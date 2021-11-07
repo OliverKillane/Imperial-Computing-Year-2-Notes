@@ -1,0 +1,120 @@
+#!/bin/bash
+# Commands to create a file structure for a tutorial
+# .
+# ├── (title)
+# │   ├── code
+# │   │   └── (empty)
+# │   ├── image
+# │   │   └── (empty)
+# │   ├── diagram
+# │   │   └── (empty)
+# │   └── (title).tex
+#
+# The text file will have the normal preamble and a number of questions
+
+# Default arguments:
+user='Oliver Killane'
+tutorial='tutorial here'
+module='module here'
+date=$(date +'%d/%m/%y')
+sections=0
+help='
+This is the newtut tool help! 
+Make latex tutorial sheet templates quick so you can get back to depression, synthwave and car exhaust!
+
+Help if below, for the tool, if you need any other general help please consult Jeff Bezos`s Barber.
+
+Arg:            What it do:
+-h              Show this mercilessly boring help text! And ignore any other arguments.
+-t <title>      Set the tutorial sheet title.
+-m <module>     Set the module of the tutorial sheet.
+-s <sections>   Set the number of mains sections (questions).
+-u <user>       Set the author name, you right? If you plagarise in your work, I will plagarise your mom.
+-d <date>       Set the date, by default is the current date.
+'
+
+
+# getting aruments
+while getopts ht:m:s:u:d: flag;
+do
+    case "${flag}" in
+        h) echo "$help"; exit;;
+        t) tutorial=${OPTARG};;
+        m) module=${OPTARG};;
+        s) sections=${OPTARG};;
+        u) user=${OPTARG};;
+        d) date=${OPTARG};;
+    esac
+done
+
+# create directory
+mkdir "$tutorial";
+cd "$tutorial";
+
+mkdir 'code' 'image' 'diagram';
+touch "$tutorial.tex";
+
+# tex file preamble
+echo "\documentclass{report}
+    \title{$module - $tutorial}
+    \author{$user}
+    \date{$date}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{graphicx, amssymb, amsfonts, amsmath, xcolor, listings, tcolorbox}
+
+\graphicspath{{image/}}
+
+\definecolor{codebackdrop}{gray}{0.9}
+\definecolor{commentgreen}{rgb}{0,0.6,0}
+\lstset{
+    inputpath=code, 
+    commentstyle=\color{commentgreen},
+    keywordstyle=\color{blue}, 
+    backgroundcolor=\color{codebackdrop}, 
+    basicstyle=\footnotesize,
+    frame=single,
+    numbers=left,
+    stepnumber=1,
+    showstringspaces=false,
+    breaklines=true,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
+}
+
+% COMMON TOOLS:
+\newcommand{\question}[1]{\textit{#1} \\ }
+\newcommand{\sidenote}[2]{\begin{tcolorbox}[title=#1]#2\end{tcolorbox}}
+\newcommand{\bullpara}[2]{\item \textbf{#1} \ #2}
+
+% SYNTAX HIGHLIGHTING:
+\newcommand{\fun}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\file}[1]{\textcolor{green}{\textbf{#1}}}
+\newcommand{\struct}[1]{\textcolor{orange}{\textbf{#1}}}
+\newcommand{\var}[1]{\textcolor{purple}{\textbf{#1}}}
+\newcommand{\const}[1]{\textcolor{red}{\textbf{#1}}}
+
+% CODE LISTINGS:
+% \pintoscode{startline}{endline}{title}{file}
+\newcommand{\pintoscode}[4]{\lstinputlisting[language=C, firstline = #1, firstnumber = #1, lastline = #2, title = \file{#3}]{#4}}
+
+% \codeline{language}{line}{file}
+\newcommand{\codeline}[3]{\lstinputlisting[language=#1, firstline = #2, lastline = #2]{#3}}
+
+\newcommand{\keyword}[1]{\textbf{#1}}
+\begin{document}
+    \maketitle
+" > "$tutorial.tex";
+
+# add sections
+n=0;
+while [ "$n" -lt $sections ];
+do 
+    ((n++))
+echo "    \section*{Question $n}
+" >> "$tutorial.tex";
+done
+
+# add ending
+echo "\end{document}" >> "$tutorial.tex";
+
+# final output
+echo "Created: $module - $tutorial by $user with $sections sections. Now fuck off.";
