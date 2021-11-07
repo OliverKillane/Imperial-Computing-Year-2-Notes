@@ -1,0 +1,78 @@
+\documentclass{report}
+    \title{50003 - Models of Computation - Lecture 2}
+    \author{Oliver Killane}
+    \date{15/10/21}
+
+\input{../50003 common.tex}
+
+\begin{document}
+    \maketitle
+    \sidenote{Lecture Recording}{
+        Lecture recording is available \href{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=a3951f13-3a34-44bc-ba10-adc300d0077f}{here}
+    }
+
+    \section*{Syntax of a while Language}
+        We can define a simple while language (if, else, while loops) to build programs from \& to analyse.
+        \begin{center}
+            \begin{tabular}{r c l}
+                $B \in Bool$ & ::= & $true | false | E = E | E < E | B \& B | \neg B \dots$ \\
+                $E \in Exp$ & ::= & $x | n | E + E | E \times E | \dots$ \\
+                $C \in Com$ & ::= & $x :=E | if \ B \ then \ C \ else \ C | C;C | skip | while \ B \ do \ C$ \\
+            \end{tabular}
+        \end{center}
+        Where $x \in Var$ ranges over variable identifiers, and $n \in \mathbb{N}$ ranges over natural numbers.
+        \\
+        \\ We can also define simple expressions (\keyword{SimpleExp}) to work on:
+        \[E \in SimpleExp \ ::= \ n | E + E | E \times E | \dots\]
+        \subsubsection*{Operational Semantics for SimpleExp}
+            \begin{itemize}
+                \bullpara{Small-Step}{
+                    Also called structural, gives a method for evaluating an expression step-by-step.
+                }
+                \bullpara{Big-Step}{
+                    Also called Natural, ignores intermediate steps and gives result immediately.
+                }
+            \end{itemize}
+        \subsubsection*{Big Step Semantics of SimpleExp}
+            The properties OF $\Downarrow$ are:
+            \begin{itemize}
+                \bullpara{Determinacy}{
+                    For all $E, n_1$ and $n_2$ if $E \Downarrow n_1$ and $E \Downarrow n_2$ then $n_1 = n_2$
+                }
+                \bullpara{Totality}{
+                    For all $E$ there exists an $n$ such that $E \Downarrow n$.
+                    \\
+                    \\ We can break this with loops in matching, e.g
+                    \[\bigstepdef{B-NON-TOTAL}{}{true}{true}{}\]
+                    As a result, on hitting true will not stop.
+                }
+            \end{itemize}
+            \subsubsection*{Small Step Semantics of SimpleExp}
+                Given a realtion $\to$ we can define a new relation $\leftarrow *$ such that:
+                \[E \leftarrow * E' \text{ holds if and only if } E = E' \text{ or there is some finite sequence } E \to E_1 \to E_3 \to \dots \to E_k \to E' \]
+                \begin{itemize}
+                    \bullpara{Normal Form}{
+                        $E$ is in its normal form (irreducable) if there is no $E'$ such that $E \to E'$
+                        \\
+                        \\ In \keyword{SimpleExp} the normal form is the natural numbers.
+                    }
+                    \bullpara{Determinacy}{
+                        For all $E, E_1, E_2$ if $E \to E_1$ and $E \to E_2$ then $E_1 = E_2$.
+                        \\
+                        \\ There is at most one next step.
+                    }
+                    \bullpara{Confluence}{
+                        For all $E, E_1, E_2$ if $E \to * E_1$ and $E \to * E_2$ then there exists some $E'$ such that $E_1 \to * E'$ and $E_2 \to* E'$.
+                        \\
+                        \\ Determinate $\rightarrow$ Confluent.
+                        \\
+                        \\ There are several evaluations paths, but they all get the same end result.
+                    }
+                    \bullpara{(Strong) Normalisation}{
+                        There are no infinite sequences of expressions $E_1 \to E_2 \to E_3 \to \dots$ such that for all $i$, $E_i \to E_{i+1}$.
+                        \\
+                        \\ Every evaluation path eventually reaches a normal form.
+                    }
+                \end{itemize}
+                Theorem: for all $E, n_1, n_2$, if $E \to * n_1$ and $E \to * n_2$ then $n_1 = n_2$.
+\end{document}
