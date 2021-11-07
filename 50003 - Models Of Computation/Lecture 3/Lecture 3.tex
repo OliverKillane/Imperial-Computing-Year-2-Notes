@@ -1,0 +1,83 @@
+\documentclass{report}
+    \title{50003 - Models of Computation - Lecture 3}
+    \author{Oliver Killane}
+    \date{24/10/21}
+
+\input{../50003 common.tex}
+
+\begin{document}
+    \maketitle
+    \sidenote{Lecture Recording}{
+        Lecture recording is available \href{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=38d9f5cb-459c-48a7-a0e8-adc501489970}{here}
+    }
+
+    \section*{Syntax of While}
+        We can define a simple \keyword{While} language (if, else, while loops) to build programs from \& to analyse.
+        \begin{center}
+            \begin{tabular}{r c l}
+                $B \in Bool$ & ::= & $true | false | E = E | E < E | B \& B | \neg B \dots$ \\
+                $E \in Exp$ & ::= & $x | n | E + E | E \times E | \dots$ \\
+                $C \in Com$ & ::= & $x :=E | if \ B \ then \ C \ else \ C | C;C | skip | while \ B \ do \ C$ \\
+            \end{tabular}
+        \end{center}
+        Where $x \in Var$ ranges over variable identifiers, and $n \in \mathbb{N}$ ranges over natural numbers.
+    
+    \section*{States}
+        A \keyword{state} is a partial function from variables to numbers. For state $s$, and variable $x$, $s(x)$ is defined, e.g:
+        \[s = (x \mapsto 2, y \mapsto 200, z \mapsto 20)\]
+        (In the current state, $x = 2, y = 200, z = 20$).
+        \sidenote{Partial Functions}{
+            A partial function is a mapping of every member of its domain, to at most one member of its codomain.
+            \\
+            \\ A state is a partial function as it is only defined for some variables.
+        }
+
+        For example:
+        \begin{center}
+            \begin{tabular}{r c l c}
+                $s[x \mapsto 7](u)$ & $=$ & $7$ & if $u = x$ \\
+                & $=$ & $s(u)$ & otherwise \\
+            \end{tabular}
+        \end{center}
+        The small step semantics of \keyword{While} are defined using \keyword{configurations} of form:
+        \[\config{E}{s}, \config{B}{s}, \config{C}{s} \]
+        (Evaluating $E$, $B$, or $C$ with respect to state $s$)
+        \\
+        \\ We can create a new state, where variable $x$ equals value $a$, from an existing state $s$:
+        \[s'(u) \triangleq \alpha(x)=\begin{cases}
+            a & u = x \\
+            s(u) & otherwise \\
+         \end{cases}\]
+        \[s' = s[x \mapsto u] \text{ is equivalent to } dom(s') = dom(s) \land \forall y.[y \neq x \rightarrow s(y) = s'(y) \land s'(x) = a]\]
+        ($s'$ equals $s$ where $x$ maps to $a$)
+    
+    \section*{Expressions}
+        \[\whilestdef{W-EXP.LEFT}{\config{E_1}{s} \to_e \config{E'_1}{s'}}{\config{E_1 + E_2}{s} \to_e \config{E'_1 + E_2}{s'}}{}\]
+        \[\whilestdef{W-EXP.RIGHT}{\config{E}{s} \to_e \config{E'}{s'}}{\config{n+E}{s} \to_e \config{n + E'}{s'}}{}\]
+        \[\whilestdef{W-EXP.VAR}{}{\config{x}{s} \to_e \config{n}{s}}{s(x) = n}\]
+        \[\whilestdef{W-EXP.ADD}{}{\config{n_1 + n_2}{s}}{\config{n_3}{s}}{n_3 = n_1 + n_2}\]
+        These rules allow for side effects, despite the While language being side effect free in expression evaluation. We show this by changing state $s \to_e s'$.
+        \\
+        \\ We can show inductively (from the base cases W-EXP.VAR and W-EXP.ADD) that expression evaluation is side effect free.
+    \section*{Booleans}
+        (Based on expressions, one can create the same for booleans) ($b \in \{true, false\}$)
+        \subsubsection*{AND}
+            \[\whilestdef{W-BOOL.AND.LEFT}{\config{B_1}{s} \to_b \config{B'_1}{s'}}{\config{B_1 \& B_2}{s} \to_b \config{B'_1 \& B_2}{s'}}{}\]
+            \[\whilestdef{W-BOOL.AND.RIGHT}{\config{B}{s} \to_b \config{B'}{s'}}{\config{b \& B_2}{s} \to_b \config{b \& B'}{s'}}{}\]
+            \[\whilestdef{W-BOOL.AND.TRUE}{}{\config{true \& true}{s} \to_b \config{true}{s}}{}\]
+            \[\whilestdef{W-BOOL.AND.FALSE}{}{\config{false \& b}{s} \to_b \config{true}{s}}{}\]
+            (Notice we do not short circuit, as the right arm may change the state. In a side effect free language, we could.)
+        \subsubsection*{EQUAL}
+            \[\whilestdef{W-BOOL.EQUAL.LEFT}{\config{E_1}{s} \to_e \config{E'_1}{s'}}{\config{E_1 = E_2}{s} \to_b \config{E'_1 = E_2}{s'}}{}\]
+            \[\whilestdef{W-BOOL.EQUAL.RIGHT}{\config{E}{s} \to_e \config{E'}{s'}}{\config{n = E}{s} \to_b \config{n = E}{s'}}{}\]
+            \[\whilestdef{W-BOOL.EQUAL.TRUE}{}{\config{n_1 = n_2}{s} \to_b \config{true}{s}}{n_1 = n_2}\]
+            \[\whilestdef{W-BOOL.EQUAL.FALSE}{}{\config{n_1 = n_2}{s} \to_b \config{false}{s}}{n_1 \neq n_2}\]
+        \subsubsection*{LESS}
+            \[\whilestdef{W-BOOL.LESS.LEFT}{\config{E_1}{s} \to_e \config{E'_1}{s'}}{\config{E_1 < E_2}{s} \to_b \config{E'_1 < E_2}{s'}}{}\]
+            \[\whilestdef{W-BOOL.LESS.RIGHT}{\config{E}{s} \to_e \config{E'}{s'}}{\config{n < E}{s} \to_b \config{n < E}{s'}}{}\]
+            \[\whilestdef{W-BOOL.LESS.TRUE}{}{\config{n_1 < n_2}{s} \to_b \config{true}{s}}{n_1 < n_2}\]
+            \[\whilestdef{W-BOOL.EQUAL.FALSE}{}{\config{n_1 < n_2}{s} \to_b \config{false}{s}}{n_1 \geq n_2}\]
+        \subsubsection*{NOT}
+            \[\whilestdef{W-BOOL.NOT}{}{\config{\neg true}{s} \to_b \config{false}{s}}{}\]
+            \[\whilestdef{W-BOOL.NOT}{}{\config{\neg false}{s} \to_b \config{true}{s}}{}\]
+\end{document}
