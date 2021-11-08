@@ -1,0 +1,182 @@
+\documentclass{report}
+    \title{50003 - Models of Computation - Lecture 7}
+    \author{Oliver Killane}
+    \date{02/11/21}
+
+\input{../50003 common.tex}
+
+\begin{document}
+    \maketitle
+    \sidenote{Lecture Recording}{
+        Lecture recording is available \href{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=3862d74f-cd34-4faf-ba7b-add300e0c3a7}{here}
+    }
+        \subsection*{Note for reader}
+            We will reference to state by set $State \triangleq (Var \rightharpoonup \mathbb{N})$.
+        
+        \subsection*{Lemmas}
+            \sidenote{Lemma}{
+                A small proven proposition that can be used in a proof. Used to make the proof smaller.
+                \\
+                \\ Also know as an "auxiliary theorem" or "helper theorem".
+            }
+            \sidenote{Corollary}{
+                A theorem connected by a short proof to another existing theorem.
+                \\
+                \\ If B is can be easily deduced from A (or is evident in A's proof) then B is a corollary of A.
+            }
+            \subsubsection*{Lemmas}
+                \begin{enumerate}
+                    \item $\forall r \in \mathbb{N}. \forall E_1,E_1',E_2 \in SimpleExp. [E_1 \to^r E_1' \Rightarrow (E_1 + E_2) \to^r (E_1' + E_2)]$
+                    \item $\forall r,n \in \mathbb{N}. \forall E_2,E_2' \in SimpleExp . [E_2 \to^r E_2' \Rightarrow (n + E_2) \to^r (n + E_2')]$
+                \end{enumerate}
+            \subsubsection*{Corollaries}
+                \begin{enumerate}
+                    \item $\forall n_1 \in \mathbb{N} . \forall E_1, E_2 \in SimpleExp . [E_1 \to^* n_1 \Rightarrow (E_1 + E_2) \to^* (n_1 + E_2)]$
+                    \item $\forall n_1, n_2 \in \mathbb{N} . \forall E_2 \in SimpleExp . [E_2 \to^* n_2 \Rightarrow (n_1 + E_2) \to^* (n_1 + n_2)]$
+                    \item $\forall n,n_1, n_2, \in \mathbb{N} . \forall E_1, E_2 \in SimpleExp . [E_1 \to^* n_1 \land E_2 \to^* n_2 \land n = n_1 + n_2 \Rightarrow (E_1 + E_2) \to^* n]$
+                \end{enumerate}
+
+        \subsection*{Connecting $\Downarrow$ and $\to^*$ for SimpleExp}
+            \[\forall E \in SimpleExp, n \in \mathbb{N}.[E \Downarrow n \Leftrightarrow E \to^* n]\]
+            We prove each direction of implication separately. Fir we prove by induction over $E$ using the property $P$:
+            \[P(E) =^{def} \forall n \in \mathbb{N}.[E \Downarrow n \Rightarrow E \to^* n]\]
+            \subsubsection*{Base Case}
+                Take arbitrary $n \in \mathbb{N}$ to show $P(n)$ - $n \Downarrow n \Rightarrow n \to^* n$.
+                \begin{center}
+                    \begin{tabular}{l l l}
+                        (1) & $n \to^0 n$ & ($n$ is in the normal form) \\
+                        (2) & $n \Downarrow n$ & ($n$ is in the normal form) \\
+                        (3) & $n \Downarrow n \land n \to^* n$ & (By 1 \& 2) \\
+                        (4) & $n \Downarrow n \Rightarrow n \to^* n$ & (By 3) \\
+                    \end{tabular}
+                \end{center}
+            \subsubsection*{Inductive Step}
+                Take some arbitrary $E, E_1, E_2$ such that $E = E_1 + E_2$.
+                \\ Inductive Hypothesis
+                \[\forall n_1 \in \mathbb{N} . [E_1 \Downarrow n_1 \Rightarrow E_1 \to^* n_1]\]
+                \[\forall n_2 \in \mathbb{N} . [E_2 \Downarrow n_2 \Rightarrow E_2 \to^* n_2]\]
+                To show $P(E)$: $\forall n \in \mathbb{N} . [(E_1 + E_2) \Downarrow n \Rightarrow (E_1 + E_2) \to^* n]$.
+                \begin{center}
+                    \begin{tabular}{l l l}
+                        (1) & Assume $(E_1 + E_2) \Downarrow n$ & \\
+                        (2) & $\exists n_1, n_2 \in \mathbb{N} . [E_1 \Downarrow n_1 \land E_2 \Downarrow n_2]$ & (By 1 \& definition of B-ADD) \\
+                        (3) & $E_1 \to^* n_1$ & (By 2 \& IH) \\
+                        (4) & $E_2 \to^* n_2$ & (By 2 \& IH) \\ 
+                        (5) & Chose some $n \in \mathbb{N}$ such that $n = n_1 + n_2$ & \\
+                        (6) & $(E_1 + E_2) \to^* n$ & (By 3,4,5 Corollary 3) \\
+                        (7) & $E \to^* n$ & (By 6, definition of $E$) \\
+                    \end{tabular}
+                \end{center}
+                Hence assuming $E \Downarrow n$ implies $E \to^* n$, so $P(E)$.
+                \\
+                Next we work the other way, to show:
+                \[\forall E \in SimpleExp . \forall n \in \mathbb{N}.[E \to^* n \Rightarrow E \Downarrow n ]\]
+                \begin{center}
+                    \begin{tabular}{l l l}
+                        (1) & Take arbitrary $E \in SimplExp$ such that $E \to^* n$ & (Initial setup) \\
+                        (2) & Take some $m \in \mathbb{N}$ such that $E \Downarrow m$ & (By totality of $\Downarrow$) \\
+                        (3) & $n = m$ & (By 1,2 \& uniqueness of result for $\to$) \\
+                        (4) & $E \Downarrow n$ & (By 3) \\
+                    \end{tabular}
+                \end{center}
+                It is also possible to prove this without using normalisation and determinacy, by induction on $E$.
+        \subsection*{Multi-Step Reductions}
+            \textbf{Lemma:}
+            \[\forall r \in \mathbb{N}. \forall E_1, E'_1, E_2 . [E_1 \to^r E'_1 \Rightarrow (E_1 + E_2) \to^r (E'_1 + E_2)]\]
+            To prove $\forall r \in \mathbb{N} . [P(r)]$ by induction on $r$:
+            \subsubsection*{Base Case}
+                \begin{itemize}
+                    \item Base case is $r = 0$.
+                    \item Prove that $P(0)$ holds.
+                \end{itemize}
+            \subsubsection*{Inductive  Step}
+                \begin{itemize}
+                    \item Inductive Case is $r = k + 1$ for arbitrary $k \in \mathbb{N}$.
+                    \item Inductive hypothesis is $P(k)$.
+                    \item Prove $P(k + 1)$ using inductive hypothesis.
+                \end{itemize}
+            \subsubsection*{Proof of the Lemma}
+                By induction on $r$:
+                \textbf{Base Case:}
+                Take some arbitrary $E_1, E_1', E_2 \in SimpleExp$ such that $E_1 \to^0 E_1'$.
+                \begin{center}
+                    \begin{tabular}{r c l}
+                        (1) & $E_1 = E_1'$ & (By definition of $\to^0$) \\
+                        (2) & $(E_1 + E_2) = (E_1' + E_2)$ & (By 1) \\
+                        (3) & $(E_1 + E_2) \to^0 (E_1' + E_2)$ & (By definition of $\to^0$) \\
+                    \end{tabular}
+                \end{center}
+                \textbf{Inductive Step:}
+                Take arbitrary $k \in \mathbb{N}$ such that $P(k)$
+                \begin{center}
+                    \begin{tabular}{r c l}
+                        (1) & Take arbitrary $E_1, E_1', E_2$ such that $E_1 \to E'_1$ & (Initial setup) \\
+                        (2) & Take arbitrary $E_1''$ such that $E_1'' \to E_1'$ & \\
+                        (3) & $(E_1 + E_2) \to^k (E_1'' + E_2)$ & (By 2 \& IH) \\
+                        (4) & $(E_1'' + E_2) \to (E_1' + E_2)$ & (By 2 \& rule S-LEFT) \\
+                        (5) & $(E_1 + E_2) \to^{k+1} (E_1' + E_2)$ & (3,4, definition of $\to^{k+1}$) \\
+                    \end{tabular}
+                \end{center}
+        \subsection*{Determinacy of $\to$ for Exp}
+            We extend simple expressions configurations of the form $\config{E}{s}$.
+            \[E \in Exp ::= n | x | E + E | \dots\]
+            
+            Determinacy: 
+            \[\forall E,E_1,E_2 \in Exp . \forall s, s_1, s_2 \in State . [\config{E}{s} \to \config{E_1}{s_1} \land \config{E}{s} \to \config{E_2}{s_2} \Rightarrow \config{E_1}{s_1} = \config{E_2}{s_2}]\]
+            We prove this using property $P$:
+            \[P(E,s) \triangleq \forall E_1,E_2 \in Exp . \forall s_1, s_2 \in State . [\config{E}{s} \to \config{E_1}{s_1} \land \config{E}{s} \to \config{E_2}{s_2} \Rightarrow \config{E_1}{s_1} = \config{E_2}{s_2}]\]
+            \subsubsection*{Base Case: $E = x$}
+                Take arbitrary $n \in \mathbb{N}$ and $s \in State$ to show $P(n,s)$
+                \begin{center}
+                    \begin{tabular}{r c l}
+                        (1) & take $E_1 \in Exp$, $s_1 \in State$ such that $\config{n}{s} \to \config{E_1}{s_1}$ & (Initial setup) \\
+                        (2) & take $E_2 \in Exp$, $s_2 \in State$ such that $\config{n}{s} \to \config{E_2}{s_2}$ & (Initial setup) \\
+                        (3) & $n = E_1 \land s = s_1$ & (By 1 \& inversion on definition of E.NUM) \\
+                        (4) & $n = E_2 \land s = s_2$ & (By 2 \& inversion on definition of E.NUM) \\
+                        (5) & $E_1 = E_2 \land s_1 = s_2$ & (By 3 \& 4) \\
+                        (6) & $\config{E_1}{s_1} = \config{E_2}{s_2}$ & (By 5 \& definition of configurations) \\
+                    \end{tabular}
+                \end{center}
+            \subsubsection*{Base Case: $E = x$}
+                Take arbitrary $x \in Var$ and $s \in State$ to show $P(n,s)$
+                \begin{center}
+                    \begin{tabular}{r c l}
+                        (1) & take $E_1 \in \mathbb{N}$, $s_1 \in State$ such that $\config{x}{s} \to \config{E_1}{s_1}$ & (Initial setup) \\
+                        (2) & take $E_2 \in \mathbb{N}$, $s_2 \in State$ such that $\config{x}{s} \to \config{E_2}{s_2}$ & (Initial setup) \\
+                        (3) & $E_1 = s(x) \land s_1 = s$ & (By 1 \& inversion on definition of E.VAR) \\
+                        (3) & $E_2 = s(x) \land s_2 = s$ & (By 2 \& inversion on definition of E.VAR) \\
+                        (5) & $E_1 = E_2 \land s_1 = s_2$ & (By 3 \& 4) \\
+                        (6) & $\config{E_1}{s_1} = \config{E_2}{s_2}$ & (By 5 \& definition of configurations) \\
+                    \end{tabular}
+                \end{center}
+
+                \dots Inductive Step \dots
+        
+        \subsection*{Syntax of Commands}
+            \[C \in Com ::= x := E | \cond{B}{C}{C} | C;C | skip | \while{B}{C}\]
+            \begin{itemize}
+                \bullpara{Determinacy}{
+                    \[\forall C, C_1, C_2 \in Com . \forall s, s_1, s_2 \in State . [\config{C}{s} \to_c \config{C_1}{s_1} \land \config{C}{s} \to_c \config{C_2}{s_2} \Rightarrow \config{C_1}{s_1} = \config{C_2}{s_2}]\]
+                }
+                \bullpara{Confluence}{
+                    \[\forall C, C_1, C_2 \in Com . \forall s, s_1, s_2 \in State . [\config{C}{s} \to_c^* \config{C_1}{s_1} \land \config{C}{s} \to_c^* \config{C_2}{s_2} \Rightarrow \exists C' \in Com . \exists s' \in State . [\config{C_1}{s_1} \to_c^* \config{C'}{s'} \land \config{C_2}{s_2} \to_c^* \config{C'}{s'}]]\]
+                }
+                \bullpara{Unique Answer}{
+                    \[\forall C \in Com . s_1 s_2 \in State . [\config{C}{s} \to_c^* \config{skip}{s_1} \land \config{C}{s} \to_c^* \config{skip}{s_2} \Rightarrow s_1 = s_2]\]
+                }
+                \bullpara{No Normalisation}{
+                    \\ There exist derivations of infinite length for while.
+                }
+            \end{itemize}
+        \subsection*{Connecting $\Downarrow$ and $\to^*$ for While}
+            
+            \begin{enumerate}
+                \item $\forall E, n \in Exp. \forall s, s' \in State . [\config{E}{s} \Downarrow_e \config{n}{s'} \Leftrightarrow \config{E}{s} \to_e^* \config{n}{s'}]$
+                \item $\forall B, b \in Bool. \forall s, s' \in State . [\config{B}{s} \Downarrow_b \config{b}{s'} \Leftrightarrow \config{B}{s} \to_b^* \config{b}{s'}]$
+                \item $\forall C \in Com. \forall s, s' \in State . [\config{C}{s} \Downarrow_c \langle s' \rangle \Leftrightarrow \config{C}{s} \to_c^* \config{skip}{s'}]$
+            \end{enumerate}
+            For $Exp$ and $Bool$ we have proofs by induction on the structure of expressions/booleans.
+            \\
+            \\ For $\Downarrow_c$ it is more complex as the $\Downarrow_c \Leftarrow \to_c^*$ cannot be proven using totality. Instead \keyword{complete/strong induction} on length of $\to_c^*$ is used.
+                
+\end{document}
