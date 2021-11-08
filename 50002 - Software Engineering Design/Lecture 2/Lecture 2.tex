@@ -1,0 +1,86 @@
+\documentclass{report}
+    \title{50002 - Software Engineering - Lecture 2}
+    \author{Oliver Killane}
+    \date{15/10/21}
+
+\input{../50002 common.tex}
+
+% \codecompare{language}{file 1}{file 2}
+\newcommand{\codecompare}[3]{
+    \begin{minipage}[t]{0.4\textwidth}
+        \codelist{#1}{#2 before.#3}
+    \end{minipage}
+    \begin{minipage}[t]{0.19\textwidth}
+        \begin{huge}
+            \[\Rightarrow\]
+        \end{huge}
+    \end{minipage}
+    \begin{minipage}[t]{0.4\textwidth}
+        \codelist{#1}{#2 after.#3}
+    \end{minipage}
+}
+
+\begin{document}
+    \maketitle
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=d8ccd616-3479-4acb-abcd-adc200e8ade4}
+
+    \section*{Tests}
+        \codelist{Java}{testing.java}
+
+    \section*{Refactoring}
+        \begin{enumerate}
+            \item Joshua Kerievsky defines refactoring as the process of improving the design of a piece of code, without changing it's behaviour.
+            \item The behaviour as observed through the public api should be the same.
+            \item When using TDD, we should only refactor when our tests are passing.
+        \end{enumerate}
+        \sidenote{Joshua Kerievsky}{
+            The CEO of Industrial Logic. They are an agile consultation agency that helps companies improve their development cycles. He has also written several books such as "Refactoring to Patterns" and several e-learning courses.
+        }
+
+        By refactoring frequently, we help to eliminate a buildup of technical debt, and ensure that the codebase is kept at a high quality even as new features are added quickly.
+        \sidenote{Technical Debt}{
+            Ineligant, bloated, uncommented/obfuscated code can be itnroduced when new features are added quickly. If we do not fix these issues, it will become more and more difficult to understand the codebase, and add further new features. This deficit of code quality is the debt.
+            \\
+            \\ We sometimes introduce technical debt in an effort to get a new feature added quickly, we must be aware of the costs of leaving our repayment (refactoring) until later.
+        }
+        \begin{itemize}
+            \bullpara{Mechanical Transformation}{
+                \\ A large refactoring can be madee of many small transformations, each not altering the public behaviour.
+                \\
+                \\ We can use modern development tools such as IDEs to perform these transformations more quickly and reliably than manual.
+            }
+            \bullpara{Hygiene}{
+                \\ We can continually apply refactoring technique to make small improvements in our code. This prevents a large buildup of technical debt, or needing a large refactoring project to pay the debt off.
+                \\
+                \\ The goal is to avoid major surgery on the codebase.
+            }
+        \end{itemize}
+
+    \section*{Catalogue of Refactorings}
+        \subsubsection*{Extract Method}
+            Take some code out of a method, and create a new one to hold it. This is called \textit{extract method} in intellij.
+            \\ Java Example:
+            \\ \codecompare{Java}{compose method}{java}
+
+        
+        \subsubsection*{Inlining Variables}
+            Inline variables only used once.
+            \\ C Example:
+            \\ \codecompare{C}{inline variable}{c}
+
+        \subsubsection*{Separate Responsibility}
+            Separate the responsibilities for loops, functions etc. Each only does one 'thing'.
+            \\ Rust Example:
+            % lstlistings does not support rust rip
+            \\ \codecompare{Python}{separate responsibility}{rs}
+        
+        \subsubsection*{Extract Class}
+            Extract common behaviour out to another class, and compose (can alternatively inherit, though $composition > inheritance$).
+            \\ Python Example:
+            \\ \codecompare{Python}{extract class}{py}
+        
+        \subsubsection*{Replace conditionals with polymorphism}
+            Rather than replying on conditionals to determine behaviour, use polymorphism by having objects of a n interface behave differently.
+            \\ Java Example:
+            \\ \codecompare{Java}{polymorphism over conditionals}{java}
+\end{document}
