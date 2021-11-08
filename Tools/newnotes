@@ -50,7 +50,7 @@ do
     case "${flag}" in
         h) echo "$help"; exit;;
         t) title=${OPTARG};;
-        t) link=${OPTARG};;
+        l) link=${OPTARG};;
         u) user=${OPTARG};;
         d) date=${OPTARG};;
     esac
