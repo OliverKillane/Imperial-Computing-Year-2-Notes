@@ -1,0 +1,62 @@
+\documentclass{report}
+    \title{50002 - Software Engineering Design - Lecture 1}
+    \author{Oliver Killane}
+    \date{08/11/21}
+
+\input{../50002 common.tex}
+
+\begin{document}
+    \maketitle
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=542c87a5-c46d-4ed0-9b74-adbd0113f3b7}
+
+    \section*{Waterfall Development}
+        \centerimage{scale = 0.5}{waterfall.png}
+        winston W. Royce's 1970 Paper "Managing Development of Large Software Systems" set out several phases of development through which a project should go. Unfortunately this paper was somewhat badly implemented \& resulted in the waterfall model of software development.
+        \subsubsection*{Issues With Waterfall Method}
+            \begin{itemize}
+                \bullpara{Only one chance to get it right}{
+                    \\ If an issue is found with the general design/structure of the software at the testing phase, it is difficult to fix as the team that designed has already moved on to another project.
+                }
+                \bullpara{Separation}{
+                    \\ As different teams work on different phases, design decisions that could greatly aide testing or operations may not be considered by the design team.
+                    \\
+                    \\ Phases are considered separately, so little chance to optimise each for the others.
+                }
+            \end{itemize}
+    \section*{This Module}
+    In this module we will consider 4 parts of design:
+    \begin{itemize}
+    \bullpara{Behavioural Correctness}{
+        \\ Automated Testing, Test-Driven Development (TDD) \& Mock Objects.
+        }
+        \bullpara{Design Patterns}{
+            \\ Removing Duplication, Increasing Clarity, Improving extensibility, Improving testability.
+            }
+            \bullpara{Software Architecture}{
+                \\ Interactive Applications, Data processing applications, Integrating different services.
+                }
+                \bullpara{Software Delivery}{
+        \\ Agile Methods, Continuous Deliuvery, Release and Deployment.
+        }
+    \end{itemize}
+    \section*{Design}
+        In a \href{https://blog.jbrains.ca/permalink/the-three-values-of-software}{blog post} for Jetbrains J.B. Rainsberger refers to design as one of the 3 main values of software (Features, Design, Feedback).
+        \\
+        \\ By keeping a simple \& extensible design it can become increasingly difficult to add new features for users.
+        \centerimage{width=0.3\textwidth}{costofdelayimplementingafeature.png}
+        \subsection*{Simple Design}
+            \centerimage{width=0.3\textwidth}{simple design.png}
+            \sidenote{Minimising Duplication}{
+                Can be done more mechanically, often using tools provided in modern IDEs (e.g for searching, extracting functions).
+            }
+            \sidenote{Behaves Correctly}{
+                Can be done with automated test suites to run programmer written unit \& integration tests.
+            }
+    \section*{TDD Cycle}
+        \centerimage{width=0.9\textwidth}{TDD.png}
+        \sidenote{API}{
+            \keyword{Application Programming Interface} defines the behaviour and usage of software, the interfacing being exposed to other software or services \& keeping its internals encapsulated.
+            \\
+            \\ Tests are analogous to \keyword{API} design as tests make use of the \keyword{API} \& check its behaviour is consistent with the \keyword{API}'s design.
+        }
+\end{document}
