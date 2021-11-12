@@ -12,3 +12,16 @@
 \newcommand{\threada}[1]{\textcolor{green}{\textbf{#1}}}
 \newcommand{\threadb}[1]{\textcolor{red}{\textbf{#1}}}
 %===============================================================================
+
+%============================DISPLAYING THREAD CODE=============================
+\newcommand{\threadlist}[3]{
+    \codelist{#1}{#2 init.#3}
+    \begin{minipage}[t]{0.45\textwidth}
+        \codelist{#1}{#2 A.#3}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \codelist{#1}{#2 B.#3}
+    \end{minipage}
+}
+%===============================================================================

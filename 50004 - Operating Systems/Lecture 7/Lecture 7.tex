@@ -7,7 +7,7 @@
 
 \begin{document}
     \maketitle
-    \lectlink{https://www.youtube.com/watch?v=dQw4w9WgXcQ}
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=108a0538-c84b-4fad-ab78-addb00f338d1}
 
     \section*{Semaphores}
         A blocking synchronisation mechanism invented by \keyword{Dijkstra}. Processes cooperate by means of signals:
@@ -30,14 +30,7 @@
                 A semaphore with an initial value of $1$ acts similarly to a \keyword{lock} (\keyword{lock} also enforces that only 
                 the thread that acquired the access to the critical region can release it).
             \subsubsection*{Ordering Events}
-                \codelist{C}{semaphore ordering events init.c}
-                \begin{minipage}[t]{0.45\textwidth}
-                    \codelist{C}{semaphore ordering events A.c}
-                \end{minipage}
-                \hfill
-                \begin{minipage}[t]{0.45\textwidth}
-                    \codelist{C}{semaphore ordering events B.c}
-                \end{minipage}
+                \threadlist{C}{semaphore ordering events}{c}
                 No matter the order of processes being started, process B cannot continue to the critical region until process A has called \fun{sema\_up}.
         \section*{Producer/Consumer}
             \begin{itemize}
@@ -94,7 +87,7 @@
             \end{itemize}
         \subsubsection*{Monitor Code}
             \codelist{VBScript}{producer consumer monitor.pesudocode}
-    \section*{Summary}
+    \section*{Synchronisation Summary}
         \begin{itemize}
             \bullpara{Lock}{
                 \compitem{
