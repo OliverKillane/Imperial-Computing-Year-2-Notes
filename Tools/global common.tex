@@ -17,6 +17,14 @@
 \end{center}}
 %===============================================================================
 
+%==============================SYNTAX HIGHLIGHTING==============================
+\newcommand{\fun}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\file}[1]{\textcolor{green}{\textbf{#1}}}
+\newcommand{\struct}[1]{\textcolor{orange}{\textbf{#1}}}
+\newcommand{\var}[1]{\textcolor{purple}{\textbf{#1}}}
+\newcommand{\const}[1]{\textcolor{red}{\textbf{#1}}}
+%===============================================================================
+
 %=================================CODE LISTINGS=================================
 \definecolor{codebackdrop}{gray}{0.9}
 \definecolor{commentgreen}{rgb}{0,0.6,0}
@@ -74,4 +82,19 @@
 \newcommand{\lectlink}[1]{\sidenote{Lecture Recording}{
     Lecture recording is available \href{#1}{here}
 }}
+%===============================================================================
+
+%================================STYLISED PROOFS================================
+%For ease in writing stylised proofs with numbers
+\newcommand{\stepno}[1]{\textcolor{red}{\textbf{#1}}}
+
+\newenvironment{proof}
+{\begin{center}\begin{tabular}{r l l }}
+{\end{tabular}\end{center}}
+
+\newcommand{\proofstep}[3]{(#1) & #2 & (#3) \\}
+%===============================================================================
+
+%==============================UNFINISHED SECTION===============================
+\newcommand{\unfinished}{\begin{huge} \textcolor{red}{\textbf{UNFINISHED!!!}} \end{huge}}
 %===============================================================================

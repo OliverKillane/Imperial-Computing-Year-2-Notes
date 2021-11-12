@@ -38,9 +38,10 @@ folder=$(basename "$PWD")
 SWE='50002 - Software Engineering Design'
 MOD='50003 - Models Of Computation'
 OS='50004 - Operating Systems'
+ALG='50001 - Algorithm Analysis and Design'
 
 case $folder in
-    $SWE | $MOD | $OS);;
+    $SWE | $MOD | $OS | $ALG);;
     *) echo "Must be in a notes folder, cannot be $folder"; exit;;
 esac
 
