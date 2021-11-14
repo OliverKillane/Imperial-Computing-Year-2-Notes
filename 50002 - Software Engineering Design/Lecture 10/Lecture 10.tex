@@ -1,0 +1,72 @@
+\documentclass{report}
+    \title{50002 - Software Engineering Design - Lecture 10}
+    \author{Oliver Killane}
+    \date{14/11/21}
+
+\input{../50002 common.tex}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  sensitive=true
+}
+
+\begin{document}
+    \maketitle
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=0fc33d52-21b7-4577-a6c4-adde00f851cc}
+
+    \section*{MapReduce}
+        A system built by Google to work on very large datasets, allowing data processing tasks to be spread over many computers in a farm.
+        \\
+        The main difficulties win distributed computing considered were:
+        \compitem{
+            \item If many projects are changed to be distributed, then lots of code must be changed, much will be duplicated \& there is potential for bugs.
+            \item Ordinging interactions and sharing data across many networked computers is difficult.
+            \item Probability of a hardware failure grows with the amount of hardware.
+        }
+        MapReduce takes tasks written by programmers, and distributises it across a number of systems, handling failures \& can be easily used through an \keyword{API}. 
+        Furthermore any improvements to the system will immediately be reflected in all projects using it.
+        \\
+        \\ Google wanted to index the world wide web, this is a large problem that is best suited to highly distributed programming.
+        \codelist{Javascript}{simple mapreduce.js}
+
+        \centerimage{width=0.6\textwidth}{mapreduce.png}
+        The shuffle stage is important, to increase performance we want to transmit/copy the minimum amount of data between computers.
+        \\
+        \\ For \keyword{MapReduce} the signatures are different to lists \& integers:
+        \[map: (k_1,v_1) \to list(k_2, v_2)\]
+        \[reduce: list(k_2, list(v_2)) \to list(k_2, v_2)\]
+        For example:
+        We have $k_1 = \text{line number}$ and $v_1 = \text{line of text}$
+        \begin{center}
+            \begin{tabular}{c l}
+                \textbf{Key} & \textbf{Value} \\
+                1 & I think that it's extraordinarily important that we in computer science keep fun in computing. \\
+                2 & When it started out, it was an awful lot of fun. Of course, the paying customers got shafted every \\
+                3 & now and then, and after a while we began to take their complaints seriously. We began to feel as \\
+                4 & if we really were responsible for the successful, error-free perfect use of these machines. I don't \\
+                5 & think we are. I think we're responsible for stretching them, setting them off in new directions, and \\
+                6 & keeping fun in the house. I hope the field of computer science never loses its sense of fun \\
+            \end{tabular}
+        \end{center}
+        $map (k_1, v_1) \to [(k_2, v_2)]$ where $k_2 = \text{word}$ and $v_2 = \text{1}$.
+        \codelist{Python}{example map.py}
+        The we reduce with $+$ for each key:
+        \\ $reduce [(k_2, v_2)] \to [(k_2, [v_2])]$:
+        \codelist{Python}{example reduce.py}
+    
+        \subsubsection*{Alternatives}
+            Other projects have been developed to perform a similar role to \keyword{MapReduce} such as \keyword{Hadoop}.
+
+    \section*{Java Example}
+        \codelist{Java}{Hadoop java.java}
+\end{document}
