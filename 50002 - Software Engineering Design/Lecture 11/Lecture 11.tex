@@ -1,0 +1,59 @@
+\documentclass{report}
+    \title{50002 - Software Engineering Design - Lecture 11}
+    \author{Oliver Killane}
+    \date{14/11/21}
+
+\input{../50002 common.tex}
+
+\begin{document}
+    \maketitle
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=dbe807a1-8a14-4786-b989-ade000f93222}
+
+    \section*{Java Swing}
+        An older object oriented GUI, designed to be cross-platform.
+        \centerimage{width=\textwidth}{swing hierarchy.png}
+
+        \codelist{Java}{swingApp.java}
+
+    \section*{Layout Managers}
+        Layout managers inform a \struct{JFrame} or \struct{JPanel} how to position added components.
+        \\
+        \\ \href{https://docs.oracle.com/javase/tutorial/uiswing/layout/visual.html}{Oracle} has a guide on this, as does \href{https://www.tutorialspoint.com/swing/swing_layouts.htm}{tutorialspoint}.
+    
+    \section*{Observer Pattern}
+        \centerimage{width=0.6\textwidth}{observer pattern.png}
+        For any object we want to observer, we register one or more observers. When an event occurs, the subject informs all observers of what has occurred so that they can react.
+        \\
+        \\ In Java we can add \struct{ActionListener} implementing classes to components, this interface defines a single method \fun{actionPerformed}(\struct{ActionEvent} \var{e}).
+        \codelist{Java}{actionListener 2.java}
+        \codelist{Java}{actionListener 1.java}
+        For example the following program creates a window with a text field, that can be cleared by a button.
+        \codelist{Java}{buttonSwing.java}
+
+    \section*{Model View Controller}
+        A common patter for structuring user interface code.
+        \centerimage{width=0.6\textwidth}{MCV.png}
+        \begin{itemize}
+            \bullpara{Some Event}{Controller triggered, calls relevant functions to alter the model, pass information.}
+            \bullpara{Model Called By Controller}{Updates its internal information, responds to action passed by controller}
+            \bullpara{View}{Called either by the model of some other (e.g refresh), draws display based on information from model}
+        \end{itemize}
+        The advanatges of this pattern are:
+        \compitem{
+            \item Easier to work in teams (can split up development).
+            \item Can have multiple Views, as they interact with model.
+            \item Testing of model is easier (can be isolated for testing).
+        }
+        Ideally the main function creates, and connects the model, view and controllers.
+    \section*{Presentation Abstraction Control}
+        \keyword{PAC} is typically most useful in a hierarchical/nested structure.
+        \centerimage{width=0.8\textwidth}{PAC.png}
+        We can therefore allow nested components to manage themselves, having many nested components instead of very large classes. Sometimes propagating received events up the hierarchy.
+        \centerimage{width=0.6\textwidth}{nested components.png}
+        This allows for further benefit in splitting the code and testing.
+        \\
+        \\ However we can run into issues when communicating between objects (e.g child to an uncle), as this requires a tree traversal. Refactoring this code can be difficult.
+    \section*{Event Bus}
+        We can create broadcast channels, with agents able to view events from, and send events to a given channel.
+        \centerimage{width=0.8\textwidth}{event bus.png}
+\end{document}
