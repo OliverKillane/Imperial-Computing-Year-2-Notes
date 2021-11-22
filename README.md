@@ -8,14 +8,14 @@ My notes from second year at Imperial College, in a nice structure blessed with 
 ```
 cd Tools && pwd
 cd ~
-<editor of choice> .basrc
+<editor of choice> .bashrc
 export PATH="$PATH:<path to Tools directory>"
 ```
 
 ### Usage
 Simply cd to any notes directory, and run `newnotes` (`-h` for help dialog), the `<module> common.tex` file contains any common commands, format to be used across all notes of that directory.
 ```
-cd 50004 - Operating Systems
+cd "50004 - Operating Systems"
 newnotes -t "Lecture 42" -l "panopto link"
 ```
 You should now have:
