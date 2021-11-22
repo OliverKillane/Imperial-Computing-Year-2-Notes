@@ -1,0 +1,196 @@
+\documentclass{report}
+    \title{50004 - Operating Systems - Lecture 10}
+    \author{Oliver Killane}
+    \date{22/11/21}
+
+\input{../50004 common.tex}
+
+\begin{document}
+    \maketitle
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=7bafd1b7-0c00-4a35-9bf1-ade400bd5509}
+
+    \section*{Linux - Virtual Memory Layout}
+        \centerimage{width=0.8\textwidth}{linux VM layout.png}
+        \begin{itemize}
+            \bullpara{$1:1$ Mapping}{
+                \\ Can turn logical address to physical address for kernel pages by subtracting $3$GB.
+                \compitem{
+                    \item Very efficient for kernel memory access
+                    \item Does not require page table (so TLB is not flushed when user process makes syscall).
+                    \item On Demand Mapping contains temporary mappings for use of more than $896$ MB of memory.
+                }
+            }
+        \end{itemize}
+        \begin{minipage}[t]{0.5\textwidth}
+            \subsubsection*{Typically on IA32}
+                \compitem{
+                    \item $4$KB page size.
+                    \item $4$GB virtual address space.
+                    \item Two-level page table (up to 3 with \keyword{Physical Address Extension}).
+                    \item Offset bits contain page status (dirty, readonly etc).
+                }
+        \end{minipage}
+        \begin{minipage}[t]{0.5\textwidth}
+            \subsubsection*{On AMD64/x86\_64}
+                \compitem{
+                    \item Larger page sizes (e.g $4$MB).
+                    \item Up to four-level page table.
+                    \item Offset bits can contain can-execute (prevent malicious code being written to take over process).
+                }
+        \end{minipage}
+    
+    \section*{Meltdown Attack}
+        \codelist{C}{meltdown.c}
+        By speculative execution, this becomes:
+        \codelist{C}{meltdown speculation.c}
+    
+    \section*{Demand Paging}
+        Only load pages from swap when the user attempts to access them.
+        \compitem{
+            \item Lower I/O load (unused pages are never loaded)
+            \item Less memory required (fewer pages resident in memory)
+            \item Faster response time (Can start executing straight away, does not need to wait for all pages to be loaded first)
+            \item Supports more users (lower memory usage allows this)
+        }
+        Uses a valid-invalid bit such that:
+        \[\begin{matrix}
+            0 \Rightarrow & \text{in memory} \\
+            1 \Rightarrow & \text{not in memory} \\
+        \end{matrix}\]
+        \compitem{
+            \item All page entries are originally set to $0$.
+            \item If a page with bit $0$ is accessed, page fault and trap to kernel.
+            \item Kernel uses other table to determine if reference is invalid, or valid but page not in memory.
+        }
+        To handle a valid request the kernel:
+        \compenum{
+            \item Get empty frame
+            \item swap page to frame
+            \item Reset tables (validation bit $= 1$)
+            \item Restart last instruction
+        }
+
+        \subsection*{Performance}
+            Given a \textbf{Page Fault Rate} ($=0 \Rightarrow Never$, $=1 \Rightarrow Always$).
+            \[\text{Effective Access Time} = (1-p) \times \text{memory access time} + p \times (\begin{matrix}
+                \text{Page Fault overhead} \\ + \\
+                 \text{swap page out} \\ + \\
+                 \text{swap page in} \\ + \\
+                 \text{restart overhead} \\ + \\
+                 \text{memory access time} \\
+            \end{matrix})\]
+
+    \section*{Virtual Memory Tricks}
+        \begin{itemize}
+            \bullpara{Copy-on-Write (COW)}{
+                \\ Processes accessing identical pages use the same frame, only copy when a process wants to write/modify the page.
+                \compitem{
+                    \item Parent and Child processes can initially share same pages in memory
+                    \item Efficient process creation (copy only modified pages)
+                    \item Free pages allopcated from a pool of zero-ed out pages
+                }
+
+                For example with \fun{fork}:
+                \compitem{
+                    \item Child's page table points to parent's pages (marked as read-only in child \& parent's page table)
+                    \item Protection fault causes trap by kernel.
+                    \item Kernel allocated new copy of the page to process alterning (that it can write to), replaces old page in page table.
+                    \item Both child and parent's page table sets page to Read-Write.
+                }
+            }
+            \bullpara{Memory Mapped Files}{
+                \\ Map files into the virtual address space using paging. Only need to load parts of a file when they are accessed.
+                \\
+                \\ e.g 16K page file, only access first 2 pages, so only first 2 loaded to memory.
+                \\
+                \\ Simplified programming model for I/O (can easily access stdin/out).
+            }
+        \end{itemize}
+    
+    \section*{Page Replacement}
+        When out of free memory \& a new page must be created, a page must be swapped out.
+        \\ An example below (note victim does not have to be a page of the same process).
+        \centerimage{width=\textwidth}{page replacement.png}
+        \compenum{
+            \item Access a page not loaded into memory.
+            \item Page table contains bit to show page is not loaded.
+            \item Update page table (must ensure no race conditions when involving multiple processes that may be running on multiple cores).
+            \item Write victim to disk (swap space).
+            \item Read page from disk.
+            \item Restart operation, can now access page.
+        }
+        The goal is to:
+        \begin{itemize}
+            \bullpara{Reduce the number of page faults}{\\ Avoid bringing a page back into memory many times \& in general more frames $\Rightarrow$ fewer page faults.}
+            \bullpara{Prevent over-allocation of memory}{\\ Page-fault service routine should include page replacement.}
+            \bullpara{Reduce redundant I/O}{\\ Use modify (dirty bit) to only load modified pages back to disk.}
+        \end{itemize}
+
+        \subsection*{Replacement Algorithms}
+            \subsubsection*{FIFO}
+                Replace the oldest page. 
+                \\
+                \\\begin{minipage}[t]{0.5\textwidth}
+                    \centerline{\textbf{Advantages}}
+                    \compitem{
+                        \item Simple to implement
+                    }
+
+                \end{minipage}
+                \begin{minipage}[t]{0.5\textwidth}
+                    \centerline{\textbf{Disadvantages}}
+                    \compitem{
+                        \item May replace a heavily used page.
+                    }
+                \end{minipage}
+                
+                Belady's Anomaly (where more frames result in more page faults), for example:
+                \\ \textbf{3 frames, 9 faults}
+                \begin{center}
+                    \begin{tabular}{l c c c c c c c c c c c c} 
+                        Access:     & 1 & 2 & 3 & 4 & 1 & 2 & 5 & 1 & 2 & 3 & 4 & 5 \\
+                        Page Fault: & Y & Y & Y & Y & Y & Y & Y & N & N & Y & Y & N \\
+                        Frame 0:    & 1 & 1 & 1 & 4 & 4 & 4 & 5 & $\to$ & $\to$ & 5 & 5 & $\to$ \\
+                        Frame 1:    & N & 2 & 2 & 2 & 1 & 1 & 1 & $\to$ & $\to$ & 3 & 3 & $\to$ \\
+                        Frame 2:    & N & N & 3 & 3 & 3 & 2 & 2 & $\to$ & $\to$ & 2 & 4 & $\to$ \\
+                    \end{tabular}
+                \end{center}
+                \textbf{4 frames, 10 faults}
+                \begin{center}
+                    \begin{tabular}{l c c c c c c c c c c c c}
+                        Access:     & 1 & 2 & 3 & 4 & 1 & 2 & 5 & 1 & 2 & 3 & 4 & 5 \\
+                        Page Fault: & Y & Y & Y & Y & N & N & Y & Y & Y & Y & Y & Y \\
+                        Frame 0:    & 1 & 1 & 1 & 1 & $\to$ & $\to$ & 5 & 5 & 5 & 5 & 4 & 4 \\
+                        Frame 1:    & N & 2 & 2 & 2 & $\to$ & $\to$ & 2 & 1 & 1 & 1 & 1 & 5 \\
+                        Frame 2:    & N & N & 3 & 3 & $\to$ & $\to$ & 3 & 3 & 2 & 2 & 2 & 2 \\
+                        Frame 3:    & N & N & N & 4 & $\to$ & $\to$ & 4 & 4 & 4 & 3 & 3 & 3 \\
+                    \end{tabular}
+                \end{center}
+                Here the reference string is such that under \keyword{FIFO} at 4 frames the next page is frequently the oldest, resulting in a high number of page faults.
+            \subsubsection*{Optimal Algorithm}
+                Replace the page that will not be used for the longest period of time. This is impossible in practice, but can be used as a benchmark for comparing other algorithms.
+                \\
+                \\ Note that in the example, pages never used again are the longest away \& lower frames are chosen when pages have equal time. 
+                \\ \textbf{3 frames, 7 page faults}
+                \begin{center}
+                    \begin{tabular}{l c c c c c c c c c c c c}
+                        Access:     & 1 & 2 & 3 & 4 & 1 & 2 & 5 & 1 & 2 & 3 & 4 & 5 \\
+                        Page Fault: & Y & Y & Y & Y & N & N & Y & N & N & Y & Y & N \\
+                        Frame 0:    & 1 & 1 & 1 & 1 & $\to$ & $\to$ & 1 & $\to$ & $\to$ & 3 & 4 & $\to$ \\
+                        Frame 1:    & N & 2 & 2 & 2 & $\to$ & $\to$ & 2 & $\to$ & $\to$ & 2 & 2 & $\to$ \\
+                        Frame 2:    & N & N & 3 & 4 & $\to$ & $\to$ & 5 & $\to$ & $\to$ & 5 & 5 & $\to$ \\
+                    \end{tabular}
+                \end{center}
+
+
+
+
+
+            
+        
+
+
+
+
+
+\end{document}

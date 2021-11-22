@@ -295,6 +295,7 @@
                     \\
                     \\ The \keyword{MIPS} and \keyword{ARM} architecture's TLB uses this approach with 8-Bits ASIDs, and many other architectures have added this feature.
                 }
+                The \keyword{reach} of the TLB is the number of addresses that can be cached, for larger page sizes, the reach is larger.
             \subsubsection*{Kernel Page access in System Calls}
                 When a process makes a system call, and the system call handler runs in privileged mode int that process, it may need to access kernel pages.
                 \\
@@ -390,6 +391,13 @@
         \\ Once the pages are setup to achieve this, the kernel does not need to be involved.
         \centerimage{width=0.6\textwidth}{shared memory.png}
         This is useful for IPC, as well as other uses such as sharing libraries.
+        \\
+        \\ Comparison with pipes:
+        \compitem{
+            \item Higher performance (less kernel intervention, and data can be kept in space - less copying)
+            \item Bi-Directional communicqation possible (otherwise would require two pipes).
+            \item Less useful for unidirectional communication as kernel provides synchronisation for pipes.
+        }
         For example \keyword{System V}'s API (note more modern systems use \keyword{mmap}):
         \codelist{C}{system V shared memory.c}
         \sidenote{System V}{
