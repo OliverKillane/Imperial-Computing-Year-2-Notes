@@ -17,6 +17,7 @@
 # Default arguments:
 user='Oliver Killane'
 title='new notes'
+subject='some topic'
 date=$(date +'%d/%m/%y')
 link='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 help='
@@ -46,10 +47,11 @@ case $folder in
 esac
 
 
-while getopts ht:l:u:d: flag;
+while getopts hs:t:l:u:d: flag;
 do
     case "${flag}" in
         h) echo "$help"; exit;;
+        s) subject=${OPTARG};;
         t) title=${OPTARG};;
         l) link=${OPTARG};;
         u) user=${OPTARG};;
@@ -57,7 +59,7 @@ do
     esac
 done
 
-mkdir "$title";
+mkdir "$title - ($subject)";
 cd "$title";
 
 mkdir 'code' 'image' 'diagram';

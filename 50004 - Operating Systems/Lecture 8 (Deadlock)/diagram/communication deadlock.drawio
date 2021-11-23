@@ -1,0 +1,29 @@
+<mxfile host="65bd71144e">
+    <diagram id="JsPBUQ6eWbENOsQ6jkWA" name="Page-1">
+        <mxGraphModel dx="711" dy="1015" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;endSize=30;labelBackgroundColor=none;" edge="1" parent="1">
+                    <mxGeometry y="35" relative="1" as="geometry">
+                        <mxPoint x="140" y="55" as="sourcePoint"/>
+                        <mxPoint x="320" y="55" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="3" value="&lt;font&gt;&lt;span style=&quot;font-size: 30px&quot;&gt;A&lt;/span&gt;&lt;br&gt;&lt;font style=&quot;font-size: 15px&quot;&gt;(Waiting for reply)&lt;/font&gt;&lt;br&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="10" y="10" width="100" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="&lt;font&gt;&lt;span style=&quot;font-size: 30px&quot;&gt;B&lt;/span&gt;&lt;br&gt;&lt;font style=&quot;font-size: 15px&quot;&gt;(Waiting to recieve)&lt;/font&gt;&lt;br&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6a00ff;strokeColor=#3700CC;fontColor=#ffffff;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="350" y="10" width="100" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="" style="shape=cross;whiteSpace=wrap;html=1;rotation=-45;fillColor=#e51400;strokeColor=#B20000;fontColor=#ffffff;" vertex="1" parent="1">
+                    <mxGeometry x="205" y="20" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="message lost" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=19;" vertex="1" parent="1">
+                    <mxGeometry x="170" y="80" width="130" height="20" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

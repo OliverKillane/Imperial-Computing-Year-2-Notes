@@ -1,0 +1,70 @@
+<mxfile host="65bd71144e">
+    <diagram id="E_W6aEbQQdDLK_1xjqMn" name="Page-1">
+        <mxGraphModel dx="622" dy="1014" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Memory access instruction" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
+                    <mxGeometry x="10" y="70" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Memory Management Unit" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;arcSize=4;shadow=1;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="10" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="relocation registers (per process)" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;shadow=1;" vertex="1" parent="1">
+                    <mxGeometry x="170" y="40" width="220" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontSize=20;endArrow=open;endFill=0;endSize=11;shadow=1;" edge="1" parent="1" source="8" target="10">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="limit register" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;shadow=1;" vertex="1" parent="1">
+                    <mxGeometry x="180" y="65" width="95" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontSize=20;endArrow=open;endFill=0;endSize=11;shadow=1;" edge="1" parent="1" source="9" target="11">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="base register" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=middle;shadow=1;" vertex="1" parent="1">
+                    <mxGeometry x="280" y="65" width="95" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=none;fontSize=20;endArrow=open;endFill=0;endSize=11;shadow=1;" edge="1" parent="1" source="10" target="11">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="&amp;lt;?" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;verticalAlign=middle;fontSize=20;shadow=1;" vertex="1" parent="1">
+                    <mxGeometry x="207.5" y="110" width="40" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="less than&lt;br&gt;&amp;nbsp;limit" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;labelBackgroundColor=none;fontSize=11;endArrow=open;endFill=0;endSize=14;shadow=1;" edge="1" parent="1" source="11" target="17">
+                    <mxGeometry x="-0.5135" y="20" relative="1" as="geometry">
+                        <mxPoint x="430" y="120" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="18" value="greater &lt;br&gt;than limit" style="edgeStyle=orthogonalEdgeStyle;html=1;labelBackgroundColor=none;fontSize=11;endArrow=open;endFill=0;endSize=14;entryX=0.5;entryY=0;entryDx=0;entryDy=0;shadow=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="10" target="21">
+                    <mxGeometry x="-0.2092" y="15" relative="1" as="geometry">
+                        <mxPoint x="328" y="230" as="targetPoint"/>
+                        <mxPoint x="230" y="150" as="sourcePoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="+" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;verticalAlign=middle;fontSize=20;shadow=1;" vertex="1" parent="1">
+                    <mxGeometry x="307.5" y="110" width="40" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Logical&lt;br&gt;Address&lt;br&gt;" style="edgeStyle=none;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=none;endArrow=open;endFill=0;endSize=11;shadow=1;" edge="1" parent="1" source="2" target="10">
+                    <mxGeometry x="-0.4894" y="20" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="17" value="Memory" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
+                    <mxGeometry x="460" y="70" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;labelBackgroundColor=none;fontSize=11;endArrow=open;endFill=0;endSize=14;shadow=1;" edge="1" parent="1" source="19" target="11">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="Arbitrary mapping, + is just fast, simple &amp;amp; efficient." style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#6a00ff;strokeColor=#3700CC;fontColor=#ffffff;shadow=1;" vertex="1" parent="1">
+                    <mxGeometry x="290" y="220" width="170" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="segmentation fault" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;verticalAlign=middle;fillColor=#a20025;strokeColor=#6F0000;fontColor=#ffffff;shadow=1;" vertex="1" parent="1">
+                    <mxGeometry x="105" y="220" width="170" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

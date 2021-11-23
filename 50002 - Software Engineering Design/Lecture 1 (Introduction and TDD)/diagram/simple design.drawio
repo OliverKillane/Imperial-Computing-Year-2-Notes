@@ -1,0 +1,22 @@
+<mxfile host="65bd71144e">
+    <diagram id="1X1U28SGEwRG3AXpNgfM" name="Page-1">
+        <mxGraphModel dx="613" dy="1472" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="6" value="Behaves Correctly" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3c800;strokeColor=#B09500;fontColor=#000000;shadow=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry y="180" width="320" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Minimises Duplication" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0a30a;strokeColor=#BD7000;fontColor=#000000;shadow=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="120" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Maximises Clarity" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;shadow=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="60" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="Has Fewer Elements" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e51400;strokeColor=#B20000;fontColor=#ffffff;shadow=1;fontSize=16;" vertex="1" parent="1">
+                    <mxGeometry x="120" width="80" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
