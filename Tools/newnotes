@@ -3,16 +3,15 @@
 # folder, with a common module.tex file.
 # .
 # ├── (title)
-# │   ├── code
-# │   │   └── (empty)
-# │   ├── image
-# │   │   └── (empty)
-# │   ├── diagram
-# │   │   └── (empty)
-# │   └── (title).tex
+# │   ├── code
+# │   │   └── (empty)
+# │   ├── image
+# │   │   └── (empty)
+# │   ├── diagram
+# │   │   └── (empty)
+# │   └── (title).tex
 #
 # The text file will have the normal preamble and a number of questions
-
 
 # Default arguments:
 user='Oliver Killane'
@@ -23,11 +22,10 @@ link='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 help='
 This is the newnotes tool help! 
 Make latex tutorial sheet templates quick so you can get back to depression, synthwave and car exhaust!
-
 Help if below, for the tool, if you need any other general help please consult Jeff Bezos`s Barber.
-
 Arg:            What it do:
 -h              Show this mercilessly boring help text! And ignore any other arguments.
+-s <subject>    Subject of/lesson learnt from the lecture (e.g "you should go outside more")
 -t <title>      Set the tutorial sheet title.
 -l <link>       The link to the panopto recording for the notes.
 -u <user>       Set the author name, you right? If you plagarise in your work, I will plagarise your mom.
@@ -60,7 +58,7 @@ do
 done
 
 mkdir "$title - ($subject)";
-cd "$title";
+cd "$title - ($subject)";
 
 mkdir 'code' 'image' 'diagram';
 touch "$title.tex";
@@ -71,13 +69,10 @@ echo "\documentclass{report}
     \title{$folder - $title}
     \author{$user}
     \date{$date}
-
 \input{$(ls ../*common.tex)}
-
 \begin{document}
     \maketitle
     \lectlink{$link}
-
 \end{document}" > "$title.tex"
 
 echo "Created: $folder - $title by $user. Now piss off.";
