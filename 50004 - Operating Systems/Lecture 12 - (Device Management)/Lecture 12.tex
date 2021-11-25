@@ -1,0 +1,293 @@
+\documentclass{report}
+    \title{50004 - Operating Systems - Lecture 12}
+    \author{Oliver Killane}
+    \date{25/11/21}
+\input{../50004 common.tex}
+\begin{document}
+    \maketitle
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=f7672205-af40-419e-aee8-ade900e5f489}
+
+    \section*{Device Management}
+        \subsubsection*{Intel Example}
+            \centerimage{width=\textwidth}{intel example.png}
+            \sidenote{North \& South Bridge}{
+                Here the \keyword{X58} connects the CPU to high-speed peripherals through the high bandwidth \keyword{QuickPath Interconnect} (\keyword{QPI}). This is the \keyword{North Bridge} which connects the CPU to peripherals directly.
+                \\
+                \\ The \keyword{ICH10} (I/O Controller Hub) supports lower speed peripherals, and connects to the CPU through the \keyword{North Bridge}.
+            }
+        
+        \subsection*{I/O Device Management Objectives}
+            \begin{itemize}
+                \bullpara{Fair Access to Shared Devicess}{ Prevent processes hogging resources }
+                \bullpara{Exploit Parallelism}{
+                    \\ Can use devices in parallel (e.g send packets using network card while writing to disk), and some devices have parallelism themselves.
+                }
+                \bullpara{Provide uniform \& Simple view of I/O}{
+                    \\ Abstract devices away from processes (e.g filesystem, not disk). And use uniform interfaces (when new devices added, programs do not need to change to utilise).
+                    \compitem{
+                        \item Uniform naming and error handling.
+                        \item Hide complexity of device handling.
+                    }
+                }
+            \end{itemize}
+        
+        \subsection*{Device Independence}
+            Have the device be independent from its type (e.g terminal, disk, dvd drive) and which instance (e.g disk 1, 2, 3).
+            \\
+            \\ E.g can use the same interface for all disks connected to a system. Can read data from dvd drive, disk, terminal in a single interface (sometimes we split into classes when differences are large enough).
+        \subsection*{Device Variations}
+            \compitem{
+                \bullpara{Unit of Data Transfer}{Character (bytes) or block}
+                \bullpara{Supported Operations}{e.g read, write, seek}
+                \bullpara{Synchronous or asynchronous}{e.g network card (send request, then get result back sometime), disk (read and block until the data is read)}
+                \bullpara{Speed differences}{e.g NVMe SSD vs Tape Drive}
+                \bullpara{Shareable}{e.g disks are shareable, printers are not (can print one at a time)}
+                \bullpara{Types of error conditions}{e.g Disk errors, vs GPU temperature warnings}
+            }
+            \subsubsection*{Character vs Block Device}
+                \centerimage{width=0.8\textwidth}{character vs block.png}
+                Note the type (character/block) depends on the type of device.
+                \begin{center}
+                    \begin{tabular}{l l l}
+                        Block & Maximize throughput & Disks, network cards etc \\
+                        Character & Minimize latency & Keyboard, terminal etc \\
+                    \end{tabular}
+                \end{center}
+                \textbf{Character Devices:}
+                \\ \begin{tabular}{l l l}
+                    1 & mem & Device file representing the physical memory of the os. \\
+                    2 & pty & Pesudoterminal (bidirectional communication channel). \\
+                    180 & usb & USB devices. \\
+                \end{tabular}
+                \\ \textbf{Block Devices:}
+                \\ \begin{tabular}{l l l}
+                    1 & ramdisk & access ram disk in raw mode. \\
+                    2 & fd & Floppy Disk. \\
+                    7 & loop & Loop device, maps data blocks to a file in the filesystem, or another block device. \\
+                \end{tabular}
+                
+        \subsection*{I/O Layers}
+            \centerimage{width=0.6\textwidth}{IO layering.png}
+            \subsubsection*{Interrupt Handler}
+                An interrupt is a signal sent from a device to the CPU to inform it that the device needs attending to (e.g device connecting, finished reading, error has occured etc.).
+                \\
+                \\ Drivers register handlers to deal with types of interrupts, when the CPU receives an interrupt, it runs the relevant handler.
+                \compitem{
+                    \item For block devices, on transfer completion signal device handler.
+                    \item For character devices, when character transfered, process next character.
+                }
+                For modern systems (e.g nvme storage) a hybrid approach makes use of the following:
+                \compitem{
+                    \item Polling (queue of requests and responses), very fast but uses CPU time (analogous to spin locks)
+                    \item Wait for interrupt (better for longer waits - another process can be scheduled)
+                }
+            \subsubsection*{Device Driver}
+                Handles a type of device, can control multiple devices of the same type.
+                \compitem{
+                    \item Implements block read/write
+                    \item Access device registers (writing control information to a device)
+                    \item Initiating Operations (start device e.g at boot)
+                    \item Scheduling requests (if a device is shared, placing in order, often for performance - order hard disk operations to do the least disk traversal).
+                    \item Handle Errors
+                }
+            \subsubsection*{Device Independent OS Layer}
+                Use standard interfaces for drivers of device types:
+                \compitem{
+                    \item Simplifies OS design.
+                    \item Interface to write new drivers to.
+                    \item No OS changes required to support new drivers, just support interfaces.
+                }
+                This layer also provides \keyword{device independence}:
+                \compitem{
+                    \bullpara{Map Logical to Physical Devices}{ (Naming and Switching)
+                        \\ Can map one logical device to many physical, or vice versa (e.g disk RAIDs).
+                    }
+                    \bullpara{Request Validation against device}{
+                        \\ Check device \& driver is working correctly.
+                    }
+                    \bullpara{Allocation}{
+                        \\ Determine which processes can access which logical devices.
+                        \\
+                        \\ Control \keyword{dedicated allocation} (process exclusive access to a device)
+                    }
+                    \bullpara{Buffering}{
+                        \\ As previously mentioned - for performance \& block size independence.
+                    }
+                    \bullpara{Error Reporting}{}
+                }
+            \subsubsection*{User-Level I/O Interface}
+                System call interface to allow user programs to interact (often through other 3rd party libraries).
+                \compitem{
+                    \item basic I/O operations (\fun{close}, \fun{read}, \fun{write}, \fun{seek})
+                    \item Sets up parameters (device independent)
+                    \item Can be synchronous (blocking) or asynchronous (non-blocking)
+                }
+                \sidenote{Unix files}{
+                    Unix accesses virtual devices as files. This allows access to devices using the normal standard input/output calls. For example the common:
+                    \begin{center}
+                        \begin{tabular}{c c}
+                            \textbf{File Descriptor} & \textbf{Name} \\
+                            0 & Standard Input \\
+                            1 & Standard Output \\
+                            2 & Standard Error \\
+                        \end{tabular}
+                    \end{center}
+                    There are also files such as \const{/dev/kdb} for keyboard access.
+                }
+        \subsection*{Device Allocation}
+            \begin{itemize}
+                \bullpara{Dedicated Device}{ (e.g DVD writer, terminal, printer)
+                    \compitem{
+                        \item One process gets exclusive access to a device. 
+                        \item Typically allocated for long periods of time (e.g minutes - hours: printing, or controlling a terminal display output)
+                        \item If another process tries to access, it fails (potentially adding to a queue of open requests).
+                        \item Only allocated to authorised processes (e.g don't want malicious processes blocking access to a resource).
+                    }
+                }
+                \bullpara{Shared Device}{ (e.g disks, window terminals etc)
+                    \\ OS can provide systems for sharing, e.g file system accessible by all processes makes use of the disk.
+                }
+                \bullpara{Spooled Device}{ (e.g printer, dvd writer - many other dedicated devices)
+                    \\ A shared pool. A \keyword{daemon} process has dedicated access, processes send requests/jobs to the \keyword{daemon}.
+                    \compitem{
+                        \item Provides sharing on non-sharable resources.
+                        \item Reduces I/O time resulting in greater throughput.
+                    }
+                }
+            \end{itemize}
+        \subsection*{Buffered vs Unbuffered I/O}
+            \begin{itemize}
+                \bullpara{Buffered}{
+                    \\ \begin{tabular}{l p{10cm}}
+                        Output & User data transfered to OS output buffer. Process continues and only suspends once buffer is full. \\
+                        Input & OS reads ahead. Reads taken from buffer, process blocks when buffer empty. \\
+                    \end{tabular}
+                    \compitem{
+                        \item Smooths peaks in I/O traffic (allows for limited load balancing).
+                        \item Can allow for different data transfer unit sizes between devices (e.g buffer contaisn blocks).    
+                    }
+                }
+                \bullpara{Unbuffered}{
+                    \compitem{
+                        \item Data Transfered directly between device and user space.
+                        \item Each read/write causes physical I/O (device does something, not just accessing a hidden buffer).
+                        \item Device handler used for every transfer.
+                        \item High switching overhead (e.g every read requires the driver to take over, and to do some physical action).
+                    }
+                }
+            \end{itemize}
+    
+    \section*{Device Drivers}
+        \subsubsection*{Memory Mapped I/O}
+            Device can be addressed as a special memory location.
+            \centerimage{width=0.8\textwidth}{memory mapped IO.png}
+            Hence we can use the virtual memory setup to restrict access (e.g set supervisor bit to prevent user access).
+        \subsection*{I/O}
+            \begin{itemize}
+                \bullpara{Programmed I/O}{ (simple but inefficient)
+                    \\ Wait for device (spin), then continue execution. 
+                }
+                \bullpara{Interrupt Driven}{ (large overhead, good for long expected waits)
+                    \\ Hardware sends an interrupt when operation completed, can do other work while waiting.
+                }
+                \bullpara{Direct Memory Access (DMA)}{ (requires hardware, but reduces CPU intervention)
+                    \\ A DMA controller (often in the device) waits for the device to respond, then once the full result is available, places this directly into memory. 
+                }
+            \end{itemize}
+    
+    \section*{Linux}
+        \subsection*{Loadable Kernel Module (LKM)}
+            Device drivers are loadable modules that are loadeed and linked dynamically with the running kernel.
+            \\
+            \\ This requires binary compatability (module must be specific to kernel version).
+            \\
+            \\ Linux uses \keyword{Kmod}
+            \compitem{
+                \item Kernel subsystem that manages modules without user intervention.
+                \item Determines modules dependencies.
+                \item Loads modules on demand (e.g load driver for network card when it is connected to the system).
+            }
+            \subsubsection*{Basic LKM module}
+                \codelist{C}{basic LKM module.c}
+                Kernel can open file, look for symbol table (generated by compiler), and call the corresponding functions. 
+                \codelist{Bash}{load module.sh}
+        \subsection*{IO Management}
+            \sidenote{/dev /sys /proc}{
+                Linux (in UNIX fashion) uses files to represent many drivers, services \& methods to collect system information. Some of the main directories for this are:
+                \begin{itemize}
+                    \bullpara{/dev}{device file directory
+                        \\ Contains files for devices (virtual included).
+                    }
+                    \bullpara{/proc}{virtual filesystem for processes
+                        \\ Contains information on running processes, each represented by files of size 0. 
+                        Each numbered directory is actually the \keyword{pid} of a running process.
+                        \\
+                        \\ Other files can be read to get system information such as:
+                        \\ \begin{tabular}{l p{10cm}}
+                            /proc/meminfo & Information on the memory system including free pages, kernel stack pages etc.\\
+                            /proc/interrupts & Number of interrupts received for categories. \\
+                            /proc/stat & System status information (e.g number of processes). \\
+                            /proc/version & OS version information. \\
+                        \end{tabular}
+                    }
+                    \bullpara{/sys}{
+                        \\ A filesystem like view of the kernel and its configuration/settings.
+                    }
+                \end{itemize}
+            }
+            \begin{itemize}
+                \bullpara{Device Classes}{Group similar types of devices (similar function, performance needs)}
+                \bullpara{Identification Numbering}{ $<Major>:<Minor>$
+                    \\ \begin{tabular}{l l}
+                        \textbf{Major} & Determines which diver is controlling. (e.g IDE Disk Drive, Serial port etc.) \\
+                        \textbf{Minor} & Distinguishes devices of the same class. (e.g Drive Number) \\
+                    \end{tabular}
+                    \\ Examples from kernel documentation are \href{https://www.kernel.org/doc/Documentation/admin-guide/devices.txt}{here}.
+                }
+                \bullpara{Special Files}{
+                    \\ Most devices are represented by device/special files in the \const{/dev} directory.
+                    \centerimage{width=\textwidth}{dev directory.png}
+                }
+            \end{itemize}
+        \subsection*{Device Access}
+            Device files are accessed via the \keyword{virtual file system (VFS)}.
+            \centerimage{width=0.6\textwidth}{VFS.png}
+            Most drivers implement \fun{read}, \fun{write}, \fun{seek} etc (much like a file), however all contain other operations which do not fit this abstraction.
+            \\
+            \\ Linux uses the \keyword{ioctl} (I/O Control) system call to support special tasks (e.g getting printer status, ejecting a CD drive)
+            \codelist{C}{ioctl.c}
+        \subsection*{Character Device I/O}
+            \compitem{
+                \item Data transitted as a stream of bytes (read a byte, then another is presented)
+                \item Represented by a \struct{device\_struct} structure.
+                \item \struct{device\_struct} contains a pointer to a \struct{file\_operations} struct.
+            }
+            The \struct{file\_operations} struct:
+            \compitem{
+                \item Maintains operations supported by the device driver.
+                \item Stores function pointers to operations (read, write etc).
+            }
+            \href{https://github.com/torvalds/linux/blob/8ced7ca3570333998ad2088d5a6275701970e28e/include/linux/fs.h#L2069}{file\_operations} in the linux kernel (github).
+            \codelist{C}{file operations.c}
+            
+            Note: \href{https://tldp.org/LDP/lkmpg/2.4/html/c577.htm}{this} is a basic example, very interesting!
+
+        \subsection*{Block Device I/O}
+            \begin{itemize}
+                \bullpara{Block I/O Subsystem}{
+                    \\ Consists of several layers, with modularised operations (common code ine ach layer).
+                    \\
+                    \\ The tw main strategies to minimise time accessing block devices:
+                    \compenum{
+                        \item caching data.
+                        \item Clustering I/O Operations (store up tasks and execute several at once).
+                    }
+                    When given a task, check cache. If data not present, queue request on request queue for device.
+                }
+                \bullpara{Direct I/O}{
+                    \\ Bypass the kernel cache when accessing a device.
+                    \\
+                    \\ Useful for databases and some other applications where caching can reduce performance/consistency (e.g values very rarely accessed more than once, or doing caching in use level).
+                }
+            \end{itemize}
+\end{document}
