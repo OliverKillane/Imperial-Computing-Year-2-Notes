@@ -259,8 +259,8 @@
         \subsection*{Character Device I/O}
             \compitem{
                 \item Data transitted as a stream of bytes (read a byte, then another is presented)
-                \item Represented by a \struct{device\_struct} structure.
-                \item \struct{device\_struct} contains a pointer to a \struct{file\_operations} struct.
+                \item Represented by a \struct{char\_device\_struct} structure.
+                \item \struct{char\_device\_struct} contains a pointer to a \struct{file\_operations} struct.
             }
             The \struct{file\_operations} struct:
             \compitem{
@@ -269,6 +269,9 @@
             }
             \href{https://github.com/torvalds/linux/blob/8ced7ca3570333998ad2088d5a6275701970e28e/include/linux/fs.h#L2069}{file\_operations} in the linux kernel (github).
             \codelist{C}{file operations.c}
+
+            \href{https://github.com/torvalds/linux/blob/3498e7f2bb415e447354a3debef6738d9655768c/fs/char_dev.c#L34}{char\_device\_struct} in the linux kernel (github).
+            \codelist{C}{char device struct.c}
             
             Note: \href{https://tldp.org/LDP/lkmpg/2.4/html/c577.htm}{this} is a basic example, very interesting!
 
