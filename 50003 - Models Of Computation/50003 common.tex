@@ -22,4 +22,18 @@
 \newcommand{\while}[2]{\text{while } #1 \text{ do } #2}
 \newcommand{\cond}[3]{\text{if } #1 \text{ then } #2 \text{ else } #3}
 \newcommand{\doret}[2]{\text{do } #1 \text{ return } #2}
+
+\newcommand{\instrlabel}[1]{\text{\textcolor{teal}{$L_{#1}$}}}
+\newcommand{\reglabel}[1]{\text{\textcolor{orange}{$R_{#1}$}}}
+\newcommand{\instr}[2]{\instrlabel{#1} : & $#2$ \\}
+\newcommand{\dec}[3]{\reglabel{#1}^- \to \instrlabel{#2}, \instrlabel{#3}}
+\newcommand{\inc}[2]{\reglabel{#1}^+ \to \instrlabel{#2}}
+\newcommand{\halt}{\text{\textcolor{red}{\textbf{HALT}}}}
+
+% Variable argument regconfig \regconfig{label no}{reg val}{reg val}...
+\makeatletter
+\newcommand{\regconfig}[2]{%
+$#1$ & $#2$\checknextarg}
+\newcommand{\checknextarg}{\@ifnextchar\bgroup{\gobblenextarg}{\\}}
+\newcommand{\gobblenextarg}[1]{ & $#1$\@ifnextchar\bgroup{\gobblenextarg}{\\}}
 %==============================================================================
