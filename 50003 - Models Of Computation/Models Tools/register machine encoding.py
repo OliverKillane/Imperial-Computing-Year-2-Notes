@@ -200,12 +200,12 @@ def program_str(prog) -> str:
 # run a register machine with an input:
 def program_run(prog, instr_no : int, registers : List[int])-> Tuple[int, List[int]]:
     # step instruction label R0 R1 R2 ... (info)
-    print(rf"\begin{{center}}\begin{{tabular}}{{l l l l" + " l" * len(registers) + " }")
-    print(r"\textbf{Step} & \textbf{Instruction} & \textbf{Label} &" + " & ".join([rf"$\reglabel{{{n}}}$" for n in range(0, len(registers))]) + r" & \textbf{Description}\\")
+    print(rf"\begin{{center}}\begin{{tabular}}{{l l l c" + " c" * len(registers) + " }")
+    print(r"\textbf{Step} & \textbf{Instruction} & \instrlabel{{i}} &" + " & ".join([rf"$\reglabel{{{n}}}$" for n in range(0, len(registers))]) + r" & \textbf{Description}\\")
     print(r"\hline")
     step = 0
     while True:
-        step_str = rf"{step} & ${instr_to_str(prog[instr_no])}$ & $\instrlabel{{{instr_no}}}$ & " + "&".join([f"${n}$" for n in registers]) + "&"
+        step_str = rf"{step} & ${instr_to_str(prog[instr_no])}$ & ${instr_no}$ & " + "&".join([f"${n}$" for n in registers]) + "&"
         instr = prog[instr_no]
         if type(instr) == Inc:
             if (instr.reg >= len(registers)):
