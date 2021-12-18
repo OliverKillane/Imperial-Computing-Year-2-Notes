@@ -11,6 +11,13 @@ cd ~
 <editor of choice> .bashrc
 export PATH="$PATH:<path to Tools directory>"
 ```
+3. Set the default user to yourself within the newnotes file
+```
+# Default arguments:
+user='Oliver Killane'
+```
+...
+7. Profit (time saved in notes setup time & writing with handy commands)
 
 ### Usage
 Simply cd to any notes directory, and run `newnotes` (`-h` for help dialog), the `<module> common.tex` file contains any common commands, format to be used across all notes of that directory.
