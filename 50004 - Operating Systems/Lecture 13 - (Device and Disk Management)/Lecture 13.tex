@@ -126,6 +126,7 @@
         \subsection*{Disk Layout}
             \begin{minipage}[t]{0.6\textwidth}
                 \centerimage{width=\textwidth}{disk cylinder.jpg}
+                (Note that \keyword{cylinder} refers to all the tracks on top opf eachother / same number on each disk. Innermost cylinder is all the innermost tracks on all the platters)
             \end{minipage}
             \begin{minipage}[t]{0.4\textwidth}
                 \centerimage{width=\textwidth}{disk layout.png}
@@ -198,9 +199,9 @@
                 \compitem{
                     \bullpara{Seek Time}{$t_{seek}$}
                     \bullpara{Transfer Time}{$t_{transfer} = \cfrac{b}{r \times N}$
-                        \\ At most need half a revolution, so $\cfrac{1}{r}$ is seconds per revolution.
+                        \\ $\cfrac{1}{r}$ is seconds per revolution.
                     }
                     \bullpara{Total Access Time}{$t_{access} = t_{seek} + \cfrac{1}{2 \times r} + \cfrac{b}{r \times N}$
-                        \\ Seek + latency time (to get to start worst case rotate half) + How much to rotate while reading (e.g reading $x$ bytes from track size $2x$ requires a half rotation)}
+                        \\ Seek + latency time (to get to start average case rotate half $\to$ disk typically only rotates in one direction) + How much to rotate while reading (e.g reading $x$ bytes from track size $2x$ requires a half rotation)}
                 }
 \end{document}
