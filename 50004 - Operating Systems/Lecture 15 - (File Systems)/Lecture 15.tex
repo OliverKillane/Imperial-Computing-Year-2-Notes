@@ -30,13 +30,13 @@
         \\
         \\ Calculate the disk block reads required to get the $1020^{th}$ data byte, and then $510,100^{th}$ data byte, assuming nothing is cached in memory.}
         \subsubsection*{$1020^{th} byte$}
-            $\lceil \cfrac{1020}{1024} \lceil = 1  \to 1^{st} \ block$. Hence $1$ read required to get the inode, and $1$ required to get the data from the block pointer \& the offset of $1020$ bytes.
-            \\ \textbf{$2 \ reads$}
+            $\lceil \cfrac{1020}{1024} \rceil = 1  \to 1^{st} \ block$. Hence $1$ read required to get the inode, and $1$ required to get the data from the block pointer \& the offset of $1020$ bytes.
+            \\ Requires \textbf{$2 \ reads$}
         \subsubsection*{$510,100^{th} byte$}
             $\lceil \cfrac{510,100}{1024} \rceil = 499 \to 499^{th} \ block$. Each block of pointers contains $\cfrac{1024}{4} = 256 \ pointers$. Hence this block is pointed to indirectly by the doubly indirect pointer.
             \\
             \\ Therefore we require $1$ read to get the inode, then $2$ reads to get the data block, then $1$ more to read from the data block.
-            \\ \textbf{$4 \ reads$}
+            \\ Requires \textbf{$4 \ reads$}
         \centerimage{width=\textwidth}{inode example.png}
     
     \section*{Free Space Management}
@@ -55,7 +55,6 @@
             \compitem {
                 \item Uses little memory (single bit per entry).
                 \item Can quickly determine contiguous blocks at locations (useful for placing file's blocks next to each other to reduce seek time when accessing).
-                \item 
                 \item Highly optimised bit operations exist as instructions for most CPUs (allows for fast operations on the bitmap).
                 \item May need to search the entire bitmap to find a free spot ($O(n)$ complexity) which is slow.
             }
