@@ -1,0 +1,140 @@
+\documentclass{report}
+    \title{50004 - Operating Systems - Lecture 15}
+    \author{Oliver Killane}
+    \date{20/12/21}
+\input{../50004 common.tex}
+\begin{document}
+    \maketitle
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=ef153fe0-219e-428b-a83b-adf200b752e3}
+
+    \section*{Linux Inodes Continued...}
+        Indirect pointers are used to increase the number of data blocks that can be associated with a file. Indirect pointers can point to blocks, filled with either more indirect pointers or pointers to data blocks.
+        \centerimage{width=\textwidth}{indirect pointers.png}
+        For example:
+        \\ \question{Take an OS with inodes containing:
+        \compitem {
+            \item 6 direct pointers
+            \item 1 indirect pointer
+            \item 1 doubly indirect pointer
+        }
+        Each pointer requires $8$ bytes, each block is $1024$ bytes and each indirect block fills a whole block on the disk.
+        \\
+        \\ What is the maximum file size?}
+
+        Each indirect block can hold $\cfrac{1024}{8} = 128$ pointers to other blocks. Hence we can calculate the  maximum number of blocks:
+        \[6 + 128 \times 1 + 128 \times 128 \times 1 = 16,518 \ blocks = 16,914,432 \ bytes \approx 16.13 \ MB\]
+        By adding a single triply indirect pointer we can increase this:
+        \[6 + 128 + 128^2 + 128^3 = 2113670 \ blocks = 2,164,398,080 \ bytes \approx 2.02 \ GB\]
+        We can also determine the number of disk reads required for accessing a block.
+        \\ \question{Given an OS using inodes with 6 direct pointers, 1 indirect and 1 doubly indirect, with pointers being $4$ bytes long and blocks $1024$ bytes large.
+        \\
+        \\ Calculate the disk block reads required to get the $1020^{th}$ data byte, and then $510,100^{th}$ data byte, assuming nothing is cached in memory.}
+        \subsubsection*{$1020^{th} byte$}
+            $\lceil \cfrac{1020}{1024} \lceil = 1  \to 1^{st} \ block$. Hence $1$ read required to get the inode, and $1$ required to get the data from the block pointer \& the offset of $1020$ bytes.
+            \\ \textbf{$2 \ reads$}
+        \subsubsection*{$510,100^{th} byte$}
+            $\lceil \cfrac{510,100}{1024} \rceil = 499 \to 499^{th} \ block$. Each block of pointers contains $\cfrac{1024}{4} = 256 \ pointers$. Hence this block is pointed to indirectly by the doubly indirect pointer.
+            \\
+            \\ Therefore we require $1$ read to get the inode, then $2$ reads to get the data block, then $1$ more to read from the data block.
+            \\ \textbf{$4 \ reads$}
+        \centerimage{width=\textwidth}{inode example.png}
+    
+    \section*{Free Space Management}
+        When allocating a new block for a file, we need to quickly determine which is available.
+        \subsection*{Free List}
+            \centerimage{width=0.8\textwidth}{free list.png}
+            Linked list of blocks that are free. To allocate, take free blocks from the start of the list. To free, place block at the end of the list.
+            \compitem {
+                \item Freeing and allocating blocks is fast($O(1)$), simply go to head/tail of the list.
+                \item Files unlikely to be contiguously allocated. The location of an allocated block is effectively random, so when reading files, we must seek across many random locations on the disk which is slow.
+            }
+        
+        \subsection*{Bitmap}
+            \centerimage{width=\textwidth}{free bitmap.png}
+            Each bit represents a block at the same index.
+            \compitem {
+                \item Uses little memory (single bit per entry).
+                \item Can quickly determine contiguous blocks at locations (useful for placing file's blocks next to each other to reduce seek time when accessing).
+                \item 
+                \item Highly optimised bit operations exist as instructions for most CPUs (allows for fast operations on the bitmap).
+                \item May need to search the entire bitmap to find a free spot ($O(n)$ complexity) which is slow.
+            }
+    
+    \section*{File System Layout}
+        \centerimage{width=\textwidth}{file system layout.png}
+        \compitem{
+            \bullpara{Boot Block}{Used to store data to be loaded to start the OS.}
+            \bullpara{Superblock}{Contains file system information, including:
+                \compitem {
+                    \item Number of inodes.
+                    \item Number of data blocks.
+                    \item Start of Inode \& free space bitmaps.
+                    \item Location of first data block.
+                    \item Block size.
+                    \item Maximum file size.
+                }
+            }
+        }
+    
+    \section*{Filesystem Directory Organisation}
+        \compitem{
+            \item Map symbolic names (e.g "Lecture15.tex") to logical disk locations (e.g Disk $0$, block $2354$ (Logical Block Addressing)).
+            \item Helps with file organisation.
+            \item Prevents naming collisions (e.g names only unique inside a directory).
+        }
+        \centerimage{width=0.7\textwidth}{directory tree.png}
+        \compitem {
+            \bullpara{Pathnames}{
+                \\ A path from the root directory to a file. Can be absolute (from 
+                root directory) or relative (from current/working directory). 
+                Delimited by "\textbackslash" on Windows, and "/" on Linux/Unix.}
+            \bullpara{Search}{
+                \\ Can match pathnames with wildcards (e.g "*.pdf" (match all pdfs in
+                current directory) or "lecture[0-9]/images" match all image directories
+                from single digit lecture folders.)
+            }
+            \bullpara{Mount}{
+                \\ Create a link to another file system such as a remote server or another disk (e.g usb drive).
+                \\
+                \\ When mounting:
+                \compitem {
+                    \item Combine multiple filesystems into a single namespace (so can traverse through multiple).
+                    \item Allow reference from a single root directory (filesystem accessed as a directory from the root).
+                    \item Mount point is the folder from which the mounted filesystem can be accessed from the native one.
+                    \item Support soft links (not hard links as they are dependent of filesystem implementation).
+                }
+                This is managed using a mounting table, which records location of mount points and devices.
+                \\
+                \\ When a mount point is encountered the native filesystem consults the mounting table to determine which file system to go to.
+                \centerimage{width=\textwidth}{mounting.png}
+            }
+            \bullpara{Link}{
+                A reference to a directory/file in another part of the filesystem.
+                \compitem{
+                    \bullpara{Hard Link}{Reference the address of the file (only allowed for files, not directories, in unix). A counter is used to check for when a file should be deleted (when no links).}
+                    \bullpara{Soft/Symbolic Link}{Reference the address using a directory entry (when deleting, leave links, raise an exception when the link is used).}
+                }
+                Must keep track of links to prevent looping when traversing the file system as a tree.
+                \\
+                \\ Note that hard links are not allowed for directories as they may result in an island (where a hard link points to itself, or two mutually point to eachother) meaning they can never be deleted.
+            }
+        }
+
+    
+    \section*{Unix/Linux Directory System}
+        \subsection*{System Calls}
+            \codelist{C}{directory syscalls.c}
+        \subsection*{Directory Representation}
+            Directories map symbolic names to inodes, these inodes can be other directories (typically only a single block) or files.
+            \centerimage{width=\textwidth}{directory traverse.png}
+
+
+
+
+
+
+
+
+
+
+\end{document}
