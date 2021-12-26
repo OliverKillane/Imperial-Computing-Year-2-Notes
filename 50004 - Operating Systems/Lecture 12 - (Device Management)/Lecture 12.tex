@@ -159,12 +159,12 @@
             \begin{itemize}
                 \bullpara{Buffered}{
                     \\ \begin{tabular}{l p{10cm}}
-                        Output & User data transfered to OS output buffer. Process continues and only suspends once buffer is full. \\
+                        Output & User data transferred to OS output buffer. Process continues and only suspends once buffer is full. \\
                         Input & OS reads ahead. Reads taken from buffer, process blocks when buffer empty. \\
                     \end{tabular}
                     \compitem{
                         \item Smooths peaks in I/O traffic (allows for limited load balancing).
-                        \item Can allow for different data transfer unit sizes between devices (e.g buffer contaisn blocks).    
+                        \item Can allow for different data transfer unit sizes between devices (e.g buffer contains blocks).
                     }
                 }
                 \bullpara{Unbuffered}{
