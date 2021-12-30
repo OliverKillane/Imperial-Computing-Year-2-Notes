@@ -1,0 +1,50 @@
+\documentclass{report}
+    \title{50004 - Operating Systems - Lecture 19}
+    \author{Oliver Killane}
+    \date{30/12/21}
+\input{../50004 common.tex}
+\begin{document}
+    \maketitle
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=c861c725-d42f-4477-b433-ae0100db3b87}
+
+    \section*{Memory Virtualization Continued...}
+        \subsection*{Balloon Driver}
+            Instead of relying on the \keyword{VMM} to determine pages to evict, force the Guest OS to evfict pages.
+            \compitem {
+                \item \keyword{Balloon Driver} installed in OS.
+                \item Memory allocated to the balloon is available to the \keyword{VMM}.
+                \item When the balloon is \textit{inflated}, memory is reclaimed by \keyword{VMM} as low memory prompts the Guest OS to evict pages.
+                \item When balloon is \textit{deflated}, more memory is available to Guest OS.
+            }
+        \subsection*{Sharing Memory between VMs}
+            \centerimage{width=0.7\textwidth}{sharing.png}
+            By sharing identical pages (e.g for kernel, program information when VMs are on the same OS), memory usage is reduced.
+            \\
+            \\ Comparing pairs of pages would be too expensive, instead contents of pages is hashed. Onl;y pages with identical hashes are compared, and if identical, shared.
+            \\
+            \\ There are many possible policies for when, and how to determine which pages to share. For example VMWare's ESX attempts to share pages when paging out to disk, and scans guest pages randomly at a predefined rate.
+    
+    \section*{Containers}
+        Processes are already isolated in terms of:
+        \compitem {
+            \item Non-privileged CPU instructions \& registers
+            \item Virtual Memory
+            \item File System
+            \item System Calls (e.g for I/O)
+            \item Signals
+        }
+        To improve this isolation between processes:
+        \compitem{
+            \bullpara{Support for Namespaces}{
+                e.g process identifiers are allocated and unique in groups, rather than process identifiers being global.
+            }
+            \bullpara{Separate Root Filesystems}{
+                Split the filesystem into many smaller, separate filesystems. Processes can create their own \keyword{jails} to ensure file system isolation.
+                \\ Useful for security (e.g split a companies internal and external services through jails), with very little overhead.
+            }
+        }
+        This is the main motivation behind containers.
+        \centerimage{width=\textwidth}{container.png}
+
+
+\end{document}
