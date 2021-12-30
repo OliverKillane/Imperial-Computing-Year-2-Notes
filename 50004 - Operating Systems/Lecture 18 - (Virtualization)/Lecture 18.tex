@@ -1,0 +1,220 @@
+\documentclass{report}
+    \title{50004 - Operating Systems - Lecture 18}
+    \author{Oliver Killane}
+    \date{28/12/21}
+\input{../50004 common.tex}
+\begin{document}
+    \maketitle
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=e58edf00-fbdb-4783-adf3-adff00d94d6e}
+
+    \section*{Benefit of Virtualization}
+        \begin{itemize}
+            \bullpara{Consolidation}{ RUnning many servers on one.
+                \\ An organisation may want to run many dedicated servers (e.g for mail, webserver). However each will not use an entire machine's resources all the time.
+                \\
+                \\ Hence can save money by running multiple dedicated servers on the same physical server, dynamically allocating resources on demand.
+            }
+            \bullpara{Legacy Software}{ Some software is OS \& version specific.
+            \\ Despite large efforts by companies to ensure backward compatability, software rpoduced for older OSes may be incompatible/buggy on newer ones.
+            \\
+            \\ Applications may use drivers that are no longer supported for legcacy hardware that is no longer commercially available.
+            \\
+            \\ e.g Windows 8, 7, Vista are not truly backwards compatible with XP }
+            \bullpara{Software Development \& Testing}{ Test more \& more easily
+                \compitem{ 
+                    \item Can test multiple instances of an Operating System simultaneously on a machine. 
+                    \item Can test system crashing errors (e.g kernel panics) without brining the machine down.
+                }
+            }
+            \bullpara{Security}{ Can isolate virtualized system.
+                \compitem{
+                    \item Only the \keyword{VMM} runs in kernel mode, hence if a guest OS is compromised, the whole system \& other guests are not.
+                    \item \keyword{VMM}s are typically significantly smaller than OS kernels. Less code $\to$ less potential for exploitable bugs.
+                    \item Intrusion detection via introspection on guest OSes (monitor resources, e.g scan memory) for suspicious activity.
+                }
+            }
+            \bullpara{Software Management}{ Simpler system administration.
+                \compitem{
+                    \item Can take snapshots of the state (memory, CPU, etc) of a guest OS, and roll back to snapshots.
+                    \item Can migrate between hosts (switch guest OS between machines, take snapshot then transfer and resume). We can use this for load balancing (move to higher spec machine when it is required).
+                    \item Applications depend on OS, compiler, library versions which sometimes conflict between applications. when we want to run a specific application, we can create a VM with all its requirements and then distribute this.
+                }
+            }
+        \end{itemize}
+
+    \section*{Implementing a Virtual Machine Monitor (VMM)}
+        \begin{center}
+            \begin{tabular}{l p{0.6\textwidth} l l}
+                \multirow{2}{*}{\textbf{Technique}} & \multirow{2}{*}{\textbf{Description}} & \multicolumn{2}{c}{\textbf{Slowdown}} \\
+                & & CPU-Bound & IO-Bound \\
+                Emulation & Intercept all instructions. The emulate their execution on hardware. & $\approx 100 \times$ & $\approx 2 \times$ \\
+                Modern VMs & Use hardware to accelerate virtualization. & $\approx 5 \%$ & $\approx 30 \%$ \\
+            \end{tabular}
+        \end{center}
+        
+        \subsection*{Instructions}
+            Most instructions can be run directly on the CPU. We may need to perform some checks (e.g to not access other guests' memory).
+            \codelist{{[x86masm]Assembler}}{safe instructions.s}
+            Only sensitive instructions need to be intercepted \& emulated. For example with:
+            \codelist{{[x86masm]Assembler}}{sensitive instructions.s}
+            When the instruction is run, it traps, allowing the \keyword{VMM} to take over and run relevant routines on the guest OS that caused the trap.
+            \\
+            \\ However there are some obstacles:
+            \begin{itemize}
+                \bullpara{Some instrtuctions do not trap}{
+                    \\ For example on the intel i386 \fun{popf} can be used to replace flags. Including the \var{IF} (Interrupt Flag) bit.
+                    \\
+                    \\ However if running in user mode, the \var{IF} flag is left unchanged, with no trap.
+                    \\
+                    \\ Hence as the guest OS runs in user space, this instruction could silently fail (not informing VM of attempt to access \var{IF})
+                }
+                \bullpara{Visibility of privelege level}{
+                    \\ The \var{CS} (code segment) register informs a process of its privilege level. If we do not attempt to hide this from the guest OS, it will be able to determine if it is in a virtual machine as when running in a vm it will not have kernel privilege on the hardware.
+                }
+            \end{itemize}
+            A CPU is considered \keyword{virtualizable} if all sensitive instructions trap, and hence when a sensitive instruction is executed the \keyword{VMM} can take over.
+            \\
+            \\ \keyword{x86} has been \keyword{virtualizable} since $2005$:
+            \compitem {
+                \item Intel Virtualization Technology \keyword{VT-x}
+                \item AMD Virtualization \keyword{AMD-V}
+                \item And many more extensions such as \keyword{VT-d} and \keyword{APIC-v} (\keyword{APIC} - Advanced Programmable Interrupt Controller)
+            }
+    
+    \section*{Hypervisors}
+        \subsection*{Hypervisor Types}
+            \centerimage{width=\textwidth}{hypervisor types.png}
+            \begin{itemize}
+                \bullpara{Type 1} {Runs on bare metal - Better performance.
+                    \\ Has access directly to hardware and runs in kernel mode.
+                    \\
+                    \\ Requires hardware to support virtualization (trap privileged/sensitive instruction)
+                }
+                \bullpara{Type 2}{Runs inside host OS
+                    Hypervisor is a program that can be run as a process.
+                    \compitem{
+                        \item Any performance or security issues in the host OS can affect the guest OSes.
+                        \item Easy to install (like a regular application).
+                        \item Can use drivers, scheduling and other services from host OS.
+                    }
+                }
+            \end{itemize}
+            Most systems use a hybrid of both approaches.
+        \subsection*{Binary Translation}
+            Frequent traps incur significant performance overhead (must clear \keyword{TLB}, other caches get obliterated, reduces effectiveness of branch prediction).
+            \\
+            \\ In order to eliminate traps, we can instead dynamically translate trap-inducing instructions into the code to resolve them. This is faster than trapping, then emulating, and then switching back to the guest OS.
+            \centerimage{width=\textwidth}{translate vs trap.png}
+            This technique was originally developed for the \keyword{Type 2} hypervisor VMWare Workstation (though has been used outside of virtualization for decades, fist paper I could find \href{https://dl.acm.org/doi/10.1145/151220.151227}{here}.) It can also be used to speed up \keyword{Type 1} hypervisors.
+            \compenum {
+                \item Scan each \keyword{Basic Block} just before execution.
+                \item If the block contains sensitive/privileged instructions, replace them with calls to hypervisor functions, or instructions in place.
+                \item Replace last instruction with a call to the hypervisor (to translate next block of instructions and then resume there).
+            }
+            There are several possible optimisations:
+            \compitem {
+                \item Cache translated blocks (do not need to redo translation when executing code again).
+                \item Once the successor basic block has been translated, replace the hypervisor call with a normal jump.
+                \item Do not translate user code (no privileged instructions so no need to translate, though may need address translation)
+            }
+            With these optimisations we must be careful for cases such as evicting cached blocks (may need to undo some hypervisor call $\to$ jump optimisations).
+            \\
+            \\ This can also slow down non-privileged instructions. For example user-level calls now need to be handled by the \keyword{VMM} to ensure only translated blocks are executed, and the \keyword{VMM} must be careful with saving pointers (e.g in call to \keyword{VMM} function) to ensure the guest OS cannot discover they are being virtualized through stack inspection.
+        \subsection*{Paravirtualization}
+            Another technique is to change the guest operating system's kernel source code to replace sensitive instructions with hypervisor calls.
+            \compitem{
+                \item Can handle unvirtualizable hardware.
+                \item Can achieve better performance.
+                \item Need to make many changes to the guest OS source (not always possible). An OS must support it, as well as native hardware, as well as other hypervisors.
+            }
+        \subsection*{Virtual Machine Interface (VMI)}
+            A single hypervisor \keyword{API} that can interface with multiple hypervisors \& hardware. This \keyword{API} can connect with hypervisor specific libraries, or directly to hardware.
+            \\
+            \\ This can be achieved through function pointers. sensitive instructions run through function pointers, if virtualized, the pointer goes to a hypervisor specific function to resolve sensitive operation.
+            \centerimage{width=\textwidth}{VMI.png}
+
+        \subsection*{Memory Virtualization}
+            We must prevent conflicts between guest OSes (where two guest OSes use the same frame in the host's physical memory). Hence we add an extra layer of indirection to translate:
+            \\ \centerline{\keyword{Guest Virtual Addresses} $\to$ \keyword{Guest Physical Addresses} $\to$ \keyword{Host Physical Addresses}}
+            \centerimage{width=\textwidth}{memory virtualization.png}
+            \compitem{
+                \item Virtual Address Space uses Virtual Page Numbers (VPNs)
+                \item Guest Page Tables translate VPNs $\to$ PPNs
+                \item Physical Address Space uses Physical Page Numbers (PPNs)
+                \item Physical Memory Map (\keyword{pmap}) translates PPNs $\to$ MPNs
+                \item Machine Address Space uses Machine Page Numbers (MPNs)
+            }
+        \subsection*{Shadow Page Tables}
+            \keyword{Shadow Page Tables} combine the two stage process of translating through the guest page tables and the physical memory map into one. The Guest OS is unaware of the shadow page table (managed by the hypervisor), which contains direct mappings to speed up address translation. When updating the shadow page table, the guest page tables \& physical memory map are used.
+            \compitem{
+                \item Hardware \keyword{MMU} (Memory Management Unit) uses shadow Page Tables. 
+                \item Hardware \keyword{TLB} maps VPNs $\to$ MPNs
+            }
+            On a \keyword{TLB} miss:
+            \compenum{
+                \bullpara{Search Shadow Page Table}{
+                    \\ If the mapping found, update TLB \& restart the instruction.
+                }
+                \bullpara{Page Fault Handled by the VMM}{
+                    \compenum{
+                        \item VMM attempts to find the \keyword{VPN} $\to$ \keyword{PPN} mapping in the guest OS page table.
+                        \item If not there, then it is a \textbf{true page fault} to be handled by the Guest OS.
+                        \item If it is found, it is a \textbf{hidden page fault} (Guest OS unaware). \keyword{VMM} updates the \keyword{pmap} and the shadow page table.
+                    }
+                }
+            }
+            In order to use \keyword{Shadow Page Tables} they must be kept in sync with the Guest OS's Page Tables. This can be achieved in two ways:
+            \\ \begin{minipage}[t]{0.45\textwidth}
+                \centerline{\textbf{Software}}
+                Mark page tables as read only, this way when the Guest OS writes
+                to a page table, it traps and the \keyword{VMM} can take over to update both it \& the Shadow Page table.
+                \\
+                \\ Traps are costly!
+            \end{minipage}
+            \hfill
+            \begin{minipage}[t]{0.45\textwidth}
+                \centerline{\textbf{Hardware}}
+                Newer CPUs have hardware Support. The hardware itself does the 
+                required lookup on TLB miss, removing the need to use a shadow 
+                Page Table. (hardware implements the behaviour of a shadow page table).
+                \compitem{
+                    \item AMD's Nested Page Tables (NPTs)
+                    \item Intel's extended Page Tables (EPTs)
+                }
+                On a \keyword{TLB} miss:
+                \compenum{
+                    \item \keyword{MMU} searches for mapping in guest page table.
+                    \item If not mapping found, it is a \textbf{true page fault}, hand control back to guest OS to resolve.
+                    \item If mapping found: \compenum{
+                        \item MMU searches for mapping in \keyword{pmap}
+                        \item If mapping found, update TLB \& restart instruction.
+                        \item else it is a \textbf{hidden page fault}, hand control to \keyword{VMM} to resolve it.
+                    }
+                }
+            \end{minipage}
+
+            \subsection*{Intel EPT}
+                Intel Extended Page Table make use of a 4-Level page table as below:
+                \centerimage{width=0.8\textwidth}{Intel EPT.png}
+                In a \keyword{TLB} cache miss on a physical address (PPN) (e.g the hypervisor's page table), only $4$ memory accesses are required (4 level page table).
+                \\
+                \\ However when translating from virtual addresses (from the guest OS) far more memory accesses are required as translations are required for the 4 tables ($24$ accesses).
+                \centerimage{width=\textwidth}{EPT translation.png}
+            \subsection*{Paging Problems}
+                The combined guest OS's physical memory can be larger than the Host's physical memory. In order to ensure the physical memory of Guest OSes is usable, we must swap guest physical pages to and from host physical memory.
+                \compitem {
+                    \item Hypervisor has little information on which pages the OS is using, Guest OS knows more about active pages.
+                    \bullpara{Double Paging Problem}{
+                        \compenum{
+                            \item \keyword{VMM} select page $P$ to be evicted/paged out.
+                            \item Guest OS selects page $P$ to be evicted/paged out, accesses $P$ brining it back from swap.
+                            \item Guest OS writes $P$ to virtual disk.
+                        }
+                        Here we have brought back a page, only for it to be immediately written to virtual disk.
+                    }
+                }
+
+
+
+
+\end{document}
