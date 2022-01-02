@@ -1,0 +1,42 @@
+\documentclass{report}
+    \title{50002 - Software Engineering Design - Software Engineering Design}
+    \author{Oliver Killane}
+    \date{02/01/22}
+\input{../50002 common.tex}
+\begin{document}
+    \maketitle
+    
+    \section*{Test Driven Development}
+        \subsection*{Design Principles}
+            \compitem{
+                \bullpara{Simple Design}{
+                    \\ Smaller codebase is easier to reason about, add new features to.}
+                \bullpara{Correct Behaviour}{
+                    \\ Thorough testing (e.g unit testing, automated test suites) used to ensure program behaves as required \& is bug free.
+                }
+                \bullpara{Reduce Duplication}{
+                    \\ Duplication leads to a larger codebase, greater potential for bugs (changing one instance but nmot another), and makes code changes more arduous (to find and change duplications).
+                }
+                \bullpara{Maximum Clarity}{
+                    \\ Code must be easy to read \& understand (e.g descriptive naming schemes, commenting, documentation)
+                }
+            }
+        
+        \subsection*{Waterfall Development}
+            \centerimage{width=\textwidth}{Test Driven Development/waterfall.png}
+            \compitem {
+                \item Often each stage is managed by a separate team.
+                \item Difficult to correct issues caused by previous stages (e.g altering design when discovering an issue in coding, or fixing major code when finding bugs in testing).
+            }
+        
+        \subsection*{Test Driven Development}
+            \centerimage{width=\textwidth}{Test Driven Development/test driven development.png}
+            Software developed in a cycle.
+            \compitem{
+                \item Tests define the public api \& vice-versa.
+                \item Programming to satisfy tests requires altering program internals (implementation details).
+                \item Refactoring alters the structure but not behaviour (structural design), keepuing the code in a green state.
+            }
+            \codelist{Java}{Test Driven Development/junit example.java}
+    
+\end{document}
