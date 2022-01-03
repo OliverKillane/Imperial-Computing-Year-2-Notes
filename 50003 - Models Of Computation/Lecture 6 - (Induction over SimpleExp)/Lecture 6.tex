@@ -9,7 +9,7 @@
     \maketitle
     \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=d355a5c2-e54d-4d4a-8088-add001358315}
 
-    \section*{Deinition by Induction for SimpleExp}
+    \section*{Definition by Induction for SimpleExp}
         To define a function on all expressions in \keyword{SimpleExp}:
         \compitem{
             \item define $f(n)$ directly, for each number $n$.
@@ -64,7 +64,7 @@
                 \end{center}
         \subsection*{Determinacy of Small Step}
             We create a property $P$:
-            \[P(E) =^{def} \forall E_1,E_2 \in SimpleExp .[E \to E_1 \land E \to E_2 \Rightarrow E_1 = E_2] \]
+            \[P(E) \overset{def}{=} \forall E_1,E_2 \in SimpleExp .[E \to E_1 \land E \to E_2 \Rightarrow E_1 = E_2] \]
             There are 3 rules that apply:
             \[\begin{matrix}
                 \whilestdef{A}{}{n_1 + n_2 \to n}{n = n_1 + n_2} & \whilestdef{B}{E \to E'}{n + E \to n + E'}{} & \whilestdef{C}{E_1 \to E_1'}{E_1 + E_2 \to E_1' + E_2}{}
