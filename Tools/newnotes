@@ -38,9 +38,13 @@ SWE='50002 - Software Engineering Design'
 MOD='50003 - Models Of Computation'
 OS='50004 - Operating Systems'
 ALG='50001 - Algorithm Analysis and Design'
+NET='50005 - Networks and Communications'
+COMP='50006 - Compilers'
+STAT='50008 - Probability and Statistics'
+
 
 case $folder in
-    $SWE | $MOD | $OS | $ALG);;
+    $SWE | $MOD | $OS | $ALG | $NET | $COMP | $STAT);;
     *) echo "Must be in a notes folder, cannot be $folder"; exit;;
 esac
 
