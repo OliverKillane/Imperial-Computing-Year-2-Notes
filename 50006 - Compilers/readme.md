@@ -8,6 +8,9 @@ Lecture recordings can be found on [panopto](https://imperial.cloud.panopto.eu/P
 ## Original Slides
 Available on [scientia](https://scientia.doc.ic.ac.uk/2122/modules/50006/resources) for imperial computing students (2nd year, 2021-22).
 
+## Course Website
+Sites for [Prof Paul Kelly](http://www.doc.ic.ac.uk/~phjk/Compilers) and [Dr Naraker Dulay](http://www.doc.ic.ac.uk/~nd/compilers)'s compiler's lectures.
+
 ## Course Textbooks
 - Dragon Book: ['Compilers: Principles, Techniques and Tools'](https://www.amazon.co.uk/Compilers-Principles-Techniques-Alfred-Aho-dp-0321486811/dp/0321486811/ref=dp_ob_title_bk)
 - ['Modern Compiler Implementation in Java'](https://www.amazon.co.uk/Modern-Compiler-Implementation-Andrew-Appel/dp/052182060X)
