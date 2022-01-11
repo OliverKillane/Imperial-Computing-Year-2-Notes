@@ -17,15 +17,14 @@ Changes:
 - Use of where over let & general refactoring
 - Fixed bug with execute (missing patterns for invalid stack instructions)
 - New grammar to support multiplication and division
-- 
 
 Grammar:
  add    -> mul + add | mul - add | mul
  mul    -> factor * mul | factor / mul | factor
  factor -> number | identifier
 
-+ - (left associative, low precedence)
-* / (left associative, high precedence)
++ - (right associative, low precedence)
+* / (right associative, high precedence)
 
 Eg:
 > tokenise "a+b*17"

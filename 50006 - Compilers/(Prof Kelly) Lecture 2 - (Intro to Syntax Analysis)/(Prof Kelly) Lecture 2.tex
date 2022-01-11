@@ -99,13 +99,16 @@
                 \end{center}
                 By splitting the expression into an add and multiply stage (both left associative), the second layer ($mul$) has higher precedence. To add more levels of precedence we can use more layers.
                 \centerimage{width=0.8\textwidth}{precedence.png}
-        \pagebreak
+
         \subsection*{Parse Tree vs Abstract Syntax Tree}
             The abstract syntax tree has similar structure, but does not need much of the extra information (layers for expressions used to enforce precedence for example).
-            \centerimage{width=0.8\textwidth}{parse tree vs ast.png}
+            \centerimage{width=0.5\textwidth}{parse tree vs ast.png}
     
     \section*{Parsers}
-        Parsers check the grammar is correct \& construct an \keyword{AST}. There are two types of parsers:
+        Parsers check the grammar is correct \& construct an \keyword{AST}.
+
+        \centerimage{width=0.8\textwidth}{parser types.png}
+
         \subsection*{Top-Down Parsing}
             Also called predictive parsing. 
             \compitem{
@@ -168,6 +171,32 @@
                     }
                 }
                 However there are more difficult problems, which can be more easily fixed with bottom-up parsing.
+                \\
+                \subsection*{Left recursion}
+                    Right recursive grammars produce right recursive parse trees:
+                    \begin{center}
+                        \begin{tabular}{r l }
+                            $add \to$ & $mul$ '+' $add$ \\
+                            $add \to$ & $mul$ '-' $add$ \\
+                            $add \to$ & $mul$ \\
+                            $mul \to$ & $val$ '*' $mul$ \\
+                            $mul \to$ & $val$ '/' $mul$ \\
+                            $mul \to$ & $val$ \\
+                            $val \to$ & $integer$ \\
+                            $val \to$ & $identifier$ \\
+                        \end{tabular}    
+                    \end{center}
+                    We consider this right-recursive as the recursion on productions is right of the symbol.
+                    \\
+                    \\ Top-down parsing implemented through \keyword{Recursive Descent Parsers} cannot do left recursive grammars. This is as it will result in an infinite recursion.
+                    \begin{center}
+                        \begin{tabular}{r l }
+                            $add \to$ & $add$ '+' $mul$ \\
+                        \end{tabular}
+                    \end{center}
+                    If attempting to parse this production:
+                    \codelist{Python}{left recursion.py}
+
         \subsection*{Bottom-up Parsing}
             \compitem{
                 \item The grammar's productions are used \textit{right $\to$ left}.
@@ -182,4 +211,9 @@
         \centerimage{width=\textwidth}{basic compiler stages.png}
         \codelist{Haskell}{simple compiler.hs}
 
+    \section*{Visitor Pattern}
+        \centerimage{width=\textwidth}{visitor pattern.png}
+        The advantage of this pattern is that the data structure and operations are separated. This means new operations can be added easily by simply creating and passing a new visitor, which is then able to operate on the structure (e.g a tree as in the diagram).
+        \\
+        \\ Example usage could be: turtle operations on an \keyword{abstract syntax tree} of a turtle program (visitors for different colour, text styles, languages).
 \end{document}
