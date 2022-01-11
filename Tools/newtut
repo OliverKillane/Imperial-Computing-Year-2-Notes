@@ -59,11 +59,6 @@ echo "\documentclass{report}
     \title{$module - $tutorial}
     \author{$user}
     \date{$date}
-%===========================COMMON FORMAT & COMMANDS===========================
-% This file contains commands and format to be used by every module, and is 
-% included in all files.
-%===============================================================================
-
 %====================================IMPORTS====================================
 \usepackage[a4paper, total={6in, 8in}]{geometry}
 \usepackage{graphicx, amssymb, amsfonts, amsmath, xcolor, listings, tcolorbox, multirow, hyperref}
@@ -130,6 +125,8 @@ echo "\documentclass{report}
 % \sidenote{title}{contents}
 \newcommand{\sidenote}[2]{\begin{tcolorbox}[title=#1]#2\end{tcolorbox}}
 
+\newcommand{\termdef}[2]{\begin{tcolorbox}[title=Definition: #1, colframe = blue]#2\end{tcolorbox}}
+
 % Creates an item in an itemize or enumerate, with a paragraph after
 % \begin{itemize}
 %     \bullpara{title}{contents}
@@ -151,15 +148,16 @@ echo "\documentclass{report}
 }}
 %===============================================================================
 
-%================================STYLISED PROOFS================================
-%For ease in writing stylised proofs with numbers
+%================================STYLIZED PROOFS================================
+%For ease in writing stylized proofs with numbers
 \newcommand{\stepno}[1]{\textcolor{red}{\textbf{#1}}}
 
 \newenvironment{proof}
 {\begin{center}\begin{tabular}{r l l }}
 {\end{tabular}\end{center}}
 
-\newcommand{\proofstep}[3]{\stepno{(#1)} & #2 & (#3) \\}
+%\proofstep{step}{workings}{description}
+\newcommand{\proofstep}[3]{\stepno{(#1)} & #2 & #3 \\}
 %===============================================================================
 
 %==============================UNFINISHED SECTION===============================
