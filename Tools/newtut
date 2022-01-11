@@ -59,11 +59,34 @@ echo "\documentclass{report}
     \title{$module - $tutorial}
     \author{$user}
     \date{$date}
-\usepackage[a4paper, total={6in, 8in}]{geometry}
-\usepackage{graphicx, amssymb, amsfonts, amsmath, xcolor, listings, tcolorbox}
+%===========================COMMON FORMAT & COMMANDS===========================
+% This file contains commands and format to be used by every module, and is 
+% included in all files.
+%===============================================================================
 
+%====================================IMPORTS====================================
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{graphicx, amssymb, amsfonts, amsmath, xcolor, listings, tcolorbox, multirow, hyperref}
+%===============================================================================
+
+%====================================IMAGES=====================================
 \graphicspath{{image/}}
 
+% \centerimage{options}{image}
+\newcommand{\centerimage}[2]{\begin{center}
+    \includegraphics[#1]{#2}
+\end{center}}
+%===============================================================================
+
+%==============================SYNTAX HIGHLIGHTING==============================
+\newcommand{\fun}[1]{\textcolor{blue}{\textbf{#1}}}
+\newcommand{\file}[1]{\textcolor{green}{\textbf{#1}}}
+\newcommand{\struct}[1]{\textcolor{orange}{\textbf{#1}}}
+\newcommand{\var}[1]{\textcolor{purple}{\textbf{#1}}}
+\newcommand{\const}[1]{\textcolor{red}{\textbf{#1}}}
+%===============================================================================
+
+%=================================CODE LISTINGS=================================
 \definecolor{codebackdrop}{gray}{0.9}
 \definecolor{commentgreen}{rgb}{0,0.6,0}
 \lstset{
@@ -80,26 +103,68 @@ echo "\documentclass{report}
     postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
 }
 
-% COMMON TOOLS:
-\newcommand{\question}[1]{\textit{#1} \\ }
-\newcommand{\sidenote}[2]{\begin{tcolorbox}[title=#1]#2\end{tcolorbox}}
-\newcommand{\bullpara}[2]{\item \textbf{#1} \ #2}
-
-% SYNTAX HIGHLIGHTING:
-\newcommand{\fun}[1]{\textcolor{blue}{\textbf{#1}}}
-\newcommand{\file}[1]{\textcolor{green}{\textbf{#1}}}
-\newcommand{\struct}[1]{\textcolor{orange}{\textbf{#1}}}
-\newcommand{\var}[1]{\textcolor{purple}{\textbf{#1}}}
-\newcommand{\const}[1]{\textcolor{red}{\textbf{#1}}}
-
-% CODE LISTINGS:
-% \pintoscode{startline}{endline}{title}{file}
-\newcommand{\pintoscode}[4]{\lstinputlisting[language=C, firstline = #1, firstnumber = #1, lastline = #2, title = \file{#3}]{#4}}
-
+% Create a code listing for a single line
 % \codeline{language}{line}{file}
 \newcommand{\codeline}[3]{\lstinputlisting[language=#1, firstline = #2, lastline = #2]{#3}}
 
+% Create a code listing for multiple lines
+% \codeline{language}{start}{end}{file}
+\newcommand{\codelines}[4]{\lstinputlisting[language=#1, firstline = #2, lastline = #3]{#4}}
+
+
+% Create a code listing for a given language & file
+% \codelist{language}{file}
+\newcommand{\codelist}[2]{\lstinputlisting[language=#1]{#2}}
+%===============================================================================
+
+%================================TEXT STRUCTURES================================
+% Marka a word as bold
+% \keyword{important word}
 \newcommand{\keyword}[1]{\textbf{#1}}
+
+% Creates a section in italics
+% \question{question in italics}
+\newcommand{\question}[1]{\textit{#1} \\ }
+
+% Creates a box with title for side notes.
+% \sidenote{title}{contents}
+\newcommand{\sidenote}[2]{\begin{tcolorbox}[title=#1]#2\end{tcolorbox}}
+
+% Creates an item in an itemize or enumerate, with a paragraph after
+% \begin{itemize}
+%     \bullpara{title}{contents}
+% \end{itemize}
+\newcommand{\bullpara}[2]{\item \textbf{#1} \ #2}
+
+% Creates a compact list (very small gaps between items)
+% \compitem{
+%     \item item 1
+%     \item item 2
+%     \item ...
+% }
+\newcommand{\compitem}[1]{\begin{itemize}\setlength\itemsep{-0.5em}#1\end{itemize}}
+\newcommand{\compenum}[1]{\begin{enumerate}\setlength\itemsep{-0.5em}#1\end{enumerate}}
+
+% Creates a link to the lecture for use at the start of the notes document
+\newcommand{\lectlink}[1]{\sidenote{Lecture Recording}{
+    Lecture recording is available \href{#1}{here}
+}}
+%===============================================================================
+
+%================================STYLISED PROOFS================================
+%For ease in writing stylised proofs with numbers
+\newcommand{\stepno}[1]{\textcolor{red}{\textbf{#1}}}
+
+\newenvironment{proof}
+{\begin{center}\begin{tabular}{r l l }}
+{\end{tabular}\end{center}}
+
+\newcommand{\proofstep}[3]{\stepno{(#1)} & #2 & (#3) \\}
+%===============================================================================
+
+%==============================UNFINISHED SECTION===============================
+\newcommand{\unfinished}{\begin{huge} \textcolor{red}{\textbf{UNFINISHED!!!}} \end{huge}}
+%===============================================================================
 \begin{document}
     \maketitle
 " > "$tutorial.tex";

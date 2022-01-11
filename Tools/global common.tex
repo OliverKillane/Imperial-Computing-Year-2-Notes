@@ -46,6 +46,11 @@
 % \codeline{language}{line}{file}
 \newcommand{\codeline}[3]{\lstinputlisting[language=#1, firstline = #2, lastline = #2]{#3}}
 
+% Create a code listing for multiple lines
+% \codeline{language}{start}{end}{file}
+\newcommand{\codelines}[4]{\lstinputlisting[language=#1, firstline = #2, lastline = #3]{#4}}
+
+
 % Create a code listing for a given language & file
 % \codelist{language}{file}
 \newcommand{\codelist}[2]{\lstinputlisting[language=#1]{#2}}
