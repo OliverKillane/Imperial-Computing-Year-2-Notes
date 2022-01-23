@@ -79,6 +79,9 @@
 % \end{itemize}
 \newcommand{\bullpara}[2]{\item \textbf{#1} \ #2}
 
+\newcommand{\gooditem}[1]{\item[\textcolor{green}{\textbullet}] \textcolor{green}{#1}}
+\newcommand{\baditem}[1]{\item[\textcolor{red}{\textbullet}] \textcolor{red}{#1}}
+
 % Creates a compact list (very small gaps between items)
 % \compitem{
 %     \item item 1
@@ -88,10 +91,26 @@
 \newcommand{\compitem}[1]{\begin{itemize}\setlength\itemsep{-0.5em}#1\end{itemize}}
 \newcommand{\compenum}[1]{\begin{enumerate}\setlength\itemsep{-0.5em}#1\end{enumerate}}
 
+
+
 % Creates a link to the lecture for use at the start of the notes document
 \newcommand{\lectlink}[1]{\sidenote{Lecture Recording}{
     Lecture recording is available \href{#1}{here}
 }}
+%===============================================================================
+
+%==============================PAGE SPLIT LAYOUTS===============================
+
+\newcommand{\halfsplit}[2] {
+    \begin{minipage}[t]{0.48\textwidth}
+        #1
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        #2
+    \end{minipage}
+}
+
 %===============================================================================
 
 %================================STYLIZED PROOFS================================
