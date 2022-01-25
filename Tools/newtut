@@ -183,7 +183,7 @@ echo "\documentclass{report}
 {\end{tabular}\end{center}}
 
 %\proofstep{step}{workings}{description}
-\newcommand{\proofstep}[3]{\stepno{(#1)} & #2 & #3 \\}
+\newcommand{\proofstep}[3]{\stepno{(#1)} & #2 & #3 \\\\ }
 %===============================================================================
 
 %==============================UNFINISHED SECTION===============================
