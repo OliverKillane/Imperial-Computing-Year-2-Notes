@@ -3,7 +3,7 @@
 My work-in-progress condensed notes for the Year 2 Computational Techniques module taught in Spring 2022. The course notes are **fantastic** so I have no reason to write full notes.
 
 ## Lecture Recordings
-Lecture recordings can be found on [panopto](https://imperial.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx#folderID=%22e6ce8a9a-09a8-4ab5-b24e-ae2200b756e8%22), though these are only available for imperial computing students (2nd year, 2021-22).
+Lecture recordings can be found on [panopto](https://imperial.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx#folderID=%2258839917-8327-4e7a-8648-adb90149f716%22), though these are only available for imperial computing students (2nd year, 2021-22).
 
 ## Original Slides and Notes
 Available on [scientia](https://scientia.doc.ic.ac.uk/2122/modules/50011/resources) for imperial computing students (2nd year, 2021-22).
