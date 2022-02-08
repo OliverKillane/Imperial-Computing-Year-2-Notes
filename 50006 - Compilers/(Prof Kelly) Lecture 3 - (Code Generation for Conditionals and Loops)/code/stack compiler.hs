@@ -44,7 +44,7 @@ transExp (BinOp op e1 e2)
         Divide -> Div]
 transExp (Unop Minus e)
     = transExp e ++ [PushImm (-1), Mul]
-transExp (Unop _ e)
+transExp (Unop _ _)
     = error "(transExp) Only '-' unary operator supported"
 transExp (Ident id) = [PushAbs id]
 transExp (Const n) = [PushImm n]
