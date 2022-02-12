@@ -104,6 +104,55 @@
                 Similarly for $y$:
                 \[f_Y(y) = 2 \sqrt{2} - 2|y|\]
             }
+
+            \termdef{Multinomial Distribution}{
+                Given:
+                \compitem{
+                    \item sequence of $n$ independent and identical experiments (all same distribution, same parameters).
+                    \item $r$ possible outcomes for each experiment.
+                    \item Each probability $q_i$ is the probability of outcome $i$.
+                    \item The sum of all probabilities for the outcomes is 1: $\sum_{i=1}^r q_i = 1$
+                }
+                We can have a set of random variables where each $X_i$ represents the number of experiments resulting in outcome $i$.
+
+                \[P(X_1 = n_1, X_2 = n_2, \dots, X_r = n_r) = \cfrac{n!}{n_1! \times n_2! \times \dots \times n_r!} \times q_1^{n_1} \times q_2^{n_2} \times \dots \times  q_r^{n_r}\]
+
+                We know this as any sequence will have the probability $q_1^{n_1} \times q_2^{n_2} \times \dots \times q_r^{n_r}$ where $n_1 + n_2 + \dots + n_r = n$ (multiplying the probabilities in a sequence).
+                \\
+                \\ For a given number of outcomes, there are many different sequences like the above. We can determine the number of sequences as:
+                \[\begin{pmatrix}
+                    n \\ n_1
+                \end{pmatrix} \begin{pmatrix}
+                    n - n_1 \\ n_2
+                \end{pmatrix} \dots \begin{pmatrix}
+                    n - \sum_{i=1}^{r-1} n_i \\ n_r
+                \end{pmatrix} = \cfrac{n!}{n_1! \times n_2! \times \dots \times n_r!}\]
+            }
+
+            \example{Party Politics}{
+                Given 4 different political parties with popularities:
+                \begin{center}
+                    \begin{tabular}{l l}
+                        \textbf{Party} & \textbf{Polling Percentage} \\
+                        Ingsoc & 40\% \\
+                        Techno Union & 20\% \\
+                        Norsefire & 15\% \\
+                        Birthday Party & 25\% \\
+                    \end{tabular}
+                \end{center}
+                If asking 10 people of what party they prefer, what is the probability that:
+                \compitem{
+                    \item 2 support Ingsoc
+                    \item 4 support the Techno Union 
+                    \item 1 supports Norsefire
+                    \item 3 support the Birthday Party
+                }
+                \[P(X_{ingsoc} = 2, X_{techno-union} = 4, X_{norsefire} = 1, X_{birthday} = 3)\]
+                \[\cfrac{10!}{2! \times 4! \times 1! \times 3!} \times (0.4)^2 \times (0.2)^4 \times (0.15)^1 \times (0.25)^3\]
+                \[\cfrac{189}{25000} = 0.00756 = 0.756\%\]
+
+
+            }
     
     \section*{Joint Conditional Random Variables}
         \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=bd9dd283-6e6d-4643-9b8a-ae260066a98b}
