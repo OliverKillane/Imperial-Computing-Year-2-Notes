@@ -84,10 +84,10 @@ transExp (Unop Minus e) reg@(dest:_) = transExp e reg ++ [MulImm dest (-1)]
 transExp (Unop _ _) _
   = error "(transExp) Only '-' unary operator supported"
 
--- If the constant is on the left, we can use all operations
+-- If the constant is on the right, we can use all operations
 transExp (BinOp op e (Const n)) reg@(dest:_) = transExp e reg ++ [transOpImm op dest n]
 
--- If on the right, we can use the commutative operations
+-- If on the left, we can use the commutative operations
 transExp (BinOp Plus (Const n) e) reg@(dest:_)  = transExp e reg ++ [Add dest n]
 transExp (BinOp Times (Const n) e) reg@(dest:_) = transExp e reg ++ [Mul dest n]
 
