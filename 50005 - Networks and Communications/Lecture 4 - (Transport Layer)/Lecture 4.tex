@@ -1,0 +1,607 @@
+\documentclass{report}
+    \title{50005 - Networks and Communications - Lecture 4}
+    \author{Oliver Killane}
+    \date{14/02/22}
+\input{../50005 common.tex}
+\begin{document}
+    \maketitle
+
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=7c8441d0-f630-42a1-a5fd-ae2a0149d9ef}
+
+    \section*{The Transport Layer}
+        Provides connection (\keyword{TCP}) and connection-less (\keyword{UDP}) services to allow communication between \keyword{end-systems/hosts}.
+        \compitem{
+            \item Connection decision is made at this level.
+            \item Only runs on \keyword{end hosts}, not on \keyword{routers} or \keyword{switches}.
+            \item Requires the lower layers in order to operate (Network, Data-link and Physical).
+            \item Protocols in this layer work on the assumption that the lower levels are working, however must consider that \keyword{IP} is best effort, and gives no guarantees on data integrity or order of delivery for packets. 
+        }
+
+        Other layer-4/Transport Layer protocols include:
+        \begin{center}
+            \begin{tabular}{l p{0.8\textwidth}}
+                \keyword{QUIC} & A \keyword{UDP} based transport layer designed by google employees to replace \keyword{TCP} using multiple multiplexed connections using \keyword{UDP}, focused on improving \keyword{HTTP} performance. The \href{https://en.wikipedia.org/wiki/QUIC}{wikipedia article} goes into more detail. \\
+                \keyword{UDP-Lite} & A \keyword{UDP} like connectionless protocol that allows potentially damaged data payloads to be propagated to the application layer, and hence allows the application layer to discern data integrity and act accordingly (\href{https://en.wikipedia.org/wiki/UDP-Lite}{Wikipedia article}). \\
+                \keyword{DCCP} & The \keyword{Datagram Congestion Control Protocol} is a message-oriented protocol that uses reliable connection setup, close and has explicit congestion notification (\href{https://en.wikipedia.org/wiki/Datagram_Congestion_Control_Protocol}{Wikipedia article}). \\
+                \keyword{SCTP} & The \keyword{Stream Control Transmission Protocol} is a message-oriented protocol based on \keyword{UDP} (\href{https://en.wikipedia.org/wiki/Stream_Control_Transmission_Protocol}{Wikipedia article}). \\
+                \keyword{RSVP} & The \keyword{Resource Eservation Protocol} is used to reserve network resources to ensure quality of service (\href{https://en.wikipedia.org/wiki/Resource_Reservation_Protocol}{Wikipedia article}). \\
+            \end{tabular}
+        \end{center}
+        
+        \subsection*{Terminology}
+        \begin{center}
+            \begin{tabular}{l l l}
+                \textbf{Layer} & \textbf{No} & \textbf{Data Name} \\
+                \hline
+                Application & 5 & Data \\
+                Transport & 4 & TCP Segments (created by segmentation) of UDP Datagrams \\
+                Network/Internet & 3 & IP Datagrams (a.k.a. packets) (created by fragmentation) \\
+                Data Link & 2 & Frames \\
+                Physical & 1 & Bits \\
+            \end{tabular}
+        \end{center}
+
+        \subsection*{Port Numbers}
+        \termdef{Ports}{
+            Used to connect applications together/ separate different application's connections.
+            \\
+            \\ The transport layer uses port numbers to differentiate between many different network communications. Each application on a host uses a unique port number.
+            \\
+            \\ Port numbers are cross-platform, meaning on many different devices, computer architectures and OSes they are the same for the same types of applications (e.g HTTP, IMAP).
+            \begin{center}
+                \begin{tabular}{c c c l}
+                    \multicolumn{3}{c}{\textbf{Ports}} & \textbf{Use} \\
+                    \hline
+                    $0$ & $\to$ & $1023$ & (well known/reserved for certain protocols) \\
+                    $1024$ & $\to$ & $49151$ & (for any user application to use or register, e.g HTTP $\to 80$) \\
+                    $49152$ & $\to$ & $65535$ & (dynamic/ephemeral/private) and are used by clients temporarily) \\
+                \end{tabular}
+            \end{center}
+            
+        }
+
+    \section*{TCP}
+        \termdef{Tranmission Control Protocol (TCP)}{
+            A connection-oriented transport layer protocol.
+            \compitem{
+                \item Data is split into \keyword{segments}.
+                \item Reliable data transfer (integrity of data and (possibly) ordered delivery)
+                \item Not secure (other mechanisms need to be used to ensure security)
+                \item Can offer stream connections (ordered delivery, only accept segments in order, e.g received $4$, waiting for $5$, but received $6,7$, ignore $6$ and $7$ until $5$ is received.)
+                \item Congestion Control (avoids destructive congestion on the network)
+                \item Requires A handshake to start the connection.
+                \item \keyword{Full-Duplex} so both sides can send and receive at the same time.
+            }
+        }
+
+        To identify a socket connection we use the \keyword{IP Address}, port number and protocol (\keyword{TCP}/\keyword{UDP}).
+        \centerimage{width=0.7\textwidth}{socket id.png}
+
+        \termdef{Berkely Socket Interface}{
+            An interface adpoted by all \keyword{UNIX} systems and windows.
+            \begin{center}
+                \begin{tabular}{l p{0.7\textwidth}}
+                    \textbf{1. }\fun{SOCKET} & Create a new communication endpoint. \\
+                    \textbf{2. }\fun{BIND} & Attach a local address to the socket. The client and server both bind a transport level address and name to the locally created socket. \\
+                    \textbf{3. }\fun{LISTEN} & Prepare for / Annouce ability to accept, $n$ connections. The kernel now waits for connections from clients. \\
+                    \textbf{4. }\fun{ACCEPT} & Block until some remove client wants to establish a connection, hence the server can now wait, receive a request and choose to accept or deny a connection. \\
+                    \textbf{5. }\fun{CONNECT} & Attempt to establish a connection. When a client connects it must provide the full transport-level address to locate the socket. \\
+                    \textbf{6. }\fun{SEND} & Send data over the connection. \\
+                    \textbf{7. }\fun{RECEIVE} & Receive data over a connection. \\
+                    \textbf{8. }\fun{CLOSE} & Release the connection, communication ends when the socket is closed. \\
+                \end{tabular}
+            \end{center}
+            A connection-oriented example:
+            \centerimage{width=0.6\textwidth}{berkely interface.png}
+            In a connection-less scenario, \fun{LISTEN}, \fun{ACCEPT} and \fun{CONNECT} are not required.
+        }
+        \example{Simple Java Web Client}{
+            \center\begin{minipage}[t]{0.9\textwidth}
+                \codelist{Java}{exampleTCPClient.java}
+            \end{minipage}
+        }
+        \example{Simple Java Web Server}{
+            \begin{center}
+                \begin{minipage}[t]{0.9\textwidth}
+                    \codelist{Java}{exampleTCPServer.java}
+                \end{minipage}    
+            \end{center}
+            To handle many clients, a thread must be created per client, rather than the basic forever loop as above.
+        }
+
+        \subsection*{Segments}
+            \termdef{TCP Segment}{
+                A wrapper for \keyword{TCP} data, transmitted within the Network Layer protocol (e.g \keyword{IPv4} or \keyword{IPv6})
+            }
+            \termdef{Maximum Segment Size (MSS)}{
+                The maximum amount of application data transmitted in a single segment (header size is not included).
+                \\
+                \\ Usually related to the \keyword{MTU} of the connection to avoid network level fragmentation (splitting segments in the network layer into multiple packets).
+            }
+            \termdef{Maximum Transmission Unit (MTU)}{
+                The largest link layer frame available to the sender. Consider it as the largest unit of data that can be transmitted through all links to the receiver without requiring it to be split.
+                \\
+                \\ \keyword{Path MTU Discovery} determines the largest frame that can be sent on all links from the sender to receiver.
+            }
+            \subsection*{TCP Header}
+            From the \href{https://nmap.org/book/}{NMap book}:
+            \centerimage{width=0.7\textwidth}{nmap book.png}
+            Points of note:
+            \compitem{
+                \item Source and destination ports are $16$ bit identifiers.
+                \item Sequence number and Acknowledgement Number ($32$ bits) is used for reliable data transfer (identifies a segment, so any segments missing in the sequence can be detected)
+                \item Receive window ($16$ bits), the amount of data that can be sent before an acknowledgement is received (if the receiver cannot process data as fast as it arrives, it will ask to reduce the TCP window), more \href{https://accedian.com/blog/tcp-receive-window-everything-need-know/}{here}.
+                \item Header length determines the size of the \keyword{TCP} header in $32$ bit words.
+                \item The optional/variable length field is used to negotiate protocol parameters such as window scale, or \keyword{maximum segment size}.
+            }
+            There are several header Fields:
+            \begin{center}
+                \begin{tabular}{l l p{0.7\textwidth}}
+                    \textbf{Field} & \textbf{Bits} & \textbf{Description} \\
+                    \hline
+                    \const{URG} & $1$ & Signals the data as urgent, location of urgent data marked by urgent data pointer field. Note that some software will ignore it. \\
+                    \const{ACK} & $1$ & Signals that the acknowledgement number is a valid acknowledgement. \\
+                    \const{PSH} & $1$ & Push flag, asks the receiver to push data to the application immediately. \\
+                    \const{RST} & $1$ & Resets the connection, often used to shutdown a connection when some unexpected error occurs. \\
+                    \const{SYN} & $1$ & Synchronisation flag, used as part of the handshake. \\
+                    \const{FIN} & $1$ & Signals connection to finish/shutdown. \\
+                    Checksum & $16$ & Used for error detection. \\
+                \end{tabular}
+            \end{center}
+            
+            \termdef{Sequence Number}{
+                Each byte in the data stream has a sequence number (byte, \textbf{not} segment).
+                \\
+                \\ The sequence number in a \keyword{TCP segment} indicates the position of the first byte carried by that segment.
+                \centerimage{width=0.8\textwidth}{sequence number.png}
+                When the \keyword{TCP} connection is setup, a random \keyword{Initial Sequence Number} is decided upon to avoid any leftover segments being received by mistake.
+                \\
+                \\ Hence when creating a new connections, even with the same data the sequence numbers will be different.
+            }
+
+            \termdef{Acknowledgement Number}{
+                An \keyword{acknowledgedment number} represents the end of the data received, or the first sequence number  of the data waiting to be received.
+                \compitem{
+                    \item TCP acknowledgements can be cumulative (recieve segments $1,2,3$, ackenowledge (wait for) $4$).
+                    \item Typically acknowledge every other packet.
+                }
+                \centerimage{width=\textwidth}{tcp acknowledgement.png}
+                \compitem{
+                    \item As \keyword{TCP} is full duplex, multiple streams/sequences can be received, and acknowledged at the same time.
+                }
+            }
+
+        \subsection*{3-Way Handshake}
+            \compenum{
+                \item Client sends a \keyword{TCP segment} with the \const{SYN} flag set to \const{true}, and the \keyword{initial sequence number}.
+                \item Server responds with another \const{SYN} \keyword{TCP segment} which also has \const{ACK} as \const{true} and the first unseen client Sequence number.
+                \item Client responds with an \const{ACK} with first unseen server \keyword{sequence number}, and a new \keyword{sequence number}.
+            }
+            \centerimage{width=0.6\textwidth}{3 way handshake.png}
+            Connection termination is similar, but uses \const{FIN}. 
+        
+    \section*{UDP}
+
+        \termdef{User Datagram Protocol (UDP)}{
+            A connection-less transport layer protocol.
+            \compitem{
+                \item Data is split into \keyword{datagrams} (think like telegrams).
+                \item \keyword{Datagrams} cannot be larger than $65,507$ bytes ($20B$ IP Header $+ 8B$ UDP Header + $65,507B = 65,535B$ which is the maximum IP packet size).
+                \item In practice smaller $500B \to 1KB$ datagrams are used to increase the proportion of packets that are intact (any small error only effects a small datagram, does not invalidate a large datagram).
+                \item Application identification is provided (multiplexing/demultiplexing).
+                \item Integrity of data is checked by a \href{https://en.wikipedia.org/wiki/Cyclic_redundancy_check}{\keyword{CRC}}-type checksum.
+            }
+            \keyword{UDP} is very simple:
+            \compitem{
+                \item no flow Control
+                \item no error Control
+                \item no retransmissions
+            }
+            Why use \keyword{UDP}?
+            \compitem{
+                \item Finer level of application layer control over when and what data is sent (e.g real-time such as skype).
+                \item No connection needs to be established (faster than TCP).
+                \item No connection state needs to be stored.
+                \item Very small packet overhead (only a small bit of the packet is not payload).
+            }
+            It is also very useful in \keyword{client-server} interactions.
+            \\ 
+            \\ A client can send a short message to a server, and get a quick response, on failure can time out or try again. The resulting code is simple and fewer messages are needed (no connection setup/teardown).
+        }
+        \subsection*{UDP Header}
+            \centerimage{width=0.9\textwidth}{nmap book udp.png}
+
+        \example{Simple Java Web Client}{
+            \center\begin{minipage}[t]{0.9\textwidth}
+                \codelist{Java}{exampleUDPClient.java}
+            \end{minipage}
+        }
+        \example{Simple Java Web Server}{
+            \center\begin{minipage}[t]{0.9\textwidth}
+                \codelist{Java}{exampleUDPServer.java}
+            \end{minipage}    
+        }
+    
+    \section*{TCP vs UDP}
+        \begin{itemize}
+            \bullpara{(UDP) - A PvP Game sending short bursts of data to players}{
+                \\ Data transmission is time critical, if a message is lost, we can simply recover our own way (e.g list of messages, retry). 
+                \\
+                \\ We get to control the implementation. While we may mimic TCP in some error recovery, we can decide what features we want and don't for the best experience.
+            }
+            \bullpara{(TCP) - An online card game}{
+                \\ Speed is not a concern, \keyword{TCP} is just fine.
+            }
+            \bullpara{(TCP) - Movie player application}{
+                \\ We want it to be fast, however we do not want to drop frames.
+                \compitem{
+                    \item Pre-Buffer the video, and constantly use connection to get next few seconds as the movie plays.
+                    \item TCP manages errors to reduce dropped frames.
+                }
+            }
+        \end{itemize}
+
+    \section*{Data Transfer}
+        \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=c1b8707a-15ba-4aef-a3f3-ae2a0149dd95}
+        \termdef{(FSM) Finite State Machine}{
+            A mathematical abstraction used among other uses, to describe network protocols.
+            \begin{center}
+                \begin{tabular}{l l l}
+                    FSM & Finite State Machine \\
+                    FSA & Finite State Automata \\
+                    DFA & Deterministic finite-state automaton \\
+                    NFA & None-deterministic finite state automaton \\
+                \end{tabular}
+            \end{center}
+        }
+        We can describe transitions between states for a protocol by the event and action.
+        \example{Among Us Basic Group Meeting}{
+            \centerimage{width=0.7\textwidth}{example fsm.png}
+        }
+        \subsection*{TCP FSM}
+            \centerimage{width=\textwidth}{tcp fsm.png}
+            \sidenote{View TCP states on your device}{
+                On windows can use the \fun{netstat -a} commend, \href{https://docs.microsoft.com/en-us/sysinternals/downloads/tcpview}{tcpview} or \href{https://www.nirsoft.net/utils/cports.html}{currPorts}.
+                \\
+                \\ On linux there is \href{https://htop.dev/}{htop} and \href{http://iptraf.seul.org/}{iptraf}.
+            }
+        
+        \subsection*{Data Transfer FSM}
+            \keyword{TCP} provides mechanisms to ensure reliability in data transfer. While \keyword{IP} in the \keyword{Network Layer} is a best-effort protocol and is unreliable, by going through \keyword{TCP} we can create a reliable connection.
+            \\
+            \\ we can generalise this as:
+            \centerimage{width=\textwidth}{data transfer fsm.png}
+            
+        \subsection*{Error Detection}
+            Bits may be flipped in transmission (due to noise/interference and imperfect physical hardware).
+            \begin{center}
+                \begin{tabular}{l p{0.8\textwidth}}
+                    \keyword{Error Detection} & Receiver must be able to check if packet is corrupted. \\
+                    \keyword{Receiver Feedback} & Receiver must be able to tell sender the packet sent was corrupted. \\
+                \end{tabular}
+            \end{center}
+
+            \termdef{Parity Bit}{
+                A very simple type of error dectection code, where a single bit is set based on the parity of the rest of the packet. Typically this is the \fun{XOR} of all the bits.
+                \[\begin{matrix}
+                    1001 & \to & 1001 \ 0 \\
+                    1101 & \to & 1101 \ 1 \\
+                \end{matrix}\]
+            }
+            
+            \subsubsection*{Stop and Wait with Error detection}
+                We can express the data transfer \keyword{FSM} to include error detection. In this setup the protocol is synchronous, meaning for each segment the sender must receive back an acknowledgement before the next segment is sent.
+                \centerimage{width=0.8\textwidth}{data transfer error detection.png}
+                The main issue with this approach, is that \const{ACK}s and \const{NACK}s can also get corrupted. If we use the same scheme to reliably transfer the \const{ACK}s and \const{NACK}s we end up with potentially no termination (sender and receiver stuck in a loop of replying with \const{NACK}s at each other, that the other does not receive uncorrupted on a noisy channel).
+            
+            \subsubsection*{Assume NACK and retransmit}
+                We can add a sequence number to each packet, so that packets can be retransmitted, and the receiver knows which packets are retransmissions.
+                \\
+                \\ If we use \keyword{stop and wait} we only need 1 bit for the sequence number, as $0$ is original, $1$ is retransmission.
+
+            \subsubsection*{Use Sequence Numbers instead of NACKs}
+                We can instead use sequence numbers. If the packet is not acknowledged then an \const{ACK} is not sent. \const{ACK} is sent for the last good packet, hence the receiver can use a lack of \const{ACK}s to determine that it must retransmit some data.
+                \\
+                \\ Note that with TCP the \const{ACK} contains the start of the packet to be sent (or resent) next/ the end  byte sequence number of the data received.
+            
+            \subsubsection*{Out of Order Sequence Numbers}
+                Rather than use stop and wait, a sender may send many packets.
+                \compitem {
+                    \bullpara{Delayed \const{ACK}}{
+                        \\ The receiver only accepts in order, so ignores any packets sent out of order. After receiving a packet in order, it waits some time (e.g $500ms$) before sending the \const{ACK}, allowing for more in order-packets to be received in this time (resetting the wait).
+                        \begin{center}
+                            \begin{tabular}{l l}
+                                1. & Received $0$, start wait \\
+                                2. & Wait interrupted, received $1$, start wait again \\
+                                3. & Wait interrupted, received $2$, start wait again \\
+                                4. & Received $7$, ignored \\
+                                5. & Received $6$, ignored \\
+                                6. & Wait from (3.) over, send \const{ACK} (have recieved up to $2$, please send me $3$) \\
+                                & \dots \\
+                            \end{tabular}
+                        \end{center}
+                    }
+                    \bullpara{Cumulative \const{ACK}}{
+                        \\ Received an in-order segment with the expected number, waiting on the next segment.
+                        \\
+                        \\ Immediately send a cumulative \const{ACK}.
+                    }
+                    \bullpara{Duplicate \const{ACK}}{
+                        \\ Send an \const{ACK} for the next segment. Then an out-of-order segment arrived with a higher than expected sequence number, there is a gap.
+                        \\
+                        \\ Immediately send another (duplicate) \const{ACK}.
+                    }
+                    \bullpara{Immediate \const{ACK}}{
+                        \\ A segment received partially or completely fills a gap in the received data.
+                        \\
+                        \\ Immediately send an \const{ACK} for the lower end of the gap (to fill).
+                    }
+                }
+            \subsubsection*{Timeouts}
+                We can set a timeout for receiving \const{ACK}s. When the sender does not receive an acknowledgment within the time, it assumes the packet was not received and can try again (retransmit).
+                \compitem{
+                    \item If the timeout is too long, when packets are lost retransmission will have to wait a long time and hence slow down the connection.
+                    \item If the timeout is too short, packets may be needlessly retransmitted.
+                }
+
+        \subsection*{TCP \& Checksums}
+            Used by \keyword{TCP}. A checksum is calculated from the payload data.
+            \compitem{
+               \item When received, if the checksum does not match the recalculated checksum, then corruption has occurred.
+               \item Retransmission allows for error recovery.
+               \item \const{ACK}s and \const{NACK}s are also protected by error detection code.
+               \item Corrupted \const{ACK}s are used as \const{NACK}s
+               \item Sequence numbers allow the receiver to ignore duplicate segments.
+            }
+
+    \section*{Network Simulation}
+        We can use network simulation to check, test and optimise parameters for protocols and network designs.
+        \compitem{
+            \bullpara{Cisco Packet Tracer}{
+                \\ \href{https://www.netacad.com/courses/packet-tracer}{Packet tracer} is a lightweight network simulator with a user friendly GUI.
+            }
+            \bullpara{GNS3 Network Emulator}{
+                \\ \href{https://www.gns3.com/}{GNS3} is network simulation tool available for free.
+            }
+            \bullpara{Opnet Modeler}{
+                \\ \href{https://opnetprojects.com/opnet-network-simulator/}{Opnet} (now riverbed) modeller is a commercial (paid for) network simulation tool.
+            }
+        }
+
+    \section*{Detecting Congestion}
+        \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=05aac911-baca-48f4-a8f4-ae2a0149dfee}
+        \termdef{Congestion}{
+            So far we have roughly described the \keyword{TCP Reno} protocol. However there are many other variants to deal with congestion control.
+            \\
+            \\ Routers have a limit to how many packets they can route. Packets are held in a queue.
+            \\
+            \\ If too many packets are sent to one of the routers between a sender and reciever, its queue will overflow, resulting in some segments being dropped.
+            \\
+            \\ Hence the server assumes the network is congested when it detects segment loss from:
+            \compitem{
+                \item timeouts (no \const{ACK} received)
+                \item multiple \const{ACK}s (or equivalent acknowledgements) can be considered a \const{NACK}
+            }
+        }
+        
+        There are many different congestion control algorithms:
+        \\ \begin{minipage}{0.45\textwidth}
+            \begin{center}
+                \begin{tabular}{l l}
+                    \textbf{Algorithm} & \textbf{Affects} \\
+                    \hline
+                    TFRC & Sender, Receiver \\
+                    RED & Router \\
+                    CLAMP & Router, Receiver \\
+                    XCP & Sender, Router, Receiver \\
+                    VCP & Sender, Router, Receiver\\
+                    MaxNet & Sender, Router, Receiver \\
+                    JetMax & Sender, Router, Receiver \\
+                    ECN & Sender, Router, Receiver \\
+                    Vegas & Sender \\
+                    High Speed & Sender \\
+                    BIC & Sender \\
+                    CUBIC & Sender \\
+                    H-TCP & Sender \\
+                    FAST & Sender \\
+                    Compound TCP & Sender \\
+                    Westwood & Sender \\
+                    Jersey & Sender \\
+                    \href{https://research.google/pubs/pub45646/}{BBR} & Sender \\
+                \end{tabular}
+            \end{center}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.55\textwidth}
+            \begin{itemize}
+                \bullpara{Linux}{
+                    \\ Usually CUBIC, but can be found at \lstinline{/proc/sys/net/ipv4/tcp_congestion_control}.
+                }
+                \bullpara{Windows}{ 
+                    \\ Can be found at \lstinline{netsh interface tcp>sh gl}, if nothing then it is using the windows default.
+                }
+                \bullpara{Custom}{ 
+                    \\It is possible to force any socket to use any variant 
+                }
+                \bullpara{Characteristics}{
+                    \\ Most have variable characteristics combined. For example:
+                    \begin{center}
+                        \begin{tabular}{l l}
+                            Tahoe & Slow start, AIMD, Fast Retransmit \\
+                            Reno & Fast Recovery \\
+                            Vegas & Congestion Avoidance \\
+                        \end{tabular}
+                    \end{center}
+                }
+            \end{itemize}
+        \end{minipage}
+        \termdef{TCP Vegas}{
+            A popular \keyword{TCP} implementation.
+            \compitem{
+                \item Attempts to detect congestion before losses occur.
+                \item Predicts packet loss using \keyword{RTT} (round trip time)
+                \item Larger \keyword{RTT} $\Rightarrow$ greater congestion
+            }
+        }
+        \termdef{TCP CUBIC}{
+            Used by linux as the standard. 
+            \\
+            \\ In order to avoid advantaging smaller \keyword{RTT}s (as can happen with \keyword{TCP Reno}), grows \keyword{window} as a function of time rather than \keyword{RTT} 
+        }
+
+        \termdef{Congestion Window}{
+            \centerimage{width=0.7\textwidth}{TCP congestion window.png}
+            The \keyword{congestion window} is the number of bytes that can be sent before blocking to wait for acknowledgements.
+            \\
+            \\ Both the sender and receiver can define the window size, the size used is the minimum of both.
+            \[W = min(\text{Congestion Window}, \text{Receiver Window})\]
+            Hence with a given $RTT$ and window size $W$:
+            \[\text{maximum rate } \ \lambda \approx \cfrac{W}{RTT}\]
+        }
+
+        \subsection*{Congestion Methods}
+            \termdef{Slow Start}{
+                \centerimage{width=0.6\textwidth}{slow start.png}
+                \compenum{
+                    \item Set initial window size to \keyword{MSS} (maximum segment size) (quite small for high-speed networks).
+                    \item For every good acknowledgement, increase the window size by the size of data acknowledged (meaning window size is roughly doubled every \keyword{RTT}).
+                    \item Continue this exponential increase until window size reaches the \keyword{ssthresh} (segment size threshold).
+                    \item The use \keyword{Congestion Avoidance}.
+                }
+            }
+            \termdef{Congestion Avoidance}{
+                \centerimage{width=0.6\textwidth}{congestion avoidance.png}
+                The window size is increased roughly linearly ($\approx 1 \ MSS$ per $RTT$).
+                \\
+                \\ For each good acknowledgement:
+                \[W = W + \cfrac{MSS^2}{W}\]
+                When congestion is detected (packet loss) switch to a different strategy.
+            }
+            \termdef{(AIMD) Additive Increase / Multiplicative Decrease}{
+                \centerimage{width=0.5\textwidth}{AIMD.png}
+                \compitem{
+                    \item For every good acknoledgement: $W = W + \cfrac{MSS^2}{W}$
+                    \item For every packet loss event: $W = \cfrac{W}{2}$
+                }
+            }
+            \termdef{timeout}{
+                We need to detect packet loss, when no \const{ACK} is send back. 
+                \compitem{
+                    \item \keyword{timeout interval} $T$ must be larger than the $RTT$ otherwise we will retransmit data unnecessarily.
+                    \item $T$ cannot be too large, otherwise it will be slow to retransmit.
+                    \item \keyword{TCP} continuously estimates the $RTT$.
+                    \item \keyword{TCP} sets $T$ using the \keyword{smoothed RTT} ($SRTT$) and the RTT Variation $RTTVAR$ (exact computation can be found in section 2.2 \& 2.3 \href{https://datatracker.ietf.org/doc/html/rfc6298}{here}.)
+                }
+                \[T = SRTT + 4 \times RTTVAR\]
+            }
+            \termdef{Fast Retransmission}{
+                Three duplicate \const{ACK}s are interpreted as a \const{NACK}. The number $3$ is agreed upon in section 3 \href{https://datatracker.ietf.org/doc/html/rfc2001}{here} as a tradeoff between fast retransmission and unnecessary premature retransmission.
+                \compitem{
+                    \item timeout suggests congestion
+                    \item 3 duplicate \const{ACK}s suggests the network can still transmit, 
+                }
+            }
+            \termdef{Fast Recovery}{
+                Given the current window size is $\overline{W}$:
+                \\
+                \\ If \ \keyword{timeout} occurs:
+                \compenum{
+                    \item $W = MSS$
+                    \item Run slow start until $W = \cfrac{\overline{W}}{2} = ssthresh$.
+                    \item Switch to collision avoidance.
+                }
+                If it is 3 duplicate \const{ACK}s (a \const{NACK}) then run \keyword{Fast Recovery}:
+                \compenum{
+                    \item $W = \cfrac{\overline{W}}{2}$
+                    \item Switch to collision avoidance.
+                }
+                Fast recovery is \textit{fast} as the window size is not reset all the way back to $MSS$, so can ramp up the window size more quickly.
+            }
+        \subsection*{Window Strategies}
+            \termdef{Sliding Window - Go Back $N$}{
+                \centerimage{width=0.7\textwidth}{sliding window go back N.png}
+                Sender transmits multiple segments without waiting for acknowledgement. 
+                \compitem{
+                    \item The sender can have up to W bytes of unacknowledged segments in its pipeline.
+                    \item Sender's state is a queue of acknoledgements.
+                    \item When we receive some acknoledgements, we can move the slide the window along.
+                }
+            }
+            \termdef{Sliding Window - Selective Repeat}{
+                Sender only re-transmits those segments it suspects were dropped or corrupted.
+                \compitem{
+                    \item Sender keeps a list/vector of acknowledgements.
+                    \item Receiver keeps a list/vector of acknowledged segments.
+                    \item When segments received out of order, they are kept to be added into the data once the missing/gap segments arrive.
+                    \item Sender keeps a timer for each segment it is waiting for acknowledgement of, resending only when the timer expires.
+                    \item Sender slides the window when the lowest pending segment is acknowledged.
+                }
+            }
+            \termdef{Flow Control}{
+                Flow control attempts to prevent the receiver from being overwhelmed/overflowing (rate of sending is too high for it to cope).
+                \compitem{
+                    \item The receiver sends the \keyword{RecieverWindow} size along with acknowledgements.
+                    \item This typically is the size of buffer left to fill.
+                    \item When a buffer is full and the receiver can take no more, it sends an acknowledgement with \keyword{RecieverWindow} set to $0$, and repeats a 1-byte ping to the sender to indicate it is not down or deadlocked, but rather just processing.
+                }
+            }
+
+    \section*{Wireless TCP}
+        \keyword{TCP} was designed before the popularisation of wireless networks.
+        \\ \begin{minipage}{0.47\textwidth}
+            \subsubsection*{Wired Network}
+            When packets are lost, this indicated congestion.
+            \compitem {
+                \item Reduce packets sent.
+                \item Use congestion avoidance and recovery strategies.
+            }
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.47\textwidth}
+            \subsubsection*{Wireless Network}
+            When packets are lost, this is most likely a channel reliability issue.
+            \compitem {
+                \item Resend packets as much as possible.
+                \item Gives best chance of one getting received correctly.
+            }
+        \end{minipage}
+        We can fix these conflicting requirements in two ways:
+        \compitem{
+            \bullpara{Split TCP Connections}{
+                If we use separate connections for wired and wireless we can distinguish between the two and hence use different algorithms for congestion avoidance.
+            }
+            \bullpara{Use Base Station}{
+                Have the wired base station do some retransmissions without informing the wireless source. 
+                \\
+                \\ Here the base station tries to improve wireless IP reliability using \keyword{TCP}.
+            }
+        }
+    
+    \section*{Network Usage}
+        \[\text{Utilisation Factor} = \cfrac{\text{network use}}{\text{maximum theoretical usage}}\]
+        When we have the $RTT$, packet size $L$ and transmission rate $R$, we can also use the time on the connection used out of the possible time length:
+        \[d_{trans} = \cfrac{L}{R}\]
+        \[\text{Utilisation Factor} = \cfrac{d_{trans}}{RTT + d_{trans}}\]
+
+
+
+
+
+
+
+
+    
+            
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
