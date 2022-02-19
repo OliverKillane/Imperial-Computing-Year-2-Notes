@@ -52,8 +52,8 @@
                 \begin{tabular}{c c c l}
                     \multicolumn{3}{c}{\textbf{Ports}} & \textbf{Use} \\
                     \hline
-                    $0$ & $\to$ & $1023$ & (well known/reserved for certain protocols) \\
-                    $1024$ & $\to$ & $49151$ & (for any user application to use or register, e.g HTTP $\to 80$) \\
+                    $0$ & $\to$ & $1023$ & (well known/reserved for certain protocols, e.g HTTP $\to 80$, SMTP $\to 25$, SSH $\to 22$) \\
+                    $1024$ & $\to$ & $49151$ & (for any user application to use or register) \\
                     $49152$ & $\to$ & $65535$ & (dynamic/ephemeral/private) and are used by clients temporarily) \\
                 \end{tabular}
             \end{center}
