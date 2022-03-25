@@ -16,7 +16,7 @@
                 \\ Can turn logical address to physical address for kernel pages by subtracting $3$GB.
                 \compitem{
                     \item Very efficient for kernel memory access
-                    \item Does not require page table (so TLB is not flushed when user process makes syscall).
+                    \item Does not require change of page table (not changing context such as in process switching) (so TLB is not flushed when user process makes syscall).
                     \item On Demand Mapping contains temporary mappings for use of more than $896$ MB of memory.
                 }
             }
