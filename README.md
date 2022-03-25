@@ -48,3 +48,4 @@ If *you* have found a mistake, please add an issue, create a pull request, or me
 
 - [Naman](https://github.com/NamanSharma5) - [Typo, Y instead of X](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/cf65aae4f87aca2f0ae3321b7d82d13b61d492d8)
 - [Naman](https://github.com/NamanSharma5) - [Comments mixed up left & right](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/3812ae2e788f6d9686ced47fd9a016e147f6cca3)
+- [Deepro](https://github.com/DeeproChoudhury) - [Changed 'no page table' to 'no change of page table'](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/eb8bbb7d825a86d27f1ef8c8a4a2ff322b5823cf)
