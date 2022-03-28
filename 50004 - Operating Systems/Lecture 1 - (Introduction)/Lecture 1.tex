@@ -79,7 +79,7 @@
         \end{itemize}
     \section*{OS Structure}
         \subsubsection*{Monolithic}
-            Whole OS is on executable. File system, drivers etc are built into the kernel and run with privilege.
+            Whole OS is a single executable that runs in a single address space. File system, drivers etc are built into the kernel and run with privilege.
         \subsubsection*{Microkernel}
             \begin{itemize}
                 \item Kernel provides some abstraction, manages resources, but many services run as servers (e.g file system, drivers, etc).
