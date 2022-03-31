@@ -1,0 +1,167 @@
+\documentclass{report}
+    \title{50003 - Models Of Computation - (Prof Wiklicky) Lecture 2}
+    \author{Oliver Killane}
+    \date{31/03/22}
+\input{../50003 common.tex}
+\begin{document}
+    \maketitle
+    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=bc6805e0-7b75-46bd-a92a-ade50151156a}
+
+    \section*{Gadgets}
+        \termdef{Register Machine Gadget}{
+            A gadget is a partial register machine graph, used as components in more complex programs, that can be composed into larger register machines or gadgets.
+            \compitem{
+                \item Has a single $ENTRY$ (much like $START$).
+                \item Can have many $EXIT$ (much like $\halt$).
+                \item Operates on registers specified in the name of the gadget (e.g \textit{"Add $\reglabel{1}$ to $\reglabel{2}$"}).
+                \item Can use scratch registers (assumed to be zero prior to gadget and set to zero by the gadget before it exits - allows usage in loops)
+                \item We can rename the registers used in gadgets (simply change the registers used in the name (\textit{push $\reglabel{0}$ to $\reglabel{1}$ $\to$ push $\regtemp{X}$ to $\regtemp{Y}$}), and have all scratch registers renamed to registers unused by other parts of the program)
+            }
+            For example we can create several gadgets in terms of registers that we can rename.
+            \centerimage{width=0.9\textwidth}{gadget}
+            And then can use these to create larger programs.
+        }
+    \section*{Analysing Register Machines}
+        There is no general algorithm for determining the operations of a register machine (i.e halting problem)
+        \\
+        \\ However there are several useful strategies one can use:
+
+        \begin{itemize}
+            \bullpara{Experimentation}{
+                \\ Can create a table of input values against outputs to attempt to fetermine the relation - however the values could match many different relations.
+            }
+            \bullpara{Creating Gadgets}{
+                \\ We can group instructions together into gadgets to identify simple behaviours, and continue to merge to develop an understanding of the entire machine.
+                \\
+                \\ For example below, we can deduce the result as $L = 2^X(2L + 1)$
+                \centerimage{width=0.9\textwidth}{rm analysis}
+            }
+            \bullpara{Invariants}{
+                \\ We can use logical assertions on the register machine state at certain instructions, both to get the result of the register machine, and to prove the result.
+                \\
+                \\ If correct, every execution path to a given instruction's invariant, establishes that invariant.
+                \\ 
+                \\ We could attach invariants to every instruction, however it is usually only necessary to use them at the start, end and for loops (preconditions/postconditions).
+                
+                \centerimage{width=0.4\textwidth}{rm analysis invariants}
+                Our first invariant ($P$) can be defined as:
+                \[P \equiv (X =x  \land L = l \land Z = 0)\]
+                Next we can use the instructions between invariant to find the states under which the invariants must hold.
+                \begin{center}
+                    \begin{tabular}{l l p{0.7\textwidth}}
+                    \textbf{1.} & $P[Z-1/Z] \Rightarrow I_1$ & After incrementing $Z$ needs to go to the start of the first loop. \\
+                    \hline
+                    \textbf{2.} & $I_1[L + 1/L, Z - 2/Z] \Rightarrow I_1$ & The loop decrements $L$ and increases $Z$ by two. After each loop iteration, $I_1$ must still hold. \\
+                    \hline
+                    \textbf{3.} & $I_1 \land L = 0 \Rightarrow I_2$ & If $L = 0$ the loop is escaped, and we move to $I_2$. \\
+                    \hline
+                    \textbf{4.} & $I_2[Z+1/Z,L-1/L] \Rightarrow I_2$ & Loop increments $L$ and decrements $Z$ on each iteration, after this, $I_2$ must still hold. \\
+                    \hline
+                    \textbf{5.} & $I_2 \land Z = 0 \Rightarrow I_3$ & Loop ends when $Z = 0$, moves to $I_3$. \\
+                    \hline
+                    \textbf{6.} & $I_3[X+1/X] \Rightarrow I_1$ & Large loop decrements $X$ on each iteration, invariant must hold with the new/decremented $X$. \\
+                    \hline
+                    \textbf{7.} & $I_3 \land X = 0 \Rightarrow Q$ & When the main $X$-decrementing loop is escaped, we move to exit, so $Q$ must hold.
+                    \end{tabular}
+                \end{center}
+                We can now use these constraints (also called \keyword{verification conditions}) to determine an invariant.
+                \\
+                \\
+                \\ For each constraint we do:
+                \compenum {
+                    \item Get the basic for (potentially one already derived) for the invariant in question.
+                    \item If there is iteration, iterate to build up a disjunction.
+                    \item Find the pattern, and then re-form the invariant based on it.
+                }
+
+                \subsubsection*{Constraint 1.}
+                    Hence we can deduce $I_1$ as:
+                    \[I_1 = (X = x \land L = l \land Z = 1)\]
+                    (Take $P$ and increment $Z$)
+                \subsubsection*{Constraint 2.}
+                    We can iterate to get the disjunction:
+                    \[I_1 \equiv (X=x \land L=l \land Z = 1) \lor (X=x \land L+1 = l \land Z-2 = 1) \lor (X=x \land L+2 = l \land Z - 4 = 1) \lor \dots\]
+                    Hence we can determine the pattern for each disjunct as:
+                    \[Z + 2L = 2l + 1\]
+                    Hence we create our invariant:
+                    \[I_1 = (X = x \land Z + 2L = 2l + 1)\]
+                \subsubsection*{Constraint 3.}
+                    Hence as $L=0$ we can determine that $Z = 2l + 1$.
+                    \[I_2 = (X=x \land Z = 2l + 1 \land L = 0)\]
+                \subsubsection*{Constraint 4.}
+                    We iterate to get the disjunction:
+                    \[I_2 = (X = x  \land Z = 2l + 1 \land L = 0) \lor (X = x  \land Z = 2l + 0 \land L = 1) \lor (X = x  \land Z = 2l - 1 \land L = 2) \lor \dots\]
+                    Hence we notice the pattern:
+                    \[Z + L = 2l + 1\]
+                    So can deduce the invariant:
+                    \[I_2 = (X = x \land Z + L = 2l + 1)\]
+                \subsubsection*{Constraint 5.}
+                    We can derive an invariant $I_3$ using $Z = 0$.
+                    \[I_3 = (X=x \land L = 2l + 1 \land Z = 0)\]
+                \subsubsection*{Constraint 6.}
+                    We can use the constraint, and the currently derived $I_1$ to get a disjunction:
+                    \[I_1 = (X=x-1 \land L = 2l + 1 \land Z = 0) \lor (X = x \land Z + 2L = 2l + 1)\]
+                    We can apply constraint \textbf{2.} on the first part of this disjunction, iterating to get the disjunction:
+                    \[I_1 = (X = x \land Z + 2L = 2l + 1) \lor \left( \begin{matrix}
+                        (X=x-1 \land L = 2l + 1 \land Z = 0) \lor \\ 
+                        (X=x-1 \land L = 2l + 0 \land Z = 2) \lor \\
+                        (X=x-1 \land L = 2l-1 \land Z = 4) \lor \\
+                        (X=x-1 \land L = 2l-2 \land Z = 8) \lor \dots \\
+                    \end{matrix} \right)\]
+                    Hence for the second group of disjuncts we have the relation:
+                    \[Z + 2L = 2(2l + 1)\]
+                    Hence we have:
+                    \[I_1 = (X = x \land Z + 2L = 2l + 1) \lor (X=x-1 \land Z + 2L = 2(2l + 1))\]
+                    Hence when we repeat on the larger loop, we will double again, iterating we get:
+                    \[I_1 = (X = x \land Z + 2L = 2l + 1) \lor (X=x-1 \land Z + 2L = 2(2l + 1)) \lor (X=x-2 \land Z + 2L = 4(2l + 1)) \lor \dots\]
+                    Hence we have the relation:
+                    \[I_1 = (Z + 2L = 2^{X - x}(2l + 1))\]
+                    We can apply this doubling to $L_2$ also as it forms part of the larger loop:
+                    \[I_2 = (Z + L = 2^{X - x}(2l + 1))\]
+                    And to $I_3$:
+                    \[I_3 = (L = 2^{X-x}(2l + 1) \land Z = 0)\]
+
+                \subsubsection*{Constraint 7.}
+                    Hence we can now derive $Q$ as:
+                    \[Q = (L = 2^x(2l + 1) \land Z = 0)\]
+                
+                \subsubsection*{Termination}
+                    We also need to show that each of our loops eventually terminate, we can do this by showing that sme variant (e.g register, or combination of) decreases every time the invariant is reached/visited.
+                    \\
+                    \\ For $I_1$ we can use the lexicographical ordering $(X,L)$ as in each inner loop $L$ decreases, but for the larger loop while $L$ is reset/does not increase, $X$ does.
+                    \\
+                    \\ For $I_2$ we can similarly use the lexicographical ordering $(X,Z)$
+                    \\
+                    \\ For $I_3$ we can just use $X$.
+            }
+
+
+        \end{itemize}
+
+    \section*{Universal Register Machine}
+        A register machine that simulates a register machine.
+        \\
+        \\ It takes the arguments:
+        \compitem{
+            \bullpara{$\reglabel{0}$}{$= 0$}
+            \bullpara{$\reglabel{1}$}{$= $ the program encoded as a number}
+            \bullpara{$\reglabel{2}$}{$= $ the argument list encoded as a number}
+            \bullpara{All other registers zeroed}{}
+        }
+        The registers used are:
+        \begin{center}
+            \begin{tabular}{l l p{0.7\textwidth}}
+                $\reglabel{1}$ & P & Program code of the register machine being simulated/emulated. \\
+                $\reglabel{2}$ & A & Arguments provided to the simulated register machine. \\
+                $\reglabel{3}$ & PC & Program Counter - The current register machine instruction. \\
+                $\reglabel{4}$ & N & Next label num,ber/next instruction to go to. Is also used to store the current instruction \\
+                $\reglabel{5}$ & C & The current instruction. \\
+                $\reglabel{6}$ & R & The value of the register used by the current instruction. \\
+                $\reglabel{7}$ & S & Auxiliary Register \\
+                $\reglabel{8}$ & T & Auxiliary Register \\
+                $\reglabel{9}\dots$ & & Scratch Registers \\
+            \end{tabular}
+        \end{center}
+        \codelist{Python}{universal register machine.py}
+        \centerimage{width=0.9\textwidth}{universal register machine}
+\end{document}
