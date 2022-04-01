@@ -2,7 +2,7 @@ class List list where
     empty :: list a
     single :: a -> list a
 
-    (:) :: a -> lis a -> list a
+    (:) :: a -> list a -> list a
     snoc :: list a -> list a -> list a
 
     head :: list a -> a
