@@ -6,89 +6,89 @@
 \input{../50003 common.tex}
 
 \begin{document}
-    \maketitle
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=14a819ba-3c2a-4eb6-aec0-adcc00b79830}
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=14a819ba-3c2a-4eb6-aec0-adcc00b79830}
 
-    \section*{Structural Induction}
-        Structural induction is used for reasoning about collections of objects, which are:
-        \compitem{
-            \item structured in a well defined way
-            \item finite but can be arbitrarily large and complex
-        }
-        We can use this is reason about:
-        \compitem{
-            \item natural numbers
-            \item data structures (lists, trees, etc)
-            \item programs (can be large, but are finite)
-            \item derivations of assertions like $E \Downarrow 4$ (finite trees of axioms and rules)
-        }
-    \section*{Structural Induction over Natural Numbers}
-        \[\mathbb{N} \in Nat ::= zero| succ(\mathbb{N})\]
-        To prove a property $P(\mathbb{N})$ holds, for every number $N \in Nat$ by induction on structure $\mathbb{N}$:
-        \begin{itemize}
-            \bullpara{Base Case}{Prove $P(zero)$}
-            \bullpara{Inductive Case}{Inductive Case is $P(Succ(K))$ where $P(K)$ holds}
-        \end{itemize}
-        For example, we can prove the property:
-        \[plus(\mathbb{N}, zero) = \mathbb{N}\]
-        \begin{itemize}
-            \bullpara{Base Case}{
-                \\ Show $plus(zero, zero) = zero$
-                \begin{center}
-                    \begin{tabular}{c r c l c}
-                        (1) & LHS & = & $plus(zero, zero)$ & \\
-                        (2) & & = & $zero$ & (By definition of $plus$) \\
-                        (3) & & = & RHS & (As Required) \\
-                    \end{tabular}
-                \end{center}}
-            \bullpara{Inductive Case}{
-                \\ $N = succ(K)$
-                \\ Inductive Hypothesis $plus(K, zero) = K$
-                \\ Show $plus(succ(K), zero) = succ(K)$
-                \begin{center}
-                    \begin{tabular}{c r c l c}
-                        (1) & LHS & = & $plus(succ(K), zero)$ \\
-                        (2) & & = & $succ(plus(K, zero))$ & (By definition of $plus$) \\
-                        (3) & & = & $succ(K)$ & (By Inductive Hypothesis) \\
-                        (4) & & = & RHS & (As Required) \\
-                    \end{tabular}
-                \end{center}
-            }
-        \end{itemize}
-        Mathematics induction is a special case of structural induction:
-        \[P(0) \land [\forall k \in \mathbb{N}. P(k) \Rightarrow P(k + 1)]\]
-        In the exam you may use $P(0)$ and $P(K+1)$ rather than $P(zero)$ and $P(succ(k))$ to save time.
-    \section*{Binary Tree Example}
-        \[bTree \in BinaryTree ::= Node | Branch(bTree, bTree)\]
-        We can define a function $leaves$:
-        \[leaves(Node) = 1\]
-        \[leaves(Branch(T_1, T_2)) = 1 + leaves(T_1) + leaves(T_2)\]
-        Or $branches$:
-        \[branches(Node) = 0\]
-        \[branches(Branch(T_1,T_2)) = branches(T_1) + branches(T_2)\]
-        \sidenote{Exercise}{
-            Prove By induction that $leaves(T) = branches(T) + 1$
-        }
-    \section*{Induction over SimpleExp}
-        \[E \in SimpleExp ::= n | E + E | E \times E | \dots\]
-        where $n \in N$.
-        \subsubsection*{Properties of $\Downarrow$}
-            \begin{itemize}
-                \bullpara{Determinacy}{
-                    \\ A simple expression can only evaluate to one answer.
-                    \[E \Downarrow n_1 \land E \Downarrow n_2 \rightarrow n_1 = n_2\]
-                }
-                \bullpara{Totality}{
-                    \\ A simple expression evaluates to at least one answer.
-                    \[\forall E \in SimpleExp .\exists n \in \mathbb{N} .[E \Downarrow n]\]
-                }
-            \end{itemize}
-
-
+\section*{Structural Induction}
+Structural induction is used for reasoning about collections of objects, which are:
+\compitem{
+	\item structured in a well defined way
+	\item finite but can be arbitrarily large and complex
+}
+We can use this is reason about:
+\compitem{
+	\item natural numbers
+	\item data structures (lists, trees, etc)
+	\item programs (can be large, but are finite)
+	\item derivations of assertions like $E \Downarrow 4$ (finite trees of axioms and rules)
+}
+\section*{Structural Induction over Natural Numbers}
+\[\mathbb{N} \in Nat ::= zero| succ(\mathbb{N})\]
+To prove a property $P(\mathbb{N})$ holds, for every number $N \in Nat$ by induction on structure $\mathbb{N}$:
+\begin{itemize}
+	\bullpara{Base Case}{Prove $P(zero)$}
+	\bullpara{Inductive Case}{Inductive Case is $P(Succ(K))$ where $P(K)$ holds}
+\end{itemize}
+For example, we can prove the property:
+\[plus(\mathbb{N}, zero) = \mathbb{N}\]
+\begin{itemize}
+	\bullpara{Base Case}{
+		\\ Show $plus(zero, zero) = zero$
+		\begin{center}
+			\begin{tabular}{c r c l c}
+				(1) & LHS & = & $plus(zero, zero)$ &                           \\
+				(2) &     & = & $zero$             & (By definition of $plus$) \\
+				(3) &     & = & RHS                & (As Required)             \\
+			\end{tabular}
+		\end{center}}
+	\bullpara{Inductive Case}{
+		\\ $N = succ(K)$
+		\\ Inductive Hypothesis $plus(K, zero) = K$
+		\\ Show $plus(succ(K), zero) = succ(K)$
+		\begin{center}
+			\begin{tabular}{c r c l c}
+				(1) & LHS & = & $plus(succ(K), zero)$                             \\
+				(2) &     & = & $succ(plus(K, zero))$ & (By definition of $plus$) \\
+				(3) &     & = & $succ(K)$             & (By Inductive Hypothesis) \\
+				(4) &     & = & RHS                   & (As Required)             \\
+			\end{tabular}
+		\end{center}
+	}
+\end{itemize}
+Mathematics induction is a special case of structural induction:
+\[P(0) \land [\forall k \in \mathbb{N}. P(k) \Rightarrow P(k + 1)]\]
+In the exam you may use $P(0)$ and $P(K+1)$ rather than $P(zero)$ and $P(succ(k))$ to save time.
+\section*{Binary Tree Example}
+\[bTree \in BinaryTree ::= Node | Branch(bTree, bTree)\]
+We can define a function $leaves$:
+\[leaves(Node) = 1\]
+\[leaves(Branch(T_1, T_2)) = leaves(T_1) + leaves(T_2)\]
+Or $branches$:
+\[branches(Node) = 0\]
+\[branches(Branch(T_1,T_2)) = branches(T_1) + branches(T_2) + 1\]
+\sidenote{Exercise}{
+	Prove By induction that $leaves(T) = branches(T) + 1$
+}
+\section*{Induction over SimpleExp}
+\[E \in SimpleExp ::= n | E + E | E \times E | \dots\]
+where $n \in N$.
+\subsubsection*{Properties of $\Downarrow$}
+\begin{itemize}
+	\bullpara{Determinacy}{
+		\\ A simple expression can only evaluate to one answer.
+		\[E \Downarrow n_1 \land E \Downarrow n_2 \rightarrow n_1 = n_2\]
+	}
+	\bullpara{Totality}{
+		\\ A simple expression evaluates to at least one answer.
+		\[\forall E \in SimpleExp .\exists n \in \mathbb{N} .[E \Downarrow n]\]
+	}
+\end{itemize}
 
 
 
 
-        
+
+
+
 
 \end{document}
