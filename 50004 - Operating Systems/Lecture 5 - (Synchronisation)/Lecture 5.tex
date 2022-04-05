@@ -96,18 +96,12 @@
             Not atomic, still requires multiple instructions, between which another process could be interleaved.
         \end{minipage}
     \section*{Locks}
-        \begin{minipage}[t]{0.4\textwidth}
+        \halfsplit{
             \codelist{C}{extract locks.c}
-        \end{minipage}
-        \begin{minipage}[t]{0.2 \textwidth}
-            \begin{huge}
-                \[\Leftarrow\]
-            \end{huge}
-        \end{minipage}
-        \begin{minipage}[t]{0.4\textwidth}
+        }{
             \codelist{C}{bad busy lock.c}
             \codelist{C}{unlock.c}
-        \end{minipage}
+        }
         Here the implementation of the lock is flawed as we cannot atomically check the value of the lock, and set its value.
         \\
         \\ A working implementation is:
