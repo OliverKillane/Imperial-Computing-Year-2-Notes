@@ -40,13 +40,12 @@ We will reference to state by set $State \triangleq (Var \rightharpoonup \mathbb
 We prove each direction of implication separately. First we prove by induction over $E$ using the property $P$:
 \[P(E) =^{def} \forall n \in \mathbb{N}.[E \Downarrow n \Rightarrow E \to^* n]\]
 \subsubsection*{Base Case}
-Take arbitrary $n \in \mathbb{N}$ to show $P(n)$ - $n \Downarrow n \Rightarrow n \to^* n$.
+Take arbitrary $m \in \mathbb{N}$ to show $P(m)$ = $m \Downarrow n \Rightarrow m \to^* n$.
 \begin{center}
 	\begin{tabular}{l l l}
-		(1) & $n \to^0 n$                            & ($n$ is in the normal form) \\
-		(2) & $n \Downarrow n$                       & ($n$ is in the normal form) \\
-		(3) & $n \Downarrow n \land n \to^* n$       & (By 1 \& 2)                 \\
-		(4) & $n \Downarrow n \Rightarrow n \to^* n$ & (By 3)                      \\
+		(1) & Assume $m \Downarrow n$ &                                  \\
+		(2) & $m = n$                 & (From Inversion of $\Downarrow$) \\
+		(3) & $m \to^* n$             & (By 2 and definition of $\to^*$) \\
 	\end{tabular}
 \end{center}
 \subsubsection*{Inductive Step}
