@@ -31,6 +31,17 @@
 \newcommand{\inc}[2]{\reglabel{#1}^+ \to \instrlabel{#2}}
 \newcommand{\halt}{\text{\textcolor{red}{\textbf{HALT}}}}
 
+\newcommand{\lambapp}[2]{#1 \ #2}
+\newcommand{\lambappb}[2]{(#1) \ (#2)}
+\newcommand{\lambfun}[2]{\lambda #1 \ . \ #2}
+
+\makeatletter
+\newcommand{\lambarg}[1]{%
+#1 \checknextarglambarg}
+\newcommand{\checknextarglambarg}{\@ifnextchar\bgroup{\gobblenextarglambarg}{}}
+\newcommand{\gobblenextarglambarg}[1]{ \ #1 \@ifnextchar\bgroup{\gobblenextarglambarg}{}}
+
+\newcommand{\chnum}[1]{\underline{#1}}
 % Variable argument regconfig \regconfig{label no}{reg val}{reg val}...
 \makeatletter
 \newcommand{\regconfig}[2]{%
