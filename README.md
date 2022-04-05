@@ -44,6 +44,7 @@ I recommend using [Latex Workshop](https://marketplace.visualstudio.com/items?it
 ### Notes Improvements
 Users who have contributed material to improve and extend the notes.
 - [Yelun](https://github.com/eylun) - [Fixed Typos, Completed unfinished cost model proof for algorithms lecture 2, first PR for the repo!](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/c82926a79b6592245c50964823bcacf88405d8e9)
+- [Yelun](https://github.com/eylun) - [Fixed Typos, improved and corrected errors in multistep reductions proof.](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/056d6083c14773efe33e1eaa4c753af71d48ef4c)
 ### Mistakes Found
 Users who found errors to be corrected & hence helped to improve the quality of these notes.
 
