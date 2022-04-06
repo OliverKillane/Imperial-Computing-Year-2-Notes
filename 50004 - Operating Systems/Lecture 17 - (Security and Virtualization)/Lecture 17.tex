@@ -4,83 +4,82 @@
     \date{27/12/21}
 \input{../50004 common.tex}
 \begin{document}
-    \maketitle
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=3a9c1c3c-9fd4-4053-b0cd-adf900c100d8}
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=3a9c1c3c-9fd4-4053-b0cd-adf900c100d8}
 
-    \section*{File Access on UNIX/Linux continued...}
-        \subsection*{Capability Lists}
-            Effectively lists of the rows of an access matrix, associated with the principals (users). If a capability is in the list, then the user associated with it has the capability to perform said action on said object.
-            \compitem {
-                \item Capabilities are protected pointers to objects, which specify the permitted operations (e.g file descriptor, index of capability list). 
-                \item Often implemented as protected pointers to objects. The kernel holds the capability information (can create, destroy and modify it), providing access to the user indirectly (e.g user has a file descriptor, or a key of sorts).
-                \item Alternatively the capability may be held in user-memory, but encrypted.
-            }
-        \subsection*{Access Control Lists vs Capabilities}
-            \begin{center}
-                \begin{tabular}{p{0.2\textwidth} c p{0.35\textwidth} p{0.35\textwidth}}
-                    \textbf{Action} & \textbf{Best} & \textbf{Access Control Lists} & \textbf{Capabilities} \\
-                    \hline
-                    Principle of Least Privilege & Cap & Use of groups mean all users in a group get access rights. & Can be very fine grained, only giving capabilities to specific users.\\
-                    \hline
-                    Revocation & ACL & Can revoke all access by changing one ACL for the object. & Must search all capability lists, and remove capability.  \\
-                    \hline
-                    Rights Transfer & Cap & & Can transfer a single capability from one user to another. \\
-                    \hline
-                    Persistence & ACL & File systems are designed to be persistent. & Very complex. \\
-                    
-                \end{tabular}
-            \end{center}
+\section*{File Access on UNIX/Linux continued...}
+\subsection*{Capability Lists}
+Effectively lists of the rows of an access matrix, associated with the principals (users). If a capability is in the list, then the user associated with it has the capability to perform said action on said object.
+\compitem {
+	\item Capabilities are protected pointers to objects, which specify the permitted operations (e.g file descriptor, index of capability list).
+	\item Often implemented as protected pointers to objects. The kernel holds the capability information (can create, destroy and modify it), providing access to the user indirectly (e.g user has a file descriptor, or a key of sorts).
+	\item Alternatively the capability may be held in user-memory, but encrypted.
+}
+\subsection*{Access Control Lists vs Capabilities}
+\begin{center}
+	\begin{tabular}{p{0.2\textwidth} c p{0.35\textwidth} p{0.35\textwidth}}
+		\textbf{Action}              & \textbf{Best} & \textbf{Access Control Lists}                              & \textbf{Capabilities}                                                 \\
+		\hline
+		Principle of Least Privilege & Cap           & Use of groups mean all users in a group get access rights. & Can be very fine grained, only giving capabilities to specific users. \\
+		\hline
+		Revocation                   & ACL           & Can revoke all access by changing one ACL for the object.  & Must search all capability lists, and remove capability.              \\
+		\hline
+		Rights Transfer              & Cap           &                                                            & Can transfer a single capability from one user to another.            \\
+		\hline
+		Persistence                  & ACL           & File systems are designed to be persistent.                & Very complex.                                                         \\
+	\end{tabular}
+\end{center}
 
-        \subsection*{DAC vs MAC}
-            \compitem{
-                \bullpara{Discretionary Access Control (DAC)}{Principals determine who may access their objects.
-                    \\ This is the default in UNIX/Linux, file owners determine the access rights.
-                }
-                \bullpara{Mandatory Access Control (DAC)}{Precise system rules determine object access.
-                    \\ A policy determines access controls for files, devices etc.
-                }
-            }
-        \subsection*{Bell - La Padula Model}
-            A \keyword{MAC} policy where information cannot travel down the security hierarchy.
-            \centerimage{width=0.6\textwidth}{bell - la padula Model.png}
-            \compitem{
-                \item Objects and principlals are assigned a security level (e.g unclassified, confidential, top secret)
-                \bullpara{Two Rules}{
-                    \begin{tabular}{l l}
-                        Simple Security Policy & Processes can only read objects at its security level or lower. \\
-                        The * property & Processes can only write to objects at their security level or higher. \\
-                    \end{tabular}
-                }
-            }    
-            Information can only travel up the security levels. This ensures confidentiality, but not integrity.
-        \subsection*{Biba Model}
-            A \keyword{MAC} policy guaranteeing data integrity.
-            \centerimage{width=0.6\textwidth}{Biba Model.png}
-            \compitem{
-                \bullpara{Simple Integrity Principle}{Can only write to objects of the same or lower security level.}
-                \bullpara{Integrity * Property}{Can only read objects of the same or higher security level.}
-            }
+\subsection*{DAC vs MAC}
+\compitem{
+	\bullpara{Discretionary Access Control (DAC)}{Principals determine who may access their objects.
+		\\ This is the default in UNIX/Linux, file owners determine the access rights.
+	}
+	\bullpara{Mandatory Access Control (DAC)}{Precise system rules determine object access.
+		\\ A policy determines access controls for files, devices etc.
+	}
+}
+\subsection*{Bell - La Padula Model}
+A \keyword{MAC} policy where information cannot travel down the security hierarchy.
+\centerimage{width=0.6\textwidth}{bell - la padula Model.png}
+\compitem{
+	\item Objects and principlals are assigned a security level (e.g unclassified, confidential, top secret)
+	\bullpara{Two Rules}{
+		\begin{tabular}{l l}
+			Simple Security Policy & Processes can only read objects at its security level or lower.        \\
+			The * property         & Processes can only write to objects at their security level or higher. \\
+		\end{tabular}
+	}
+}
+Information can only travel up the security levels. This ensures confidentiality, but not integrity.
+\subsection*{Biba Model}
+A \keyword{MAC} policy guaranteeing data integrity.
+\centerimage{width=0.6\textwidth}{Biba Model.png}
+\compitem{
+	\bullpara{Simple Integrity Principle}{Can only write to objects of the same or lower security level.}
+	\bullpara{Integrity * Property}{Can only read objects of the same or higher security level.}
+}
 
-        \subsection*{Design Principles}
-            \compitem{
-                \bullpara{Least Privelege}{Each process should run with the lowest privelege possible. Default should be no access.}
-                \bullpara{Simple \& Uniform Mechanism}{ensures design is easy to reason about, and can be applied to many types of principals \& objects.}
-                \bullpara{Psychologically Acceptable}{If policies are too much of a burden, too complex, or difficult to deal with then people will not implement them.}
-                \bullpara{Public}{Security by obscurity is bad, by making the design public it can be critiqued for flaws.}
-            }
-    
-    \section*{Virtualisation}
-        Operating systems abstract away hardware, providing abstractions such as virtual memory, signals, file systems, syscalls and more. 
-        \\
-        \\ For some systems we may want to abstract hardware, providing virtualised CPUs, disks, interrupts, physical memory etc as a virtual machine. such that an entire operating system can run inside.
-        \\
-        \\ This is useful for:
-        \compitem {
-            \bullpara{Legacy software}{Can run software designed for much older systems.}
-            \bullpara{Security}{Even if virtual machine compromised, the system has not. This is especially useful when deliberately compromising a machine to reverse engineer malware, virtual machine acts as a secure sandbox in which to experiment.}
-            \bullpara{Software Management}{avoids issues with conflicting software (versions and dependencies) by running them in separate virtual environments.}
-        }
-        Top achieve this we use a \keyword{Virtual Machine Monitor} (\keyword{VMM}) or \keyword{Hypervisor} to partition resources, and provide these abstractions as a virtual machine on which guest Operating Systems can run.
-        \centerimage{width=0.9\textwidth}{virtualisation layers.png}
+\subsection*{Design Principles}
+\compitem{
+	\bullpara{Least Privelege}{Each process should run with the lowest privelege possible. Default should be no access.}
+	\bullpara{Simple \& Uniform Mechanism}{ensures design is easy to reason about, and can be applied to many types of principals \& objects.}
+	\bullpara{Psychologically Acceptable}{If policies are too much of a burden, too complex, or difficult to deal with then people will not implement them.}
+	\bullpara{Public}{Security by obscurity is bad, by making the design public it can be critiqued for flaws.}
+}
+
+\section*{Virtualisation}
+Operating systems abstract away hardware, providing abstractions such as virtual memory, signals, file systems, syscalls and more.
+\\
+\\ For some systems we may want to abstract hardware, providing virtualised CPUs, disks, interrupts, physical memory etc as a virtual machine. such that an entire operating system can run inside.
+\\
+\\ This is useful for:
+\compitem {
+	\bullpara{Legacy software}{Can run software designed for much older systems.}
+	\bullpara{Security}{Even if virtual machine compromised, the system has not. This is especially useful when deliberately compromising a machine to reverse engineer malware, virtual machine acts as a secure sandbox in which to experiment.}
+	\bullpara{Software Management}{avoids issues with conflicting software (versions and dependencies) by running them in separate virtual environments.}
+}
+Top achieve this we use a \keyword{Virtual Machine Monitor} (\keyword{VMM}) or \keyword{Hypervisor} to partition resources, and provide these abstractions as a virtual machine on which guest Operating Systems can run.
+\centerimage{width=0.9\textwidth}{virtualisation layers.png}
 
 \end{document}

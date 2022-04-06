@@ -4,45 +4,45 @@
     \date{01/04/22}
 \input{../50003 common.tex}
 \begin{document}
-    \maketitle
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=65f62ca6-3bc0-4d50-a550-aded009410f1}
-    \section*{Turing Machines}
-        \termdef{Turing Machine}{
-            \centerimage{width=0.9\textwidth}{turing machine}
-        }
-        \keyword{Register machines} abstract away the representation of numbers and operations on numbers (just uses $\mathbb{N}$ with increment, decrement operations), \keyword{Turing machines} are a more concrete representation of computing.
-        \subsubsection*{Turing $\to$ Register Machine}
-            We can show that any computation by a \keyword{Turing Machine} can be implemented by a \keyword{Register Machine}. Given a \keyword{Turing Machine} $M$:
-            \compenum{
-                \item Create a numerical encoding of $M$'s finite number of states, tape symbols, and initial tape contents.
-                \item Implement the transition table as a register machine.
-                \item Implement a register machine program to repeatedly carry out $\to_M$
-            }
-            Hence \keyword{Turing Machine Computable} $\Rightarrow$ \keyword{Register Machine Computable}.
-        \subsubsection*{Turing Machine Number Lists}
-            In order to take arguments, and return value we need to encode lists on number on the tape of a turing machine. This is done as strings of unary values.
-            \centerimage{width=0.8\textwidth}{turing tape list}
-        
-        \termdef{Turing Computable}{
-            If $f: \mathbb{N}^n  \rightharpoonup \mathbb{N}$ is \keyword{Turing Computable} iff there is a turing machine $M$ such that:
-            \\
-            \\ From initial state $(s, \epsilon, [x_1, \dots, x_n])$ (tape head at the leftmost $0$), $M$ halts if and only if $f(x_1, \dots, x_n)\downarrow$, and halts with the tape containing a list, the first element of which is $y$ such that $f(x_1, \dots, x_n) = y$.
-            \\
-            \\ More formally, given $M = (Q, \sum, s, \delta)$ to compute $f$:
-            \[f(x_1, \dots, x_n)\downarrow \land f(x_1, \dots, x_n)=y \Leftrightarrow(s,\epsilon, [x_1, \dots, x_n]) \to^*_M (*, \epsilon, [y, \dots])\]
-        }
-        \subsubsection*{Register $\to$ Turing Machine}
-            It is also possible to simulate any register machine on a turing machine. As we can encode lists of numbers on the tape, we can simply implement the register machine operations as operations on integers on the tape.
-            \\
-            \\ Hence \keyword{Register Machine Computable} $\Rightarrow$ \keyword{Turing Machine Computable}.
-    
-        \subsubsection*{Notions of Computability}
-            Every computable algorithm can be expressed as a turing machine (\keyword{Church-Turing Thesis}). In fact \keyword{Turing Machines}, \keyword{Register Machines} and the \keyword{Lambda Calculus} are all equivalent (all determine what is computable).
-            \compitem{
-                \bullpara{Partial Recursive Functions}{Godel and Kleene (1936)}
-                \bullpara{$\lambda$-Calculus}{Church (1936)}
-                \bullpara{canonical systems for generating the theorems of a formal system}{Post (1943) and Markov (1951)}
-                \bullpara{Register Machines}{Lambek and Minsky (1961)}
-                \bullpara{And many more}{(multi-tape turing machines, parallel computation, turing machines embeded in cellular automata etc))}
-            }
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=65f62ca6-3bc0-4d50-a550-aded009410f1}
+\section*{Turing Machines}
+\termdef{Turing Machine}{
+	\centerimage{width=0.9\textwidth}{turing machine}
+}
+\keyword{Register machines} abstract away the representation of numbers and operations on numbers (just uses $\mathbb{N}$ with increment, decrement operations), \keyword{Turing machines} are a more concrete representation of computing.
+\subsubsection*{Turing $\to$ Register Machine}
+We can show that any computation by a \keyword{Turing Machine} can be implemented by a \keyword{Register Machine}. Given a \keyword{Turing Machine} $M$:
+\compenum{
+	\item Create a numerical encoding of $M$'s finite number of states, tape symbols, and initial tape contents.
+	\item Implement the transition table as a register machine.
+	\item Implement a register machine program to repeatedly carry out $\to_M$
+}
+Hence \keyword{Turing Machine Computable} $\Rightarrow$ \keyword{Register Machine Computable}.
+\subsubsection*{Turing Machine Number Lists}
+In order to take arguments, and return value we need to encode lists on number on the tape of a turing machine. This is done as strings of unary values.
+\centerimage{width=0.8\textwidth}{turing tape list}
+
+\termdef{Turing Computable}{
+	If $f: \mathbb{N}^n  \rightharpoonup \mathbb{N}$ is \keyword{Turing Computable} iff there is a turing machine $M$ such that:
+	\\
+	\\ From initial state $(s, \epsilon, [x_1, \dots, x_n])$ (tape head at the leftmost $0$), $M$ halts if and only if $f(x_1, \dots, x_n)\downarrow$, and halts with the tape containing a list, the first element of which is $y$ such that $f(x_1, \dots, x_n) = y$.
+	\\
+	\\ More formally, given $M = (Q, \sum, s, \delta)$ to compute $f$:
+	\[f(x_1, \dots, x_n)\downarrow \land f(x_1, \dots, x_n)=y \Leftrightarrow(s,\epsilon, [x_1, \dots, x_n]) \to^*_M (*, \epsilon, [y, \dots])\]
+}
+\subsubsection*{Register $\to$ Turing Machine}
+It is also possible to simulate any register machine on a turing machine. As we can encode lists of numbers on the tape, we can simply implement the register machine operations as operations on integers on the tape.
+\\
+\\ Hence \keyword{Register Machine Computable} $\Rightarrow$ \keyword{Turing Machine Computable}.
+
+\subsubsection*{Notions of Computability}
+Every computable algorithm can be expressed as a turing machine (\keyword{Church-Turing Thesis}). In fact \keyword{Turing Machines}, \keyword{Register Machines} and the \keyword{Lambda Calculus} are all equivalent (all determine what is computable).
+\compitem{
+	\bullpara{Partial Recursive Functions}{Godel and Kleene (1936)}
+	\bullpara{$\lambda$-Calculus}{Church (1936)}
+	\bullpara{canonical systems for generating the theorems of a formal system}{Post (1943) and Markov (1951)}
+	\bullpara{Register Machines}{Lambek and Minsky (1961)}
+	\bullpara{And many more}{(multi-tape turing machines, parallel computation, turing machines embeded in cellular automata etc))}
+}
 \end{document}

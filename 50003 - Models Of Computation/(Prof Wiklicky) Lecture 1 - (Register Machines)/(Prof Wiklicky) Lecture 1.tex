@@ -4,306 +4,306 @@
     \date{28/03/22}
 \input{../50003 common.tex}
 \begin{document}
-    \maketitle
-    
-    \section*{Algorithms}
-        \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=0da73323-9627-477d-9f60-adde01490aac}
-        \sidenote{Hilbert's Entscheidungsproblem (Decision Problem)}{
-            A problem proposed by David Hilbert and Wilhem Ackermann in 1928. Considering if there is an algorithm to determine if any statement is universally valid (valid in every structure satisfying the axioms - facts within the logic system assumed to be true (e.g in maths $1 + 0 = 1$)).
-            \\
-            \\ This can be also be expressed as an algorithm that can determine if any first-order logic statement is provable given some axioms.
-            \\
-            \\ It was proven that no such algorithm exists by Alonzo Church and Alan Turing using their notions of Computing which show it is not computable.
-        }
+\maketitle
 
-        \termdef{Algorithms Informally}{
-            One definition is: \textit{A finite, ordered series of steps to solve a problem.}
-            \\
-            \\ Common features of the many definitions of algorithms are:
-            \compitem{
-                \bullpara{Finite}{Finite number of elementary (cannot be broken down further) operations.}
-                \bullpara{Deterministic}{Next step uniquely defined by the current.}
-                \bullpara{Terminating?}{May not terminate, but we can see when it does \& what the result is.}
-            }
-            \centerimage{width=0.6\textwidth}{algorithm}
-        }
-    \section*{Register Machines}
-        \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=0bb8a81c-aac4-483c-a26a-adde0149f6fd}
-        \termdef{Register Machine}{
-            A turing-equivalent (same computational power as a turing machine) abstract machine that models what is computable.
-            \compitem{
-                \item Infinitely many registers, each storing a natural number ($\mathbb{N} \triangleq \{0, 1, 2, \dots\}$)
-                \item Each instruction has a label associated with it.
-                \bullpara{3 Instructions} {
-                    \begin{center}
-                        \begin{tabular}{l l}
-                            $\inc{i}{m}$ & Add 1 to register $\reglabel{i}$ and then jump to the instruction at $\instrlabel{m}$ \\
-                            $\dec{i}{n}{m}$ & If $\reglabel{i} > 0$ then decrement it and jump to $\instrlabel{n}$, else jump to $\instrlabel{m}$ \\
-                            $\halt$ & Halt the program.
-                        \end{tabular}
-                    \end{center}
-                }
-            }
-            At each point in a program the registers are in a configuration $c = (l, r_0, \dots, r_n)$ (where $r_i$ is the value of $\reglabel{i}$ and $l$ is the instruction label $\instrlabel{l}$ that is about to be run).
-            \compitem{
-                \item $c_0$ is the initial configuration, next configurations are $c_1, c_2, \dots$.
-                \item In a finite computation, the final configuration is the \keyword{halting configuration}.
-                \item In a \keyword{proper halt} the program ends on a $\halt$.
-                \item In an \keyword{erroneous halt} the program jumps to a non-existent instruction, the \keyword{halting configuration} is for the instruction immediately before this jump.
-            }
-            \centerimage{width=0.6\textwidth}{graphical register machine}
-        }
-        \example{Sum of three numbers}{
-            The following register machine computes:
-            \[\begin{matrix}
-                \reglabel{0} = \reglabel{0} + \reglabel{1} + \reglabel{2} & \reglabel{1} = 0 & \reglabel{2} = 0 \\
-            \end{matrix}\]
-            Or as a partial function:
-            \[f(x,y,z) = x + y + z\]
-            \begin{minipage}{0.3\textwidth}
-                \subsubsection*{Registers}
-                    $\begin{matrix}
-                        \reglabel{0} & \reglabel{1} & \reglabel{2} \\
-                    \end{matrix}$
-                \subsubsection*{Program}
-                    $\begin{matrix*}[l]
-                        \instr{0}{\dec{1}{1}{2}}
-                        \instr{1}{\inc{0}{0}}
-                        \instr{2}{\dec{2}{3}{4}}
-                        \instr{3}{\inc{0}{2}}
-                        \instr{4}{\halt}
-                    \end{matrix*}$
-            \end{minipage}
-            \hfill
-            \begin{minipage}{0.2\textwidth}
-                \centerimage{width=\textwidth}{graphical rm example}
-            \end{minipage}
-            \hfill
-            \begin{minipage}{0.3\textwidth}
-                \subsubsection*{Example Configuration}
-                    \begin{tabular}{l l l l}
-                        \regconfig{$\instrlabel{i}$}{$\reglabel{0}$}{$\reglabel{1}$}{$\reglabel{2}$}
-                        \hline
-                        \regconfig{0}{1}{2}{3}
-                        \regconfig{1}{1}{1}{3}
-                        \regconfig{0}{2}{1}{3}
-                        \regconfig{1}{2}{0}{3}
-                        \regconfig{0}{3}{0}{3}
-                        \regconfig{2}{3}{0}{3}
-                        \regconfig{3}{3}{0}{2}
-                        \regconfig{2}{4}{0}{2}
-                        \regconfig{3}{4}{0}{1}
-                        \regconfig{2}{5}{0}{1}
-                        \regconfig{3}{5}{0}{0}
-                        \regconfig{2}{6}{0}{0}
-                        \regconfig{4}{6}{0}{0}
-                    \end{tabular}    
-            \end{minipage}
-        }
-        \subsection*{Partial Functions}
-            \termdef{Partial Function}{
-                A partial function maps some members of the domain $X$, with each mapped member going to at most one member of the codomain $Y$.
-                \[f \subseteq X \times Y \ \text{  and  } \ (x,y_1) \in f \land (x, y_2) \in f \Rightarrow y_1 = y_2\]
-                \begin{center}
-                    \begin{tabular}{l | l}
-                        $f(x) = y$ & $(x,y) \in f$ \\
-                        $f(x)\downarrow$ & $\exists y \in Y . [f(x) = y]$ \\
-                        $f(x)\uparrow$ & $\neg\exists y \in Y . [f(x) = y]$ \\
-                        $X \rightharpoonup Y$ & Set of all \keyword{partial functions} from $X$ to $Y$. \\
-                        $X \to Y$ & Set of all \keyword{total functions} from $X$ to $Y$. \\
-                    \end{tabular}
-                \end{center}
-                A partial function from $X$ to $Y$ is total if it satisfies $f(x)\downarrow$.
-            }
-            Register machines can be considered as partial functions as for a given input/initial configuration, they produce at most one halting configuration (as they are deterministic, for non-finite computations/non-halting there is no halting configuration).
-            \\
-            \\ We can consider a register machine as a partial function of the input configuration, to the value of the first register in the halting configuration.
-            \[f \in \mathbb{N}^n \rightharpoonup \mathbb{N} \ \text{  and  } \ (r_0, \dots, r_n) \in \mathbb{N}^n, r_0 \in \mathbb{N}\]
-            Note that many different register machines may compute the same partial function.
-        \subsection*{Computable Functions}
-            The following arithmetic functions are computable. Using them we can derive larger register machines for more complex arithmetic (e.g logarithms making use of repeated division).
-            \subsubsection*{Projection}
-                \trisplit{
-                    \[p(x,y) \triangleq x\]
-                    \[(r_0, r_1) \to r_0\]
-                }{
-                    \[\halt\]
-                }{
-                    \centerimage{scale=0.3}{rm functions/projection}
-                }
+\section*{Algorithms}
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=0da73323-9627-477d-9f60-adde01490aac}
+\sidenote{Hilbert's Entscheidungsproblem (Decision Problem)}{
+	A problem proposed by David Hilbert and Wilhem Ackermann in 1928. Considering if there is an algorithm to determine if any statement is universally valid (valid in every structure satisfying the axioms - facts within the logic system assumed to be true (e.g in maths $1 + 0 = 1$)).
+	\\
+	\\ This can be also be expressed as an algorithm that can determine if any first-order logic statement is provable given some axioms.
+	\\
+	\\ It was proven that no such algorithm exists by Alonzo Church and Alan Turing using their notions of Computing which show it is not computable.
+}
 
-            \subsubsection*{Constant}
-                \trisplit{
-                    \[c(x) \triangleq n\]
-                    \[(r_0) \to n\]
-                }{
-                    \[
-                        \begin{matrix*}[l]
-                            \instr{0}{\dec{0}{0}{1}}
-                            \instr{1}{\inc{0}{2}}
-                            \vdots & \vdots \\
-                            \instr{n}{\inc{0}{n+1}}
-                            \instr{n+1}{\halt}
-                        \end{matrix*}    
-                    \]
-                }{
-                    \centerimage{scale=0.3}{rm functions/constant}
-                }
-                
-            \subsubsection*{Truncated Subtraction}
-                \trisplit{
-                    \[x - y \triangleq \begin{cases}
-                        x - y & y \leq x \\
-                        0 & y > x
-                    \end{cases}\]
-                    \[(r_0, r_1) \to r_0 - r_1\]
-                }{
-                    \[
-                        \begin{matrix*}[l]
-                            \instr{0}{\dec{1}{1}{2}}
-                            \instr{1}{\dec{0}{0}{2}}
-                            \instr{2}{\halt}
-                        \end{matrix*}    
-                    \]
-                }{
-                    \centerimage{scale=0.3}{rm functions/truncated subtraction}
-                }
-                
-            \subsubsection*{Integer Division}
-                Note that this is an inefficient implementation (to make it easy to follow) we could combine the halts and shortcut the initial zero check (so we don't increment, then re-decrement).
-                \\ \trisplit{
-                    \[x \ div \ y \triangleq \begin{cases}
-                        \left\lfloor \cfrac{x}{y} \right\rfloor & y > 0 \\
-                        0 & y = 0 \\
-                    \end{cases}\]
-                }{
-                    \[
-                        \begin{matrix*}[l]
-                            \instr{0}{\dec{1}{3}{2}}
-                            \instr{1}{\dec{0}{1}{2}}
-                            \instr{2}{\halt}
-                            \instr{3}{\inc{1}{4}}
-                            \instr{4}{\dec{1}{5}{7}}
-                            \instr{5}{\inc{2}{6}}
-                            \instr{6}{\inc{3}{4}}
-                            \instr{7}{\dec{3}{8}{9}}
-                            \instr{8}{\inc{1}{9}}
-                            \instr{9}{\dec{2}{10}{4}}
-                            \instr{10}{\dec{0}{9}{11}}
-                            \instr{11}{\dec{4}{12}{13}}
-                            \instr{12}{\inc{0}{11}}
-                            \instr{13}{\halt}
-                        \end{matrix*}    
-                    \]
-                }{
-                    \centerimage{scale=0.3}{rm functions/integer division}
-                }
-            \subsubsection*{Multiplication}
-                \trisplit{
-                    \[x \times y\]
-                }{
-                    \[
-                        \begin{matrix*}[l]
-                            \instr{0}{\dec{1}{5}{1}}
-                            \instr{1}{\dec{0}{1}{2}}
-                            \instr{2}{\dec{3}{3}{4}}
-                            \instr{3}{\inc{0}{2}}
-                            \instr{4}{\halt}
-                            \instr{5}{\dec{0}{6}{8}}
-                            \instr{6}{\inc{2}{7}}
-                            \instr{7}{\inc{3}{5}}
-                            \instr{8}{\dec{2}{9}{0}}
-                            \instr{9}{\inc{0}{8}}
-                        \end{matrix*}    
-                    \]  
-                }{
-                    \centerimage{scale=0.3}{rm functions/integer multiplication}
-                }
-            \subsubsection*{Exponent of base 2}
-                \trisplit{
-                    \[e(x) \triangleq 2^x \]
-                }{
-                    \[
-                        \begin{matrix*}[l]
-                            \instr{0}{\inc{1}{1}}
-                            \instr{1}{\dec{0}{5}{2}}
-                            \instr{2}{\dec{1}{3}{4}}
-                            \instr{3}{\inc{0}{2}}
-                            \instr{4}{\halt}
-                            \instr{5}{\dec{1}{6}{7}}
-                            \instr{6}{\inc{2}{5}}
-                            \instr{7}{\dec{2}{8}{1}}
-                            \instr{8}{\inc{1}{9}}
-                            \instr{9}{\inc{1}{7}}
-                        \end{matrix*}    
-                    \]  
-                }{
-                    \centerimage{scale=0.3}{rm functions/exponent base 2}
-                }
-        \section*{Encoding Programs as Numbers}
-            \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=99d3e4fb-ecb1-462a-8ae4-ade5014e5bcf}
-            \termdef{Halting Problem}{
-                Given a set $S$ of pairs $(A,D)$ where $A$ is an algorithm and $D$ is some input data $A$ operates on ($A(D)$).
-                \\
-                \\ We want to create some algorithm $H$ such that:
-                \[H(A,D) \triangleq \begin{cases}
-                    1 & A(D)\downarrow \\
-                    0 & otherwise
-                \end{cases}\]
-                Hence if $A(D)\downarrow$ then $A(D)$ eventually halts with some result.
-                \\
-                \\ We can use proof by contradiction to show no such algorithm $H$ can exist.
-                \\
-                \\ Assume an algorithm $H$ exists:
-                \[B(p) \triangleq \begin{cases}
-                    halts & H(p(p)) = 0 \ \text{  ($p(p)$ does not halt)} \\
-                    forever & H(p(p)) = 1 \ \text{  ($p(p)$ halts)} \\
-                \end{cases}\]
-                Hence using $H$ on any $B(p)$ we can determine if $p(p)$ halts ($H(B(p)) \Rightarrow \neg H(p(p))$).
-                \\
-                \\ Now we consider the case when $p = B$.
-                \compitem{
-                    \bullpara{$B(B)$ halts}{Hence $B(B)$ does not halt. Contradiction!}
-                    \bullpara{$B(B)$ does not halt}{Hence $B(B)$ halts. Contradiction!}
-                }
-                Hence by contradiction there is not such algorithm $H$.
-            }
-            In order to reason about programs consuming/running programs (as in the halting problem), we need a way to encode programs as data. Register machines use natural numbers as values for input, and hence we need a way to encode any register machine as a natural number.
-            \subsection*{Pairs}
-                \begin{center}
-                    \begin{tabular}{r l c l}
-                        $\langle\langle x, y \rangle\rangle $&$= 2^x(2y + 1)$ & $y \ 1 \ 0_1 \dots 0_x$ & Bijection between $\mathbb{N} \times \mathbb{N}$ and $\mathbb{N}^+ = \{n \in \mathbb{N} | n \neq 0\}$  \\
-                        $\langle x, y \rangle $&$= 2^x(2y + 1) - 1$ &  $y \ 0 \ 1_1 \dots 1_x$ & Bijection between $\mathbb{N} \times \mathbb{N}$ and $\mathbb{N}$  \\
-                    \end{tabular}
-                \end{center}
-            \subsection*{Lists}
-                We can express lists and right-nested pairs.
-                \[[x_1, x_2, \dots, x_n] = x_1:x_2:\dots:x_n = (x_1, (x_2, (\dots, x_n) \dots ))\]
-                We use zero to define the empty list, so must use a bijection that does not map to zero, hence we use the pair mapping $\langle\langle x,y \rangle\rangle$.
-                \[l : \begin{cases}
-                    \ulcorner [] \urcorner \triangleq 0 \\
-                    \ulcorner x_1 :: l_{inner} \urcorner \triangleq \langle\langle x, \ulcorner l_{inner} \urcorner \rangle\rangle \\
-                \end{cases}\]
-                Hence:
-                \[\ulcorner x_1, \dots, x_n \urcorner = \langle\langle x_1 , \langle\langle \dots, x_n\rangle\rangle \dots \rangle\rangle\]
-            \subsection*{Instructions}
-                \[\begin{split}
-                    \ulcorner \inc{i}{n} \urcorner &= \langle\langle 2i, n \rangle\rangle \\
-                    \ulcorner \dec{i}{n}{m} \urcorner &= \langle\langle 2i + 1, \langle n,m \rangle \  \rangle\rangle \\
-                    \ulcorner \halt \urcorner &= 0 \\
-                \end{split}\]
-            \subsection*{programs}
-                Given some program:
-                \[\ulcorner \left( \begin{matrix*}[l]
-                    \instr{0}{instruction_0}
-                    \vdots & \vdots \\
-                    \instr{n}{instruction_n}
-                \end{matrix*} \right) \urcorner = \ulcorner [\ulcorner instruction_0 \urcorner, \dots, \ulcorner instruction_n \urcorner] \urcorner\]
-    \section*{Tools}
-        In order to simplify checking workings, I have created a basic python script for running, encoding and decoding register machines.
-        \\
-        \\ It is designed to be used in the python shell, to allow for easy manipulation, storing, etc of register machines, encoding/decoding results.
-        \\
-        \\ It also produces latex to show step-by-step workings for calculations.
-        \codelist{python}{../../Models Tools/register machine encoding.py}
+\termdef{Algorithms Informally}{
+	One definition is: \textit{A finite, ordered series of steps to solve a problem.}
+	\\
+	\\ Common features of the many definitions of algorithms are:
+	\compitem{
+		\bullpara{Finite}{Finite number of elementary (cannot be broken down further) operations.}
+		\bullpara{Deterministic}{Next step uniquely defined by the current.}
+		\bullpara{Terminating?}{May not terminate, but we can see when it does \& what the result is.}
+	}
+	\centerimage{width=0.6\textwidth}{algorithm}
+}
+\section*{Register Machines}
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=0bb8a81c-aac4-483c-a26a-adde0149f6fd}
+\termdef{Register Machine}{
+	A turing-equivalent (same computational power as a turing machine) abstract machine that models what is computable.
+	\compitem{
+		\item Infinitely many registers, each storing a natural number ($\mathbb{N} \triangleq \{0, 1, 2, \dots\}$)
+		\item Each instruction has a label associated with it.
+		\bullpara{3 Instructions} {
+			\begin{center}
+				\begin{tabular}{l l}
+					$\inc{i}{m}$    & Add 1 to register $\reglabel{i}$ and then jump to the instruction at $\instrlabel{m}$               \\
+					$\dec{i}{n}{m}$ & If $\reglabel{i} > 0$ then decrement it and jump to $\instrlabel{n}$, else jump to $\instrlabel{m}$ \\
+					$\halt$         & Halt the program.
+				\end{tabular}
+			\end{center}
+		}
+	}
+	At each point in a program the registers are in a configuration $c = (l, r_0, \dots, r_n)$ (where $r_i$ is the value of $\reglabel{i}$ and $l$ is the instruction label $\instrlabel{l}$ that is about to be run).
+	\compitem{
+		\item $c_0$ is the initial configuration, next configurations are $c_1, c_2, \dots$.
+		\item In a finite computation, the final configuration is the \keyword{halting configuration}.
+		\item In a \keyword{proper halt} the program ends on a $\halt$.
+		\item In an \keyword{erroneous halt} the program jumps to a non-existent instruction, the \keyword{halting configuration} is for the instruction immediately before this jump.
+	}
+	\centerimage{width=0.6\textwidth}{graphical register machine}
+}
+\example{Sum of three numbers}{
+	The following register machine computes:
+	\[\begin{matrix}
+			\reglabel{0} = \reglabel{0} + \reglabel{1} + \reglabel{2} & \reglabel{1} = 0 & \reglabel{2} = 0 \\
+		\end{matrix}\]
+	Or as a partial function:
+	\[f(x,y,z) = x + y + z\]
+	\begin{minipage}{0.3\textwidth}
+		\subsubsection*{Registers}
+		$\begin{matrix}
+				\reglabel{0} & \reglabel{1} & \reglabel{2} \\
+			\end{matrix}$
+		\subsubsection*{Program}
+		$\begin{matrix*}[l]
+				\instr{0}{\dec{1}{1}{2}}
+				\instr{1}{\inc{0}{0}}
+				\instr{2}{\dec{2}{3}{4}}
+				\instr{3}{\inc{0}{2}}
+				\instr{4}{\halt}
+			\end{matrix*}$
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.2\textwidth}
+		\centerimage{width=\textwidth}{graphical rm example}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.3\textwidth}
+		\subsubsection*{Example Configuration}
+		\begin{tabular}{l l l l}
+			\regconfig{$\instrlabel{i}$}{$\reglabel{0}$}{$\reglabel{1}$}{$\reglabel{2}$}
+			\hline
+			\regconfig{0}{1}{2}{3}
+			\regconfig{1}{1}{1}{3}
+			\regconfig{0}{2}{1}{3}
+			\regconfig{1}{2}{0}{3}
+			\regconfig{0}{3}{0}{3}
+			\regconfig{2}{3}{0}{3}
+			\regconfig{3}{3}{0}{2}
+			\regconfig{2}{4}{0}{2}
+			\regconfig{3}{4}{0}{1}
+			\regconfig{2}{5}{0}{1}
+			\regconfig{3}{5}{0}{0}
+			\regconfig{2}{6}{0}{0}
+			\regconfig{4}{6}{0}{0}
+		\end{tabular}
+	\end{minipage}
+}
+\subsection*{Partial Functions}
+\termdef{Partial Function}{
+	A partial function maps some members of the domain $X$, with each mapped member going to at most one member of the codomain $Y$.
+	\[f \subseteq X \times Y \ \text{  and  } \ (x,y_1) \in f \land (x, y_2) \in f \Rightarrow y_1 = y_2\]
+	\begin{center}
+		\begin{tabular}{l | l}
+			$f(x) = y$            & $(x,y) \in f$                                           \\
+			$f(x)\downarrow$      & $\exists y \in Y . [f(x) = y]$                          \\
+			$f(x)\uparrow$        & $\neg\exists y \in Y . [f(x) = y]$                      \\
+			$X \rightharpoonup Y$ & Set of all \keyword{partial functions} from $X$ to $Y$. \\
+			$X \to Y$             & Set of all \keyword{total functions} from $X$ to $Y$.   \\
+		\end{tabular}
+	\end{center}
+	A partial function from $X$ to $Y$ is total if it satisfies $f(x)\downarrow$.
+}
+Register machines can be considered as partial functions as for a given input/initial configuration, they produce at most one halting configuration (as they are deterministic, for non-finite computations/non-halting there is no halting configuration).
+\\
+\\ We can consider a register machine as a partial function of the input configuration, to the value of the first register in the halting configuration.
+\[f \in \mathbb{N}^n \rightharpoonup \mathbb{N} \ \text{  and  } \ (r_0, \dots, r_n) \in \mathbb{N}^n, r_0 \in \mathbb{N}\]
+Note that many different register machines may compute the same partial function.
+\subsection*{Computable Functions}
+The following arithmetic functions are computable. Using them we can derive larger register machines for more complex arithmetic (e.g logarithms making use of repeated division).
+\subsubsection*{Projection}
+\trisplit{
+	\[p(x,y) \triangleq x\]
+	\[(r_0, r_1) \to r_0\]
+}{
+	\[\halt\]
+}{
+	\centerimage{scale=0.3}{rm functions/projection}
+}
+
+\subsubsection*{Constant}
+\trisplit{
+	\[c(x) \triangleq n\]
+	\[(r_0) \to n\]
+}{
+	\[
+		\begin{matrix*}[l]
+			\instr{0}{\dec{0}{0}{1}}
+			\instr{1}{\inc{0}{2}}
+			\vdots & \vdots \\
+			\instr{n}{\inc{0}{n+1}}
+			\instr{n+1}{\halt}
+		\end{matrix*}
+	\]
+}{
+	\centerimage{scale=0.3}{rm functions/constant}
+}
+
+\subsubsection*{Truncated Subtraction}
+\trisplit{
+	\[x - y \triangleq \begin{cases}
+			x - y & y \leq x \\
+			0     & y > x
+		\end{cases}\]
+	\[(r_0, r_1) \to r_0 - r_1\]
+}{
+	\[
+		\begin{matrix*}[l]
+			\instr{0}{\dec{1}{1}{2}}
+			\instr{1}{\dec{0}{0}{2}}
+			\instr{2}{\halt}
+		\end{matrix*}
+	\]
+}{
+	\centerimage{scale=0.3}{rm functions/truncated subtraction}
+}
+
+\subsubsection*{Integer Division}
+Note that this is an inefficient implementation (to make it easy to follow) we could combine the halts and shortcut the initial zero check (so we don't increment, then re-decrement).
+\\ \trisplit{
+	\[x \ div \ y \triangleq \begin{cases}
+			\left\lfloor \cfrac{x}{y} \right\rfloor & y > 0 \\
+			0                                       & y = 0 \\
+		\end{cases}\]
+}{
+	\[
+		\begin{matrix*}[l]
+			\instr{0}{\dec{1}{3}{2}}
+			\instr{1}{\dec{0}{1}{2}}
+			\instr{2}{\halt}
+			\instr{3}{\inc{1}{4}}
+			\instr{4}{\dec{1}{5}{7}}
+			\instr{5}{\inc{2}{6}}
+			\instr{6}{\inc{3}{4}}
+			\instr{7}{\dec{3}{8}{9}}
+			\instr{8}{\inc{1}{9}}
+			\instr{9}{\dec{2}{10}{4}}
+			\instr{10}{\dec{0}{9}{11}}
+			\instr{11}{\dec{4}{12}{13}}
+			\instr{12}{\inc{0}{11}}
+			\instr{13}{\halt}
+		\end{matrix*}
+	\]
+}{
+	\centerimage{scale=0.3}{rm functions/integer division}
+}
+\subsubsection*{Multiplication}
+\trisplit{
+	\[x \times y\]
+}{
+	\[
+		\begin{matrix*}[l]
+			\instr{0}{\dec{1}{5}{1}}
+			\instr{1}{\dec{0}{1}{2}}
+			\instr{2}{\dec{3}{3}{4}}
+			\instr{3}{\inc{0}{2}}
+			\instr{4}{\halt}
+			\instr{5}{\dec{0}{6}{8}}
+			\instr{6}{\inc{2}{7}}
+			\instr{7}{\inc{3}{5}}
+			\instr{8}{\dec{2}{9}{0}}
+			\instr{9}{\inc{0}{8}}
+		\end{matrix*}
+	\]
+}{
+	\centerimage{scale=0.3}{rm functions/integer multiplication}
+}
+\subsubsection*{Exponent of base 2}
+\trisplit{
+	\[e(x) \triangleq 2^x \]
+}{
+	\[
+		\begin{matrix*}[l]
+			\instr{0}{\inc{1}{1}}
+			\instr{1}{\dec{0}{5}{2}}
+			\instr{2}{\dec{1}{3}{4}}
+			\instr{3}{\inc{0}{2}}
+			\instr{4}{\halt}
+			\instr{5}{\dec{1}{6}{7}}
+			\instr{6}{\inc{2}{5}}
+			\instr{7}{\dec{2}{8}{1}}
+			\instr{8}{\inc{1}{9}}
+			\instr{9}{\inc{1}{7}}
+		\end{matrix*}
+	\]
+}{
+	\centerimage{scale=0.3}{rm functions/exponent base 2}
+}
+\section*{Encoding Programs as Numbers}
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=99d3e4fb-ecb1-462a-8ae4-ade5014e5bcf}
+\termdef{Halting Problem}{
+	Given a set $S$ of pairs $(A,D)$ where $A$ is an algorithm and $D$ is some input data $A$ operates on ($A(D)$).
+	\\
+	\\ We want to create some algorithm $H$ such that:
+	\[H(A,D) \triangleq \begin{cases}
+			1 & A(D)\downarrow \\
+			0 & otherwise
+		\end{cases}\]
+	Hence if $A(D)\downarrow$ then $A(D)$ eventually halts with some result.
+	\\
+	\\ We can use proof by contradiction to show no such algorithm $H$ can exist.
+	\\
+	\\ Assume an algorithm $H$ exists:
+	\[B(p) \triangleq \begin{cases}
+			halts   & H(p(p)) = 0 \ \text{  ($p(p)$ does not halt)} \\
+			forever & H(p(p)) = 1 \ \text{  ($p(p)$ halts)}         \\
+		\end{cases}\]
+	Hence using $H$ on any $B(p)$ we can determine if $p(p)$ halts ($H(B(p)) \Rightarrow \neg H(p(p))$).
+	\\
+	\\ Now we consider the case when $p = B$.
+	\compitem{
+		\bullpara{$B(B)$ halts}{Hence $B(B)$ does not halt. Contradiction!}
+		\bullpara{$B(B)$ does not halt}{Hence $B(B)$ halts. Contradiction!}
+	}
+	Hence by contradiction there is not such algorithm $H$.
+}
+In order to reason about programs consuming/running programs (as in the halting problem), we need a way to encode programs as data. Register machines use natural numbers as values for input, and hence we need a way to encode any register machine as a natural number.
+\subsection*{Pairs}
+\begin{center}
+	\begin{tabular}{r l c l}
+		$\langle\langle x, y \rangle\rangle $ & $= 2^x(2y + 1)$     & $y \ 1 \ 0_1 \dots 0_x$ & Bijection between $\mathbb{N} \times \mathbb{N}$ and $\mathbb{N}^+ = \{n \in \mathbb{N} | n \neq 0\}$ \\
+		$\langle x, y \rangle $               & $= 2^x(2y + 1) - 1$ & $y \ 0 \ 1_1 \dots 1_x$ & Bijection between $\mathbb{N} \times \mathbb{N}$ and $\mathbb{N}$                                     \\
+	\end{tabular}
+\end{center}
+\subsection*{Lists}
+We can express lists and right-nested pairs.
+\[[x_1, x_2, \dots, x_n] = x_1:x_2:\dots:x_n = (x_1, (x_2, (\dots, x_n) \dots ))\]
+We use zero to define the empty list, so must use a bijection that does not map to zero, hence we use the pair mapping $\langle\langle x,y \rangle\rangle$.
+\[l : \begin{cases}
+		\ulcorner [] \urcorner \triangleq 0                                                                            \\
+		\ulcorner x_1 :: l_{inner} \urcorner \triangleq \langle\langle x, \ulcorner l_{inner} \urcorner \rangle\rangle \\
+	\end{cases}\]
+Hence:
+\[\ulcorner x_1, \dots, x_n \urcorner = \langle\langle x_1 , \langle\langle \dots, x_n\rangle\rangle \dots \rangle\rangle\]
+\subsection*{Instructions}
+\[\begin{split}
+		\ulcorner \inc{i}{n} \urcorner &= \langle\langle 2i, n \rangle\rangle \\
+		\ulcorner \dec{i}{n}{m} \urcorner &= \langle\langle 2i + 1, \langle n,m \rangle \  \rangle\rangle \\
+		\ulcorner \halt \urcorner &= 0 \\
+	\end{split}\]
+\subsection*{programs}
+Given some program:
+\[\ulcorner \left( \begin{matrix*}[l]
+			\instr{0}{instruction_0}
+			\vdots & \vdots \\
+			\instr{n}{instruction_n}
+		\end{matrix*} \right) \urcorner = \ulcorner [\ulcorner instruction_0 \urcorner, \dots, \ulcorner instruction_n \urcorner] \urcorner\]
+\section*{Tools}
+In order to simplify checking workings, I have created a basic python script for running, encoding and decoding register machines.
+\\
+\\ It is designed to be used in the python shell, to allow for easy manipulation, storing, etc of register machines, encoding/decoding results.
+\\
+\\ It also produces latex to show step-by-step workings for calculations.
+\codelist{python}{../../Models Tools/register machine encoding.py}
 \end{document}

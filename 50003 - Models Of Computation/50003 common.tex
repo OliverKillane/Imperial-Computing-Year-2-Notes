@@ -37,7 +37,7 @@
 
 \makeatletter
 \newcommand{\lambarg}[1]{%
-#1 \checknextarglambarg}
+	#1 \checknextarglambarg}
 \newcommand{\checknextarglambarg}{\@ifnextchar\bgroup{\gobblenextarglambarg}{}}
 \newcommand{\gobblenextarglambarg}[1]{ \ #1 \@ifnextchar\bgroup{\gobblenextarglambarg}{}}
 
@@ -45,7 +45,7 @@
 % Variable argument regconfig \regconfig{label no}{reg val}{reg val}...
 \makeatletter
 \newcommand{\regconfig}[2]{%
-$#1$ & $#2$\checknextarg}
+	$#1$ & $#2$\checknextarg}
 \newcommand{\checknextarg}{\@ifnextchar\bgroup{\gobblenextarg}{\\}}
 \newcommand{\gobblenextarg}[1]{ & $#1$\@ifnextchar\bgroup{\gobblenextarg}{\\}}
 %==============================================================================

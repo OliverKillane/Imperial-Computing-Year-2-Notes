@@ -45,6 +45,7 @@ I recommend using [Latex Workshop](https://marketplace.visualstudio.com/items?it
 Users who have contributed material to improve and extend the notes.
 - [Yelun](https://github.com/eylun) - [Fixed Typos, Completed unfinished cost model proof for algorithms lecture 2, first PR for the repo!](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/c82926a79b6592245c50964823bcacf88405d8e9)
 - [Yelun](https://github.com/eylun) - [Fixed Typos, improved and corrected errors in multistep reductions proof.](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/056d6083c14773efe33e1eaa4c753af71d48ef4c)
+- [Yelun](https://github.com/eylun) - [Fixed Typos including error with variance definition.](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/45c3087385ab63818cc80a43a13a91c019e8ad73)
 ### Mistakes Found
 Users who found errors to be corrected & hence helped to improve the quality of these notes.
 

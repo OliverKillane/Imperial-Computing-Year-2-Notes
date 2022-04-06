@@ -6,203 +6,203 @@
 \input{../50004 common.tex}
 
 \begin{document}
-    \maketitle
-    \sidenote{Lecture Recording}{
-        Lecture recording is available \href{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=8ce2ab3e-8ad5-49a3-b391-adc800a6efb6}{here}
-    }
+\maketitle
+\sidenote{Lecture Recording}{
+	Lecture recording is available \href{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=8ce2ab3e-8ad5-49a3-b391-adc800a6efb6}{here}
+}
 
-    \section*{Scheduling}
-        \subsubsection*{Process States}
-            \centerimage{width=0.8\textwidth}{process states.png}
-            Scheduling concerns determining which ready process should be run, when and for how long.
-        \subsubsection*{Scheduling Goals}
-            \begin{itemize}
-                \bullpara{Fairness}{Comparable processes get comparable resource allocation (e.g CPU time).}
-                \bullpara{Avoid Indefinite Postponement}{No process should starve (be left with no CPU time at all, effectively not running at all).}
-                \bullpara{Enforce Policy}{For example enforcing certain processes (e.g system processe) are prioritised.}
-                \bullpara{Maximize Resource Utilisation}{If there is a process that can be run, it should be run. Resources go beyond CPU time to resouces such as disk, or I/O.}
-                \bullpara{Minimise Overhead}{The scheduling system itself should use as little resources as possible. (e.g minimise scheduling decisions and frequency of context switches).}
-            \end{itemize}
-            There are different priorities for different types of systems
-        \subsubsection*{Scheduler Types \& Systems}
-            \begin{itemize}
-                \bullpara{Batch Systems}{Optimise for throughput (jobs per unit time) or turnaround time (time from submission to completion).}
-                \bullpara{Interactive Systems}{Response Time is crucial (time from request issued to first response).}
-                \bullpara{Real Time Systems}{Need to meet deadlines. 
-                \begin{tabular}{l}
-                    Soft: (recoverable) e.g reduced video quality. \\
-                    Hard: (irrecoverable) e.g factory robots collide.}
-                \end{tabular}
-            \end{itemize}
-            There are two main types of scheduler
-            \begin{itemize}
-                \bullpara{Non-Preemptive}{
-                    \compitem{
-                        \item Processes are allowed to continue to run until they become blocked, or voluntarily yield the CPU.
-                        \item Typically this requires software to be trusted to not monopolise the CPU maliciously.
-                        \item Bad for interactivity as a process may be waiting for a long time.
-                        \item Good for batch systems as sheduler overhead is typically small.
-                    }
-                }
-                \bullpara{Preemeptive}{
-                    \compitem{
-                        \item Processes can run for a maximum amount of time (time slice) before being descheduled.
-                        \item Requires a clock interrupt to allow the OS to take control from the process.
-                        \item Used often in interactive systems as longest wait is guarenteed to be $(\text{processes} - 1) \times \text{time slice}$.
-                    }
-                }
-            \end{itemize}
-        \subsubsection*{CPU vs I/O Bound}
-            \textbf{CPU Bound}
-            \compitem{
-                \item Spend most of their time using the CPU (e.g data processing).
-            }
-            \textbf{I/O Bound}
-            \compitem{
-                \item Spend most of their time waiting for I/O.
-                \item Use the CPU briefly before issuing an I/O request.
-            }
-    \section*{Schedulers}
-        \subsection*{FCFS}
-            \centerimage{width=0.8\textwidth}{FCFS Non-Preemeptive.png}
-            \textbf{Advantages}
-            \compitem{
-                \item All processes are eventually scheduled.
-                \item Very simple \& easy to implement.
-                \item Very fast (minimal scheduling overhead).
-            }
-            \textbf{Disadvantages}
-            \\ scheduler is unfair, for example:
-            \centerimage{width=\textwidth}{FCFS Non-preemptive disadvantage.png}
-        \subsubsection*{Round Robin Scheduling}
-            Much like \keyword{FCFS}, however a process is preempted and added back to the ready queue when its time quantum expires (time slice).
-            \centerimage{width=\textwidth}{RR scheduling.png}
-            \compitem{
-                \item Fair (ready jobs get equal CPU time).
-                \item Response time is good for a small number of jobs.
-                \item Turnaround time is low when run times differ (smaller jobs can finish quickly), but poor for similar runtimes (constant interruption \& sent to back of ready queue).
-            }
+\section*{Scheduling}
+\subsubsection*{Process States}
+\centerimage{width=0.8\textwidth}{process states.png}
+Scheduling concerns determining which ready process should be run, when and for how long.
+\subsubsection*{Scheduling Goals}
+\begin{itemize}
+	\bullpara{Fairness}{Comparable processes get comparable resource allocation (e.g CPU time).}
+	\bullpara{Avoid Indefinite Postponement}{No process should starve (be left with no CPU time at all, effectively not running at all).}
+	\bullpara{Enforce Policy}{For example enforcing certain processes (e.g system processe) are prioritised.}
+	\bullpara{Maximize Resource Utilisation}{If there is a process that can be run, it should be run. Resources go beyond CPU time to resouces such as disk, or I/O.}
+	\bullpara{Minimise Overhead}{The scheduling system itself should use as little resources as possible. (e.g minimise scheduling decisions and frequency of context switches).}
+\end{itemize}
+There are different priorities for different types of systems
+\subsubsection*{Scheduler Types \& Systems}
+\begin{itemize}
+	\bullpara{Batch Systems}{Optimise for throughput (jobs per unit time) or turnaround time (time from submission to completion).}
+	\bullpara{Interactive Systems}{Response Time is crucial (time from request issued to first response).}
+	\bullpara{Real Time Systems}{Need to meet deadlines.
+	\begin{tabular}{l}
+		Soft: (recoverable) e.g reduced video quality. \\
+		Hard: (irrecoverable) e.g factory robots collide.}
+	\end{tabular}
+\end{itemize}
+There are two main types of scheduler
+\begin{itemize}
+	\bullpara{Non-Preemptive}{
+	\compitem{
+	\item Processes are allowed to continue to run until they become blocked, or voluntarily yield the CPU.
+	\item Typically this requires software to be trusted to not monopolise the CPU maliciously.
+	\item Bad for interactivity as a process may be waiting for a long time.
+	\item Good for batch systems as sheduler overhead is typically small.
+	      }
+	      }
+	      \bullpara{Preemeptive}{
+	      \compitem{
+	\item Processes can run for a maximum amount of time (time slice) before being descheduled.
+	\item Requires a clock interrupt to allow the OS to take control from the process.
+	\item Used often in interactive systems as longest wait is guarenteed to be $(\text{processes} - 1) \times \text{time slice}$.
+	      }
+	      }
+\end{itemize}
+\subsubsection*{CPU vs I/O Bound}
+\textbf{CPU Bound}
+\compitem{
+	\item Spend most of their time using the CPU (e.g data processing).
+}
+\textbf{I/O Bound}
+\compitem{
+	\item Spend most of their time waiting for I/O.
+	\item Use the CPU briefly before issuing an I/O request.
+}
+\section*{Schedulers}
+\subsection*{FCFS}
+\centerimage{width=0.8\textwidth}{FCFS Non-Preemeptive.png}
+\textbf{Advantages}
+\compitem{
+	\item All processes are eventually scheduled.
+	\item Very simple \& easy to implement.
+	\item Very fast (minimal scheduling overhead).
+}
+\textbf{Disadvantages}
+\\ scheduler is unfair, for example:
+\centerimage{width=\textwidth}{FCFS Non-preemptive disadvantage.png}
+\subsubsection*{Round Robin Scheduling}
+Much like \keyword{FCFS}, however a process is preempted and added back to the ready queue when its time quantum expires (time slice).
+\centerimage{width=\textwidth}{RR scheduling.png}
+\compitem{
+	\item Fair (ready jobs get equal CPU time).
+	\item Response time is good for a small number of jobs.
+	\item Turnaround time is low when run times differ (smaller jobs can finish quickly), but poor for similar runtimes (constant interruption \& sent to back of ready queue).
+}
 
-            \[\text{overhead} = \cfrac{\text{context switch}}{\text{context switch} + \text{quantum}}\]
-            \[\text{worst response} = \text{number of processes} \times \text{quantum}\]
-            Hence the length of time quantum is a tradeoff between overhead and response time. It should be larger than the context switch time.
-            \\ 
-            \\ Typically from $10ms - 200ms$.
-            \begin{center}
-                \begin{tabular}{r l}
-                    \textbf{OS} & \textbf{Time Slice} \\
-                    Linux & $100ms$ \\
-                    Windows Client & $20ms$ \\
-                    WIndows Server & $180ms$ \\
-                \end{tabular}
-            \end{center}
-        \subsubsection*{Shortest Job First}
-            Schedule the ready thread with the shortest CPU burst remaining given we know the runtimes of each job (either provided, predicted or historical).
-            \centerimage{width=\textwidth}{SJF Scheduler.png}
-            Average turnaround time is optimally low as we run the jobs that are quickest first.
-        \subsubsection*{Shortest Remaining Time}
-            Premptive version of \keyword{SJF}, chooses the process with the shortest remaining time.
-            \\
-            \\ As \keyword{SJF} only makes scheduling decisions when a job is complete, when a new job is added while another job is running, it will have to wait. In \keyword{SRT} we can reschedule immediately upon receiving the shorter job. For example:
-            \\
-            \\ Job 1 \& 2 added simultaneously, Job 3 added after $2s$:
-            \centerimage{width=0.7\textwidth}{SJF vs SRT.png}
-            One issue with \keyword{SRT} is that a long job could be heavily delayed if many short jobs are added.
-        \subsubsection*{Konowing Runtimes in Advance}
-            Runtimes are normally not available in advance. However we can make estimates based on previous history (e.g past CPU time).
-            \\
-            \\ We can also use user estimates, however we may need to counteract programs cheating (by providing low estimates) by for example penalising processes that overrun their estimated time.
-        \subsubsection*{Fair Share Scheduling}
-            On a multi-user system, we need to take into account which processes are being run by which users.
-            \\
-            \\ This can be achieved in \keyword{round robin} scheduling by having a ready queue per user, and round robining on which ready queue is used.
-            \subsubsection*{General Purpose Scheduling}
-                \begin{itemize}
-                    \bullpara{Favour short \& I/O Bound jobs}{
-                        \compitem{
-                            \item Once scheduled they are quickly done with and can have resources freed.
-                            \item I/O bound will likely be blocked and unscheduled quickly.   
-                            \item Keep reposnse times low.
-                        }
-                    }
-                    \bullpara{Quickly Determine Job Nature}{
-                        \\ By quickly adapting to determine which jobs are \keyword{CPU} and \keyword{I/O} bound we can schedule more effectively.
-                    }
-                \end{itemize}
-    
-        \subsubsection*{Priority Scheduling}
-            \begin{itemize}
-                \item Jobs run based on a priority. Always running the job with the highest priority.
-                \item Priorities can be externally defined (user) or based on process-specific metrics (e.g expected CPU burst, previous CPU time, process parent).
-                \item Can be static (unchanging) or dynamic (change during execution - e.g process aging).
-            \end{itemize}
-            Note: Shortest remaining time is a form of priority scheduling.
-            \\
-            \\ These are also used in:
-            \compitem{
-                \item Windows Vista, 7
-                \item Mac OS X
-                \item Linux 2.6 - 2.6.23
-                \item Pintos!
-            }
-            \sidenote{Process explorer}{
-                If you are on windows, you can use the process explorer to see the priority system in action on any running process \& its threads.
-                \\ (https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer)
-                \centerimage{width=0.7\textwidth}{process explorer.png}
-            }
+\[\text{overhead} = \cfrac{\text{context switch}}{\text{context switch} + \text{quantum}}\]
+\[\text{worst response} = \text{number of processes} \times \text{quantum}\]
+Hence the length of time quantum is a tradeoff between overhead and response time. It should be larger than the context switch time.
+\\
+\\ Typically from $10ms - 200ms$.
+\begin{center}
+	\begin{tabular}{r l}
+		\textbf{OS}    & \textbf{Time Slice} \\
+		Linux          & $100ms$             \\
+		Windows Client & $20ms$              \\
+		WIndows Server & $180ms$             \\
+	\end{tabular}
+\end{center}
+\subsubsection*{Shortest Job First}
+Schedule the ready thread with the shortest CPU burst remaining given we know the runtimes of each job (either provided, predicted or historical).
+\centerimage{width=\textwidth}{SJF Scheduler.png}
+Average turnaround time is optimally low as we run the jobs that are quickest first.
+\subsubsection*{Shortest Remaining Time}
+Premptive version of \keyword{SJF}, chooses the process with the shortest remaining time.
+\\
+\\ As \keyword{SJF} only makes scheduling decisions when a job is complete, when a new job is added while another job is running, it will have to wait. In \keyword{SRT} we can reschedule immediately upon receiving the shorter job. For example:
+\\
+\\ Job 1 \& 2 added simultaneously, Job 3 added after $2s$:
+\centerimage{width=0.7\textwidth}{SJF vs SRT.png}
+One issue with \keyword{SRT} is that a long job could be heavily delayed if many short jobs are added.
+\subsubsection*{Konowing Runtimes in Advance}
+Runtimes are normally not available in advance. However we can make estimates based on previous history (e.g past CPU time).
+\\
+\\ We can also use user estimates, however we may need to counteract programs cheating (by providing low estimates) by for example penalising processes that overrun their estimated time.
+\subsubsection*{Fair Share Scheduling}
+On a multi-user system, we need to take into account which processes are being run by which users.
+\\
+\\ This can be achieved in \keyword{round robin} scheduling by having a ready queue per user, and round robining on which ready queue is used.
+\subsubsection*{General Purpose Scheduling}
+\begin{itemize}
+	\bullpara{Favour short \& I/O Bound jobs}{
+	\compitem{
+	\item Once scheduled they are quickly done with and can have resources freed.
+	\item I/O bound will likely be blocked and unscheduled quickly.
+	\item Keep reposnse times low.
+	      }
+	      }
+	      \bullpara{Quickly Determine Job Nature}{
+		      \\ By quickly adapting to determine which jobs are \keyword{CPU} and \keyword{I/O} bound we can schedule more effectively.
+	      }
+\end{itemize}
+
+\subsubsection*{Priority Scheduling}
+\begin{itemize}
+	\item Jobs run based on a priority. Always running the job with the highest priority.
+	\item Priorities can be externally defined (user) or based on process-specific metrics (e.g expected CPU burst, previous CPU time, process parent).
+	\item Can be static (unchanging) or dynamic (change during execution - e.g process aging).
+\end{itemize}
+Note: Shortest remaining time is a form of priority scheduling.
+\\
+\\ These are also used in:
+\compitem{
+	\item Windows Vista, 7
+	\item Mac OS X
+	\item Linux 2.6 - 2.6.23
+	\item Pintos!
+}
+\sidenote{Process explorer}{
+	If you are on windows, you can use the process explorer to see the priority system in action on any running process \& its threads.
+	\\ (https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer)
+	\centerimage{width=0.7\textwidth}{process explorer.png}
+}
 
 
-        \subsubsection*{Multilevel Feedback queues}
-            \centerimage{width=0.5\textwidth}{multilevel feedback queue.png}
-            Each priority level has its own set of runnable threads, which can be scheduled (even by different algorithms). 
-            \\
-            \\ We must be careful not to starve lower priority jobs. This can be done with the feedback mechanism that age a thread as it waits, and assign higher priority to threads that are waiting a long time.
-            \\
-            \\ We can also give I/O bound operations higher priority to ensure they are able to run as quickly they are done waiting (response time is important).
-            \\
-            \\ However there are some disadvantages:
-            \begin{itemize}
-                \bullpara{Inflexible}{
-                    \\ Applications have no control over their priority, and priorities make no guarentees (e.g high priority does not matter, if all processes are running on high priority)
-                }
-                \bullpara{Cannot React Quickly}{
-                    \\ Often Needs a warm-up period (as initially priorities of processes may not relfect what bounds them/their behaviour). This also becomes a rpoblem for realtime systems that must react quickly.
-                }
-                \bullpara{Cheating}{
-                    \\ e.g Adding meaningless I/O to boost priority.
-                    \\
-                    \\ As prity is based off 'feedback', priority can be manipulated.
-                }
-            \end{itemize}
-        
-        \subsubsection*{Lottery Scheduling}
-            Next job to schedule is based on probability. At each scheduling decision a random process is chosen, with probability biased towards threads we that are higher priority.
-            \begin{itemize}
-                \bullpara{tickets Meaningful}{
-                    \\ If a process has $20\%$ of the tickets, it gets on average $20\%$ of the time.
-                }
-                \bullpara{Highly responsive}{
-                    \\ We can provide a job more tickets to give it a higher chance of being run at the next scheduling decision.
-                }
-                \bullpara{No Starvation}{
-                    \\ As all threads have a chance of being scheduled at every decision.
-                }
-                \bullpara{Donation}{
-                    \\ Jobs can exchange tickets, this allows for easy priority donation, and allows cooperating jobs to achieve goals.
-                }
-                \bullpara{Adding a Job affects existing Jobs}{}
-                \bullpara{Unpredictable}{
-                    A process can be \textit{lucky} or \textit{unlucky}, and this can impact response times (e.g interactive process is very unlucky, causes an issue).
-                }
-            \end{itemize}
-    \section*{Summary}
-        \begin{itemize}
-            \bullpara{Schedulers Balance Conflicting Goals}{Fairness, enforce policy, maximise resource utilisation, minimise overhead.}
-            \bullpara{Different Scheduling Algorithms are Appropriate in Different Contexts}{Batch vs interactive vs real-time.}
-            \bullpara{Well Studied Algorithms}{FCFS, RR, SJF, SRT, MLFQs, Lottery}
-        \end{itemize}
-        \centerimage{width=\textwidth}{Numbers you should know.png}
-    \section*{Additions}
-        A little python program for doing \keyword{RR}, \keyword{fcfs} calculations:
-        \lstinputlisting[language=python]{schedulers.py}
+\subsubsection*{Multilevel Feedback queues}
+\centerimage{width=0.5\textwidth}{multilevel feedback queue.png}
+Each priority level has its own set of runnable threads, which can be scheduled (even by different algorithms).
+\\
+\\ We must be careful not to starve lower priority jobs. This can be done with the feedback mechanism that age a thread as it waits, and assign higher priority to threads that are waiting a long time.
+\\
+\\ We can also give I/O bound operations higher priority to ensure they are able to run as quickly they are done waiting (response time is important).
+\\
+\\ However there are some disadvantages:
+\begin{itemize}
+	\bullpara{Inflexible}{
+		\\ Applications have no control over their priority, and priorities make no guarentees (e.g high priority does not matter, if all processes are running on high priority)
+	}
+	\bullpara{Cannot React Quickly}{
+		\\ Often Needs a warm-up period (as initially priorities of processes may not relfect what bounds them/their behaviour). This also becomes a rpoblem for realtime systems that must react quickly.
+	}
+	\bullpara{Cheating}{
+		\\ e.g Adding meaningless I/O to boost priority.
+		\\
+		\\ As prity is based off 'feedback', priority can be manipulated.
+	}
+\end{itemize}
+
+\subsubsection*{Lottery Scheduling}
+Next job to schedule is based on probability. At each scheduling decision a random process is chosen, with probability biased towards threads we that are higher priority.
+\begin{itemize}
+	\bullpara{tickets Meaningful}{
+		\\ If a process has $20\%$ of the tickets, it gets on average $20\%$ of the time.
+	}
+	\bullpara{Highly responsive}{
+		\\ We can provide a job more tickets to give it a higher chance of being run at the next scheduling decision.
+	}
+	\bullpara{No Starvation}{
+		\\ As all threads have a chance of being scheduled at every decision.
+	}
+	\bullpara{Donation}{
+		\\ Jobs can exchange tickets, this allows for easy priority donation, and allows cooperating jobs to achieve goals.
+	}
+	\bullpara{Adding a Job affects existing Jobs}{}
+	\bullpara{Unpredictable}{
+		A process can be \textit{lucky} or \textit{unlucky}, and this can impact response times (e.g interactive process is very unlucky, causes an issue).
+	}
+\end{itemize}
+\section*{Summary}
+\begin{itemize}
+	\bullpara{Schedulers Balance Conflicting Goals}{Fairness, enforce policy, maximise resource utilisation, minimise overhead.}
+	\bullpara{Different Scheduling Algorithms are Appropriate in Different Contexts}{Batch vs interactive vs real-time.}
+	\bullpara{Well Studied Algorithms}{FCFS, RR, SJF, SRT, MLFQs, Lottery}
+\end{itemize}
+\centerimage{width=\textwidth}{Numbers you should know.png}
+\section*{Additions}
+A little python program for doing \keyword{RR}, \keyword{fcfs} calculations:
+\lstinputlisting[language=python]{schedulers.py}
 \end{document}

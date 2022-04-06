@@ -4,3 +4,4 @@
 *.fdb_latexmk
 *.synctex.gz
 *.out
+*.bak*

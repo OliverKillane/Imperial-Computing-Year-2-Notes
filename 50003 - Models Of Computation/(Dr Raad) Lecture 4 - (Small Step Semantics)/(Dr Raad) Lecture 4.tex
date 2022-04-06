@@ -6,219 +6,219 @@
 \input{../50003 common.tex}
 
 \begin{document}
-    \maketitle
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=88425795-02a4-430e-8610-adc901857f44}
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=88425795-02a4-430e-8610-adc901857f44}
 
-    \section*{Small Step semantics}
-        \subsection*{Expressions}
-            \[\whilestdef{W-EXP.LEFT}{
-                \config{E_1}{s} \to_e \config{E_1'}{s'}
-                }{\config{E_1 + E_2}{s} \to_e \config{E_1' + E_2}{s'}}{}\]
-            \[\whilestdef{W-EXP.RIGHT}{
-                \config{E}{s} \to_e \config{E'}{s'}
-                }{\config{n + E}{s} \to_e \config{n + E'}{s'}}{}\]
-            \[\whilestdef{W-EXP.VAR}{}{\config{x}{s} \to_e \config{n}{s}}{s(x) = n}\]
-            \[\whilestdef{W-EXP.ADD}{}{\config{n_1 + n_2}{s} \to_e \config{n_3}{s}}{n_3 = n_1 + n_2}\]
-        \subsection*{Assignment}
-            \[\whilestdef{W-ASS.EXP}{\config{E}{s} \to_e \config{E'}{s'}}{
-                \config{x := E}{s} \to_c \config{x := E'}{s'}
-            }{}\]
-            \[\whilestdef{W-ASS.NUM}{}{
-                \config{x:= n}{s} \to_c \config{skip}{s[x \mapsto n]}
-            }{}\]
-        \subsection*{Sequential Composition}
-            \[\whilestdef{W-SEQ.LEFT}{\config{C_1}{s} \to_c \config{C_1'}{s'}}{
-                \config{C_1;C_2}{s} \to_c \config{C_1';C_2}{s'}
-            }{}\]
-            \[\whilestdef{W-SEQ.SKIP}{}{
-                \config{skip;C}{s} \to_c \config{C}{s}
-            }{}\]
-        \subsection*{Conditional}
-            \[\whilestdef{W-COND.TRUE}{}{\config{\text{if } true \text{ then } C_1 \text{ else } C_2}{s} \to_c \config{C_1}{s}}{}\]
-            \[\whilestdef{W-COND.FALSE}{}{\config{\text{if } false \text{ then } C_1 \text{ else } C_2}{s} \to_c \config{C_2}{s}}{}\]
-            \[\whilestdef{W-COND.BEXP}{
-                \config{B}{s} \to_b \config{B'}{s'}
-            }{\config{\text{if } B \text{ then } C_1 \text{ else } C_2}{s} \to_c \config{\text{if } B' \text{ then } C_1 \text{ else } C_2}{s'}}{}\]
-        \subsection*{While}
-            \[\whilestdef{W-WHILE}{}{
-                \config{\text{while } B \text{ do } C}{s} \to_c \config{\text{if } B \text{ then } (C; \text{while } B \text{ do } C) \text{ else } skip}{s}
-            }{}\]
-        \subsection*{Determinacy and Confluence}
-            The execution relation ($\to_c$) is deterministic. 
-            \[\forall C,C_1,C_2 \in Com \forall s,s_1,s_2 .[\config{C}{s} \to_c \config{C_1}{s_1} \land \config{C}{s} \to_c \config{C_2}{s_2} \rightarrow \config{C_1}{s_1} = \config{C_2}{s_2}]\]
-            Hence the relation is also confluent:
-            \[\forall C,C_1,C_2 \in Com \forall s,s_1,s_2 .[\config{C}{s} \to_c \config{C_1}{s_1} \land \config{C}{s} \to_c \config{C_2}{s_2} \rightarrow \]
-            \[\exists C' \in Com, s' . [\config{C_1}{s_1} \to_c \config{C'}{s'} \land \config{C_2}{s_2}\to_c \config{C'}{s'} ]]\]
-            Both also hold for $\to_e$ and $\to_b$.
-        \subsection*{Answer Configuration}
-            A configuration $\config{skip}{s}$ is an \keyword{answer configuration}. As there is no rule to execute skip, it is a normal form.
-            \[\neg\exists C \in Com, s, s' . [\config{skip}{s} \to_c \config{C}{s'}]\]
-            For booleans $\config{true}{s}$ and $\config{false}{s}$ are answer configurations, and for expressions $\config{n}{s}$.
-        \subsection*{Stuck Configurations}
-            A configuration that cannot be evaluated to a normal form is called a \keyword{suck configuration}.
-            \[\config{y}{(x \mapsto 3)}\]
-            Note that a configuration that leads to a \keyword{stuck configuration} is not itself stuck.
-            \[\config{5 < y}{(x \mapsto 2)}\]
-            (Not stuck, but reduces to a stuck state)
-        \subsection*{Normalising}
-            The relations $\to_b$ and $\to_e$ are normalising, but $\to_c$ is not as it may not have a normal form.
-            \[\text{while } true \text{ do } skip\]
-            \[\config{\text{while } true \text{ do } skip}{s} \to_c^3 \config{\text{while } true \text{ do } skip}{s}\]
-            ($\to_c^3$ means 3 steps, as we have gone through more than one to get the same configuration, it is an infinite loop)
-        \subsection*{Side Effecting Expressions}
-            If we allow programs such as:
-            \[\text{do } x := x + 1 \ return \ x\]
-            \[(\text{do } x := x + 1 \ return \ x) + (\text{do } x := x \times 1 \ return \ x)\]
-            (value depends on evaluation order)
-        \subsection*{Short Circuit Semantics}
-            \[\cfrac{B_1 \to_b B'_1}{B_1 \& B_2 \to_b B_1' \& B_2}\]
-            \[\cfrac{}{false \& B \to_b false}\]
-            \[\cfrac{}{true \& B \to_b B}\]
-        \subsection*{Strictness}
-            An operation is \keyword{strict} when arguments must be evaluated before the operation is evaluated. Addition is struct as both expressions must be evaluated (left, then right).
-            \\
-            \\ Due to short circuiting, $\&$ is left strict as it is possible for the operation to be evaluated without evaluating the right (\keyword{non-strict} in right argument). 
+\section*{Small Step semantics}
+\subsection*{Expressions}
+\[\whilestdef{W-EXP.LEFT}{
+		\config{E_1}{s} \to_e \config{E_1'}{s'}
+	}{\config{E_1 + E_2}{s} \to_e \config{E_1' + E_2}{s'}}{}\]
+\[\whilestdef{W-EXP.RIGHT}{
+		\config{E}{s} \to_e \config{E'}{s'}
+	}{\config{n + E}{s} \to_e \config{n + E'}{s'}}{}\]
+\[\whilestdef{W-EXP.VAR}{}{\config{x}{s} \to_e \config{n}{s}}{s(x) = n}\]
+\[\whilestdef{W-EXP.ADD}{}{\config{n_1 + n_2}{s} \to_e \config{n_3}{s}}{n_3 = n_1 + n_2}\]
+\subsection*{Assignment}
+\[\whilestdef{W-ASS.EXP}{\config{E}{s} \to_e \config{E'}{s'}}{
+		\config{x := E}{s} \to_c \config{x := E'}{s'}
+	}{}\]
+\[\whilestdef{W-ASS.NUM}{}{
+		\config{x:= n}{s} \to_c \config{skip}{s[x \mapsto n]}
+	}{}\]
+\subsection*{Sequential Composition}
+\[\whilestdef{W-SEQ.LEFT}{\config{C_1}{s} \to_c \config{C_1'}{s'}}{
+		\config{C_1;C_2}{s} \to_c \config{C_1';C_2}{s'}
+	}{}\]
+\[\whilestdef{W-SEQ.SKIP}{}{
+		\config{skip;C}{s} \to_c \config{C}{s}
+	}{}\]
+\subsection*{Conditional}
+\[\whilestdef{W-COND.TRUE}{}{\config{\text{if } true \text{ then } C_1 \text{ else } C_2}{s} \to_c \config{C_1}{s}}{}\]
+\[\whilestdef{W-COND.FALSE}{}{\config{\text{if } false \text{ then } C_1 \text{ else } C_2}{s} \to_c \config{C_2}{s}}{}\]
+\[\whilestdef{W-COND.BEXP}{
+		\config{B}{s} \to_b \config{B'}{s'}
+	}{\config{\text{if } B \text{ then } C_1 \text{ else } C_2}{s} \to_c \config{\text{if } B' \text{ then } C_1 \text{ else } C_2}{s'}}{}\]
+\subsection*{While}
+\[\whilestdef{W-WHILE}{}{
+		\config{\text{while } B \text{ do } C}{s} \to_c \config{\text{if } B \text{ then } (C; \text{while } B \text{ do } C) \text{ else } skip}{s}
+	}{}\]
+\subsection*{Determinacy and Confluence}
+The execution relation ($\to_c$) is deterministic.
+\[\forall C,C_1,C_2 \in Com \forall s,s_1,s_2 .[\config{C}{s} \to_c \config{C_1}{s_1} \land \config{C}{s} \to_c \config{C_2}{s_2} \rightarrow \config{C_1}{s_1} = \config{C_2}{s_2}]\]
+Hence the relation is also confluent:
+\[\forall C,C_1,C_2 \in Com \forall s,s_1,s_2 .[\config{C}{s} \to_c \config{C_1}{s_1} \land \config{C}{s} \to_c \config{C_2}{s_2} \rightarrow \]
+			\[\exists C' \in Com, s' . [\config{C_1}{s_1} \to_c \config{C'}{s'} \land \config{C_2}{s_2}\to_c \config{C'}{s'} ]]\]
+Both also hold for $\to_e$ and $\to_b$.
+\subsection*{Answer Configuration}
+A configuration $\config{skip}{s}$ is an \keyword{answer configuration}. As there is no rule to execute skip, it is a normal form.
+\[\neg\exists C \in Com, s, s' . [\config{skip}{s} \to_c \config{C}{s'}]\]
+For booleans $\config{true}{s}$ and $\config{false}{s}$ are answer configurations, and for expressions $\config{n}{s}$.
+\subsection*{Stuck Configurations}
+A configuration that cannot be evaluated to a normal form is called a \keyword{suck configuration}.
+\[\config{y}{(x \mapsto 3)}\]
+Note that a configuration that leads to a \keyword{stuck configuration} is not itself stuck.
+\[\config{5 < y}{(x \mapsto 2)}\]
+(Not stuck, but reduces to a stuck state)
+\subsection*{Normalising}
+The relations $\to_b$ and $\to_e$ are normalising, but $\to_c$ is not as it may not have a normal form.
+\[\text{while } true \text{ do } skip\]
+\[\config{\text{while } true \text{ do } skip}{s} \to_c^3 \config{\text{while } true \text{ do } skip}{s}\]
+($\to_c^3$ means 3 steps, as we have gone through more than one to get the same configuration, it is an infinite loop)
+\subsection*{Side Effecting Expressions}
+If we allow programs such as:
+\[\text{do } x := x + 1 \ return \ x\]
+\[(\text{do } x := x + 1 \ return \ x) + (\text{do } x := x \times 1 \ return \ x)\]
+(value depends on evaluation order)
+\subsection*{Short Circuit Semantics}
+\[\cfrac{B_1 \to_b B'_1}{B_1 \& B_2 \to_b B_1' \& B_2}\]
+\[\cfrac{}{false \& B \to_b false}\]
+\[\cfrac{}{true \& B \to_b B}\]
+\subsection*{Strictness}
+An operation is \keyword{strict} when arguments must be evaluated before the operation is evaluated. Addition is struct as both expressions must be evaluated (left, then right).
+\\
+\\ Due to short circuiting, $\&$ is left strict as it is possible for the operation to be evaluated without evaluating the right (\keyword{non-strict} in right argument).
 
-    \section*{Factorial Program}
-            \[C = y:= x; a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)\]
-            We can attempt to evaluate this for a given input, for example:
-            \[s = [x \mapsto 3, y \mapsto 17, z \mapsto 42]\]
-            The evaluation path is as follows:
-            \subsubsection*{Start}
-                \[\config{y:= x; a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{[x \mapsto 3, y \mapsto 17, z \mapsto 42]}\]
-            \subsubsection*{Get x variable}
-                where $C = a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 17, z \mapsto 42)$:
-                \[\whilest{W-SEQ.LEFT}{
-                    \whilest{W-ASS.EXP}{
-                        \whilest{W-EXP.VAR}{}{\config{x}{s} \to_e \config{3}{s}}
-                    }{\config{y:= x}{s} \to_c \config{y := 3}{s}}
-                }{\config{y:= x; C}{s} \to_c \config{y:=3;C}{s}}\]
-                Result:
-                \[\config{y:= 3; a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 17, z \mapsto 42)}\]
-            \subsubsection*{Assign to y variable}
-                where $C = a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 17, z \mapsto 42)$:
-                \[\whilest{W-SEQ.LEFT}{
-                    \whilest{W-ASS.NUM}{}{\config{y:=3}{s} \to_c \config{skip}{s[y \mapsto 3]}}
-                }{\config{y:= 3; C}{s} \to_c \config{skip;C}{s[y \mapsto 3]}}\]
-                Result:
-                \[\config{skip; a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42)}\]
-            \subsubsection*{Eliminate skip}
-                where $C = a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42)$:
-                \[\whilest{W-SEQ.SKIP}{}{\config{skip;C}{s} \to_c \config{C}{s}}\]
-                Result:
-                \[\config{a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42)}\]
-            \subsubsection*{Assign a}
-                where $C = \text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42)$:
-                \[\whilest{W-SEQ.LEFT}{
-                    \whilest{W-ASS.NUM}{}{\config{a := 1}{s} \to_c \config{skip}{s[a \mapsto 1]}}
-                }{\config{a:=1;C}{s} \to_c \config{skip;C}{s[a \mapsto 1]}}\]
-                Result:
-                \[\config{skip;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
-            \subsubsection*{Eliminate skip}
-                where $C = \text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$
-                \[\whilest{W-SEQ.SKIP}{}{\config{skip;C}{s} \to_c \config{C}{s}}\]
-                Result:
-                \[\config{\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
-            \subsubsection*{Expand while}
-                where $C = (a:= a \times y; y:= y - 1)$, $B = 0<y$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
-                \[\whilest{W-WHILE}{}{\config{\text{while } B \text{ do } C}{s} \to_c \config{\text{if } B \text{ then } (C; \text{while } B \text{ do } C) \text{ else } skip}{s}}\]
-                Result:
-                \[\config{\text{if } 0<y \text{ then } (a:= a \times y; y:= y - 1; \text{while } 0<y \text{ do } a:= a \times y; y:= y - 1) \text{ else } skip}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
-            \subsubsection*{Get y variable}
-                where $C = (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
-                \[\whilest{W-COND.BEXP}{
-                    \whilest{W-BOOL.LESS.RIGHT}{
-                        \whilest{W-EXP.VAR}{}{\config{y}{s} \to \config{3}{s}}
-                    }{\config{0<y}{s} \to_b \config{0<3}{s}}
-                }{\config{\text{if } 0<y \text{ then } (C; \text{while } 0<y \text{ do } C) \text{ else } skip}{s} \to_c \config{\text{if } 0<3 \text{ then } (C; \text{while } 0<y \text{ do } C) \text{ else } skip}{s}}\]
-                Result:
-                \[\config{\text{if } 0<3 \text{ then } (a:= a \times y; y:= y - 1; \text{while } 0<y \text{ do } a:= a \times y; y:= y - 1); \text{ else } skip}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
-            \subsubsection*{Complete if boolean}
-                where $C = (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
-                \[\whilest{W-COND.EXP}{
-                    \whilest{W-BOOl.LESS.TRUE}{}{\config{0<3}{s} \to_b \config{true}{s}}
-                }{\config{\text{if } 0<3 \text{ then } (C; \text{while } 0<y \text{ do } C) \text{ else } skip}{s} \to_c \config{\text{if } true \text{ then } (C; \text{while } 0<y \text{ do } C) \text{ else } skip}{s}}\]
-                Result:
-                \[\config{\text{if } true \text{ then } (a:= a \times y; y:= y - 1; \text{while } 0<y \text{ do } a:= a \times y; y:= y - 1); \text{ else } skip}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
-            \subsubsection*{Evaluate if}
-                where $C = (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
-                \[\whilest{W-COND.TRUE}{}{\config{\text{if } true \text{ then } (C; \text{while } 0<y \text{ do } C) \text{ else } skip}{s} \to_c \config{C; \text{while } 0<y \text{ do } C}{s}}\]
-                Result:
-                \[\config{a:= a \times y; y:= y - 1; \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
-            \subsubsection*{Evaluate Expression a}
-                where $C = y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
-                \[\whilest{W-SEQ.LEFT}{
-                    \whilest{W-ASS.EXP}{
-                        \whilest{W-EXP.MUL.LEFT}{
-                            \whilest{W-EXP.VAR}{}{\config{a}{s} \to \config{1}{s}}
-                        }{\config{a \times y}{s} \to_e \config{1 \times y}{s}}
-                    }{\config{a := a \times y}{s} \to_c \config{a := 1 \times y}{s}}
-                }{\config{a := a \times y; C}{s} \to_c \config{a := 1 \times y; C}{s}}\]
-                Result:
-                \[\config{a := 1 \times y; y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
-            \subsubsection*{Evaluate Expression y}
-                where $C = y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
-                \[\whilest{W-SEQ.LEFT}{
-                    \whilest{W-ASS.EXP}{
-                        \whilest{W-EXP.MUL.RIGHT}{
-                            \whilest{W-EXP.VAR}{}{\config{y}{s} \to_e \config{3}{s}}
-                        }{\config{1 \times y}{s} \to_e \config{1 \times 3}{s}}
-                    }{\config{a := 1 \times y}{s} \to_c \config{a := 1 \times 3}{s}}
-                }{\config{a := 1 \times y; C}{s} \to \config{a := 1 \times 3; C}{s}}\]
-                Result:
-                \[\config{a := 1 \times 3; y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
-            \subsubsection*{Evaluate Multiply}
-                where $C = y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
-                \[\whilest{W-SEQ.LEFT}{
-                    \whilest{W-ASS.EXP}{
-                        \whilest{W-EXP.MUL}{}{\config{1 \times 3}{s} \to_e \config{3}{s}}
-                    }{\config{a := 1 \times 3}{s} \to_c \config{a := 3}{s}}
-                }{\config{a := 1 \times 3; C}{s} \to_c \config{a := 3; C}{s}}\]
-                Result:
-                \[\config{a := 3; y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
-            \subsubsection*{Assign 3 to a}
-                where $C = y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
-                \[\whilest{W-SEQ.LEFT}{
-                    \whilest{W-ASS.NUM}{}{\config{a := 3}{s} \to_c \config{skip}{s[a \mapsto 3]}}
-                }{\config{a := 3; C}{s} \to_c \config{skip;C}{s[a \mapsto 3]}}\]
-                Result:
-                \[\config{skip; y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)}\]
-            \subsubsection*{Eliminate Skip}
-                where $C = y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)$:
-                \[\whilest{W-SEQ.SKIP}{}{\config{skip;C}{s} \to_c \config{C}{s}}\]
-                Result:
-                \[\config{y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)}\]
-            \subsubsection*{Assign 3 to y}
-                where $C = \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)$:
-                \[\whilest{W-SEQ.LEFT}{
-                    \whilest{W-ASS.EXP}{
-                        \whilest{W-EXP.SUB.LEFT}{
-                            \whilest{W-EXP.VAR}{}{\config{y}{s} \to \config{3}{s}}
-                        }{\config{y - 1}{s} \to_e \config{3 - 1}{s}}
-                    }{\config{y := y - 1}{s} \to_c \config{y := 3 - 1}{s}}
-                }{\config{y := y - 1; C}{s} \to_c \config{y := 3 - 1}{s}}\]
-                Result:
-                \[\config{y:= 3 - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)}\]
-            \subsubsection*{Evaluate Subtraction}
-                where $C = \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)$:
-                \[\whilest{W-SEQ.LEFT}{
-                    \whilest{W-ASS.EXP}{
-                        \whilest{W-EXP.SUB}{}{\config{3 - 1}{s} \to_e \config{2}{s}}
-                    }{\config{y := 3 - 1}{s} \to_c \config{y := 2}{s}}
-                }{\config{y := 3 - 1;C}{s} \to_c \config{y:= 2;C}{s}}\]
-                Result:
-                \[\config{y:= 2;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)}\]
-            \subsubsection*{Assign 2 to y}
-                where $C = \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)$:
-                \[\whilest{W-SEQ.LEFT}{
-                    \whilest{W-ASS.NUM}{}{\config{y:= 2}{s} \to_c \config{skip}{s[y \mapsto 2]}}
-                }{\config{y:= 2;C}{s} \to_c \config{skip;C}{s[y \mapsto 2]}}\]
-                Result:
-                \[\config{skip;\text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 2, z \mapsto 42, a \mapsto 3)}\]
-            \subsubsection*{Eliminate skip}
-                where $C = \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 2, z \mapsto 42, a \mapsto 3)$:
-                \[\whilest{W-SEQ.SKIP}{}{\config{skip;C}{s} \to_c \config{C}{s}}\]
-                Result:
-                \[\config{\text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 2, z \mapsto 42, a \mapsto 3)}\]
+\section*{Factorial Program}
+\[C = y:= x; a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)\]
+We can attempt to evaluate this for a given input, for example:
+\[s = [x \mapsto 3, y \mapsto 17, z \mapsto 42]\]
+The evaluation path is as follows:
+\subsubsection*{Start}
+\[\config{y:= x; a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{[x \mapsto 3, y \mapsto 17, z \mapsto 42]}\]
+\subsubsection*{Get x variable}
+where $C = a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 17, z \mapsto 42)$:
+\[\whilest{W-SEQ.LEFT}{
+		\whilest{W-ASS.EXP}{
+			\whilest{W-EXP.VAR}{}{\config{x}{s} \to_e \config{3}{s}}
+		}{\config{y:= x}{s} \to_c \config{y := 3}{s}}
+	}{\config{y:= x; C}{s} \to_c \config{y:=3;C}{s}}\]
+Result:
+\[\config{y:= 3; a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 17, z \mapsto 42)}\]
+\subsubsection*{Assign to y variable}
+where $C = a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 17, z \mapsto 42)$:
+\[\whilest{W-SEQ.LEFT}{
+		\whilest{W-ASS.NUM}{}{\config{y:=3}{s} \to_c \config{skip}{s[y \mapsto 3]}}
+	}{\config{y:= 3; C}{s} \to_c \config{skip;C}{s[y \mapsto 3]}}\]
+Result:
+\[\config{skip; a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42)}\]
+\subsubsection*{Eliminate skip}
+where $C = a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42)$:
+\[\whilest{W-SEQ.SKIP}{}{\config{skip;C}{s} \to_c \config{C}{s}}\]
+Result:
+\[\config{a:= 1;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42)}\]
+\subsubsection*{Assign a}
+where $C = \text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42)$:
+\[\whilest{W-SEQ.LEFT}{
+		\whilest{W-ASS.NUM}{}{\config{a := 1}{s} \to_c \config{skip}{s[a \mapsto 1]}}
+	}{\config{a:=1;C}{s} \to_c \config{skip;C}{s[a \mapsto 1]}}\]
+Result:
+\[\config{skip;\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
+\subsubsection*{Eliminate skip}
+where $C = \text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$
+\[\whilest{W-SEQ.SKIP}{}{\config{skip;C}{s} \to_c \config{C}{s}}\]
+Result:
+\[\config{\text{while }0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
+\subsubsection*{Expand while}
+where $C = (a:= a \times y; y:= y - 1)$, $B = 0<y$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
+\[\whilest{W-WHILE}{}{\config{\text{while } B \text{ do } C}{s} \to_c \config{\text{if } B \text{ then } (C; \text{while } B \text{ do } C) \text{ else } skip}{s}}\]
+Result:
+\[\config{\text{if } 0<y \text{ then } (a:= a \times y; y:= y - 1; \text{while } 0<y \text{ do } a:= a \times y; y:= y - 1) \text{ else } skip}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
+\subsubsection*{Get y variable}
+where $C = (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
+\[\whilest{W-COND.BEXP}{
+		\whilest{W-BOOL.LESS.RIGHT}{
+			\whilest{W-EXP.VAR}{}{\config{y}{s} \to \config{3}{s}}
+		}{\config{0<y}{s} \to_b \config{0<3}{s}}
+	}{\config{\text{if } 0<y \text{ then } (C; \text{while } 0<y \text{ do } C) \text{ else } skip}{s} \to_c \config{\text{if } 0<3 \text{ then } (C; \text{while } 0<y \text{ do } C) \text{ else } skip}{s}}\]
+Result:
+\[\config{\text{if } 0<3 \text{ then } (a:= a \times y; y:= y - 1; \text{while } 0<y \text{ do } a:= a \times y; y:= y - 1); \text{ else } skip}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
+\subsubsection*{Complete if boolean}
+where $C = (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
+\[\whilest{W-COND.EXP}{
+		\whilest{W-BOOl.LESS.TRUE}{}{\config{0<3}{s} \to_b \config{true}{s}}
+	}{\config{\text{if } 0<3 \text{ then } (C; \text{while } 0<y \text{ do } C) \text{ else } skip}{s} \to_c \config{\text{if } true \text{ then } (C; \text{while } 0<y \text{ do } C) \text{ else } skip}{s}}\]
+Result:
+\[\config{\text{if } true \text{ then } (a:= a \times y; y:= y - 1; \text{while } 0<y \text{ do } a:= a \times y; y:= y - 1); \text{ else } skip}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
+\subsubsection*{Evaluate if}
+where $C = (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
+\[\whilest{W-COND.TRUE}{}{\config{\text{if } true \text{ then } (C; \text{while } 0<y \text{ do } C) \text{ else } skip}{s} \to_c \config{C; \text{while } 0<y \text{ do } C}{s}}\]
+Result:
+\[\config{a:= a \times y; y:= y - 1; \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
+\subsubsection*{Evaluate Expression a}
+where $C = y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
+\[\whilest{W-SEQ.LEFT}{
+		\whilest{W-ASS.EXP}{
+			\whilest{W-EXP.MUL.LEFT}{
+				\whilest{W-EXP.VAR}{}{\config{a}{s} \to \config{1}{s}}
+			}{\config{a \times y}{s} \to_e \config{1 \times y}{s}}
+		}{\config{a := a \times y}{s} \to_c \config{a := 1 \times y}{s}}
+	}{\config{a := a \times y; C}{s} \to_c \config{a := 1 \times y; C}{s}}\]
+Result:
+\[\config{a := 1 \times y; y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
+\subsubsection*{Evaluate Expression y}
+where $C = y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
+\[\whilest{W-SEQ.LEFT}{
+		\whilest{W-ASS.EXP}{
+			\whilest{W-EXP.MUL.RIGHT}{
+				\whilest{W-EXP.VAR}{}{\config{y}{s} \to_e \config{3}{s}}
+			}{\config{1 \times y}{s} \to_e \config{1 \times 3}{s}}
+		}{\config{a := 1 \times y}{s} \to_c \config{a := 1 \times 3}{s}}
+	}{\config{a := 1 \times y; C}{s} \to \config{a := 1 \times 3; C}{s}}\]
+Result:
+\[\config{a := 1 \times 3; y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
+\subsubsection*{Evaluate Multiply}
+where $C = y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
+\[\whilest{W-SEQ.LEFT}{
+		\whilest{W-ASS.EXP}{
+			\whilest{W-EXP.MUL}{}{\config{1 \times 3}{s} \to_e \config{3}{s}}
+		}{\config{a := 1 \times 3}{s} \to_c \config{a := 3}{s}}
+	}{\config{a := 1 \times 3; C}{s} \to_c \config{a := 3; C}{s}}\]
+Result:
+\[\config{a := 3; y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)}\]
+\subsubsection*{Assign 3 to a}
+where $C = y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 1)$:
+\[\whilest{W-SEQ.LEFT}{
+		\whilest{W-ASS.NUM}{}{\config{a := 3}{s} \to_c \config{skip}{s[a \mapsto 3]}}
+	}{\config{a := 3; C}{s} \to_c \config{skip;C}{s[a \mapsto 3]}}\]
+Result:
+\[\config{skip; y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)}\]
+\subsubsection*{Eliminate Skip}
+where $C = y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)$:
+\[\whilest{W-SEQ.SKIP}{}{\config{skip;C}{s} \to_c \config{C}{s}}\]
+Result:
+\[\config{y:= y - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)}\]
+\subsubsection*{Assign 3 to y}
+where $C = \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)$:
+\[\whilest{W-SEQ.LEFT}{
+		\whilest{W-ASS.EXP}{
+			\whilest{W-EXP.SUB.LEFT}{
+				\whilest{W-EXP.VAR}{}{\config{y}{s} \to \config{3}{s}}
+			}{\config{y - 1}{s} \to_e \config{3 - 1}{s}}
+		}{\config{y := y - 1}{s} \to_c \config{y := 3 - 1}{s}}
+	}{\config{y := y - 1; C}{s} \to_c \config{y := 3 - 1}{s}}\]
+Result:
+\[\config{y:= 3 - 1;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)}\]
+\subsubsection*{Evaluate Subtraction}
+where $C = \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)$:
+\[\whilest{W-SEQ.LEFT}{
+		\whilest{W-ASS.EXP}{
+			\whilest{W-EXP.SUB}{}{\config{3 - 1}{s} \to_e \config{2}{s}}
+		}{\config{y := 3 - 1}{s} \to_c \config{y := 2}{s}}
+	}{\config{y := 3 - 1;C}{s} \to_c \config{y:= 2;C}{s}}\]
+Result:
+\[\config{y:= 2;  \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)}\]
+\subsubsection*{Assign 2 to y}
+where $C = \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 3, z \mapsto 42, a \mapsto 3)$:
+\[\whilest{W-SEQ.LEFT}{
+		\whilest{W-ASS.NUM}{}{\config{y:= 2}{s} \to_c \config{skip}{s[y \mapsto 2]}}
+	}{\config{y:= 2;C}{s} \to_c \config{skip;C}{s[y \mapsto 2]}}\]
+Result:
+\[\config{skip;\text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 2, z \mapsto 42, a \mapsto 3)}\]
+\subsubsection*{Eliminate skip}
+where $C = \text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)$ and $s = (x \mapsto 3, y \mapsto 2, z \mapsto 42, a \mapsto 3)$:
+\[\whilest{W-SEQ.SKIP}{}{\config{skip;C}{s} \to_c \config{C}{s}}\]
+Result:
+\[\config{\text{while } 0<y \text{ do } (a:= a \times y; y:= y - 1)}{(x \mapsto 3, y \mapsto 2, z \mapsto 42, a \mapsto 3)}\]
 
 \end{document}

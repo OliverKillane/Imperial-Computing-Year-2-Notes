@@ -13,8 +13,8 @@
 
 % \centerimage{options}{image}
 \newcommand{\centerimage}[2]{\begin{center}
-    \includegraphics[#1]{#2}
-\end{center}}
+		\includegraphics[#1]{#2}
+	\end{center}}
 %===============================================================================
 
 %==============================SYNTAX HIGHLIGHTING==============================
@@ -29,17 +29,17 @@
 \definecolor{codebackdrop}{gray}{0.9}
 \definecolor{commentgreen}{rgb}{0,0.6,0}
 \lstset{
-    inputpath=code, 
-    commentstyle=\color{commentgreen},
-    keywordstyle=\color{blue}, 
-    backgroundcolor=\color{codebackdrop}, 
-    basicstyle=\footnotesize,
-    frame=single,
-    numbers=left,
-    stepnumber=1,
-    showstringspaces=false,
-    breaklines=true,
-    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
+	inputpath=code, 
+	commentstyle=\color{commentgreen},
+	keywordstyle=\color{blue}, 
+	backgroundcolor=\color{codebackdrop}, 
+	basicstyle=\footnotesize,
+	frame=single,
+	numbers=left,
+	stepnumber=1,
+	showstringspaces=false,
+	breaklines=true,
+	postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}
 }
 
 % Create a code listing for a single line
@@ -95,20 +95,20 @@
 
 % Creates a link to the lecture for use at the start of the notes document
 \newcommand{\lectlink}[1]{\sidenote{Lecture Recording}{
-    Lecture recording is available \href{#1}{here}
-}}
+		Lecture recording is available \href{#1}{here}
+	}}
 %===============================================================================
 
 %==============================PAGE SPLIT LAYOUTS===============================
 
 \newcommand{\halfsplit}[2] {
-    \begin{minipage}[t]{0.48\textwidth}
-        #1
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        #2
-    \end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		#1
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{0.48\textwidth}
+		#2
+	\end{minipage}
 }
 
 %===============================================================================
@@ -119,7 +119,7 @@
 
 \newenvironment{proof}
 {\begin{center}\begin{tabular}{r l l }}
-{\end{tabular}\end{center}}
+			{\end{tabular}\end{center}}
 
 %\proofstep{step}{workings}{description}
 \newcommand{\proofstep}[3]{\stepno{(#1)} & #2 & #3 \\}

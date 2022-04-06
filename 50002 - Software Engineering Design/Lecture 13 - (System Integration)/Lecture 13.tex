@@ -6,62 +6,62 @@
 \input{../50002 common.tex}
 
 \begin{document}
-    \maketitle
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=fa29f444-a038-44f5-900c-ade7009ab98f}
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=fa29f444-a038-44f5-900c-ade7009ab98f}
 
-    \section*{Adapter}
-        \centerline{\textit{I have X, but I want Y}}
-        Converts the interfgace of a class into another interface that the client expects.
-        \\
-        \\ Used when an existing component does what we require, but does not have the correct interface to use in our system. We may use our adapter to call multiple methods in the Adaptee, but almost all the behaviour should be in the adaptee.
-        \centerimage{width=0.8\textwidth}{adapter pattern.png}
-        \codelist{Java}{adapter.java}
-        
-    \section*{Decorator}
-        \centerline{\textit{I have X, but I want a better X}}
-        Add more functionality or responsibility to an object dynamically.
-        \\
-        \\ We use an existing basic service, and create a new service that uses the basic service.
-        \centerimage{width=0.8\textwidth}{decorator.png}
-        \codelist{Java}{decorator.java}
+\section*{Adapter}
+\centerline{\textit{I have X, but I want Y}}
+Converts the interfgace of a class into another interface that the client expects.
+\\
+\\ Used when an existing component does what we require, but does not have the correct interface to use in our system. We may use our adapter to call multiple methods in the Adaptee, but almost all the behaviour should be in the adaptee.
+\centerimage{width=0.8\textwidth}{adapter pattern.png}
+\codelist{Java}{adapter.java}
 
-    \section*{Facade}
-        \centerline{\textit{I have X, but I want a simpler X}}
-        The facade hides the internal complexity, hading the use of many objects \& interfaces  behind one simple interface.
-        \centerimage{width=0.6\textwidth}{facade.png}
-        \subsubsection*{Simplicator}
-            A common use case for this is the \keyword{Simplicator} for interacting with legacy networking systems.
-            \centerimage{width=0.6\textwidth}{simplicator.png}
-            This can make it easier to test as we can mock our Simpler API for testing the system, and use our simpler api alone to create tests for checking our legacy system.
+\section*{Decorator}
+\centerline{\textit{I have X, but I want a better X}}
+Add more functionality or responsibility to an object dynamically.
+\\
+\\ We use an existing basic service, and create a new service that uses the basic service.
+\centerimage{width=0.8\textwidth}{decorator.png}
+\codelist{Java}{decorator.java}
 
-    \section*{Proxy}
-        \centerline{\textit{I have X, but its too slow}}
-        Control access to an object by providing a placeholder or surrogate object. Is put in front of an expensive resource to manage it (e.g prioritisation, load balancing, caching), delegates to that resource.
-        \\
-        \\ Proxy may (or may not) decide to push a request on to the service, or may hold onto the result (caching).
-        \subsubsection*{Caching}
-            \centerimage{width=0.8\textwidth}{caching.png}
-            Caching can be very effective when combined with a simplificator. We can use the simplificator to integrate off-the-shelf caching software and have it work with our legacy system.
-        
-    \section*{Hexagonal Architecture}
-        \centerimage{width=\textwidth}{hexagonal architectures.png}
-        By using adapters to bridge our code for the program logic, and 3rd party services we can:
-        \begin{itemize}
-            \bullpara{Unit Test the Logic}{
-                \\ As we can mock the adapters, we can easily test the program logic without having to spin up any 3rd party services.
-            }
-            \bullpara{Perform Integration Tests}{
-                \\ Test the adapters in isolation from the program logic.
-            }
-            \bullpara{Perform System Tests}{
-                \\ Can test all components together, though this is more complex, slow and unlikely to cover all behaviour.
-            }
-            \bullpara{Decouple 3rd party services and program logic}{
-                \\ We can alter program logic easily without dealing with types \& conventions from our services. Furthermore we can easily change service by only changing the adapter.
-            }
-        \end{itemize}
-    
-    \section*{Test Proportions}
-        A common ratio for $unit : integration : system$ tests is $70\% : 20\% : 10\%$ though this varies by speed of tests \& how focused/wide ranging the tests are.
-        
+\section*{Facade}
+\centerline{\textit{I have X, but I want a simpler X}}
+The facade hides the internal complexity, hading the use of many objects \& interfaces  behind one simple interface.
+\centerimage{width=0.6\textwidth}{facade.png}
+\subsubsection*{Simplicator}
+A common use case for this is the \keyword{Simplicator} for interacting with legacy networking systems.
+\centerimage{width=0.6\textwidth}{simplicator.png}
+This can make it easier to test as we can mock our Simpler API for testing the system, and use our simpler api alone to create tests for checking our legacy system.
+
+\section*{Proxy}
+\centerline{\textit{I have X, but its too slow}}
+Control access to an object by providing a placeholder or surrogate object. Is put in front of an expensive resource to manage it (e.g prioritisation, load balancing, caching), delegates to that resource.
+\\
+\\ Proxy may (or may not) decide to push a request on to the service, or may hold onto the result (caching).
+\subsubsection*{Caching}
+\centerimage{width=0.8\textwidth}{caching.png}
+Caching can be very effective when combined with a simplificator. We can use the simplificator to integrate off-the-shelf caching software and have it work with our legacy system.
+
+\section*{Hexagonal Architecture}
+\centerimage{width=\textwidth}{hexagonal architectures.png}
+By using adapters to bridge our code for the program logic, and 3rd party services we can:
+\begin{itemize}
+	\bullpara{Unit Test the Logic}{
+		\\ As we can mock the adapters, we can easily test the program logic without having to spin up any 3rd party services.
+	}
+	\bullpara{Perform Integration Tests}{
+		\\ Test the adapters in isolation from the program logic.
+	}
+	\bullpara{Perform System Tests}{
+		\\ Can test all components together, though this is more complex, slow and unlikely to cover all behaviour.
+	}
+	\bullpara{Decouple 3rd party services and program logic}{
+		\\ We can alter program logic easily without dealing with types \& conventions from our services. Furthermore we can easily change service by only changing the adapter.
+	}
+\end{itemize}
+
+\section*{Test Proportions}
+A common ratio for $unit : integration : system$ tests is $70\% : 20\% : 10\%$ though this varies by speed of tests \& how focused/wide ranging the tests are.
+
 \end{document}

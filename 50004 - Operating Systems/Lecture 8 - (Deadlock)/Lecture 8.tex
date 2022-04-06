@@ -6,106 +6,106 @@
 \input{../50004 common.tex}
 
 \begin{document}
-    \maketitle
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=108a0538-c84b-4fad-ab78-addb00f338d1}
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=e250a514-a6f4-40ed-bfbf-adde00aebf98}
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=108a0538-c84b-4fad-ab78-addb00f338d1}
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=e250a514-a6f4-40ed-bfbf-adde00aebf98}
 
-    \section*{Deadlock}
-        When two processes mutually block access to a resource the other requires to progress. An example is below:
-        \threadlist{C}{deadlock simple}{c}
-        \subsubsection*{Dining Philosophers}
-            \codelist{C}{dining philosophers init.c}
-            \codelist{C}{dining philosopher eat.c}
-            Notice that if every philosopher takes chopstick $i$ at the same time (chopstick to the left), then we have a deadlock. As no one can get the chopstick to the right, so cannot progress.
-        
-        A set of processes is \keyword{deadlocked} if each process is waiting for an event that only another process can cause, and that process is waiting on an event that is directly or indirectly caused by the other.
-        \\
-        \\Resource deadlock is the most common type, and for it $4$ conditions must hold:
-        \begin{itemize}
-            \bullpara{Mutual Exlcusion}{
-                Each resoruce is either available or assigned to exactly one process
-            }
-            \bullpara{Hold \& Wait}{
-                Process can request resources while it holds other resources.
-            }
-            \bullpara{No preemption}{
-                Resources given to a process cannot be forcibly revoked or borrowed.
-            }
-            \bullpara{Circular Wait}{
-                Two or more processes in a circular chain, each waiting for a resoruce held by the next process.
-            }
-        \end{itemize}
-        \subsubsection*{Resource Allocation Graphs}
-            A \keyword{Directed Graph} containing:
-            \centerimage{width=0.8\textwidth}{RAG edges.png}
-            A cycle in the graph represents a deadlock.
-    
-    \section*{Deadlock Strategies}
-        \begin{itemize}
-            \bullpara{Ignore}{
-                \\ The "ostrich algorithm", if contention for resources is low \& deadlocks very infrequent, then can iugnore, simply restart when a deadlock occurs.
-            }
-            \bullpara{Detection \& Recovery}{
-                \\ After the system becomes deadlocked, detect a deadlock has occured \& recover from it (e.g reverting to a saved state).
-            }
-            \bullpara{Dynamic Avoidance}{
-                \\ Dynamically consider every request and decide if it is safe to grant.
-                \\
-                \\ Needs information to determine safety of a request (e.g resoruce use, current owners etc).
-            }
-            \bullpara{Prevention}{
-                \\ Prevent deadlocks by ensuring at least one of the four conditios can never hold.
-            }
-        \end{itemize}
-        \subsection*{Detection \& Recovery}
-            Dynamically builds resource ownership graph and searches for cycles (\keyword{Depth-First Search}, when edge inspected it is marked and not visited again).
-            \\
-            \\ When cycle detected, recover.
-            \codelist{Python}{detection.py}
-            \centerimage{width=0.8\textwidth}{RAG deadlock.png}
-            Here we have a cycle as $D,E \& G$ are in a cycle and cannot gain the resources they need to progress. Further $B$ may be blocked as $E$ holds $T$.
-            \subsubsection*{Recovery}
-                \begin{itemize}
-                    \bullpara{Pre-emption}{
-                        \\ Temporarily take a resource from an owner \& give it to another.
-                        }
-                    \bullpara{Rollback}{
-                        \\ Processes are periodically checkpointed (memory image, state), rollback to the last state (note we must still prevent deadlock from occuring when this state progresses).
-                        }
-                    \bullpara{Killing Processes}{
-                        \\ Select a random process in the cycle and kill it! (Would work for jobs such as compiling, but not for a DB system - depends if it is easy to restart the process)
-                        }
-                \end{itemize}
-        \subsection*{Deadlock Prevention}
-            Attack one of the $4$ deadlock conditions.
-            \begin{itemize}
-                \bullpara{Mutual Exclusion}{
-                    \\ Share the resource
-                    \\
-                    \\ Issue: This risks race conditions.
-                }
-                \bullpara{Hold \& Wait}{
-                    Require all processes to request resources before start, if not available then wait.
-                    \\
-                    \\ Issue: Need to know what resoruces are needed in advance.
-                }
-                \bullpara{No-preemption}{
-                    \\ Issue: Potential issues with race conditions, data corruption etc (e.g forcing a printer to give up half way through a print). 
-                }
-                \bullpara{Circular Wait}{
-                    \\ Force single resource per process - Issue: Not optimal, requires far more resources.
-                    \\
-                    \\ Index resources, processes wait for resources in order - Issue: For a large number or resources \& processes it is difficult to organise.
-                }
-            \end{itemize}
-    \section*{Communication Deadlock}
-        \centerimage{width=0.5\textwidth}{communication deadlock.png}
-        Ordering resources \& careful scheduling will not help here, instead we must alter the communication protocol to use timeouts.
-    
-    \section*{Livelock}
-            Processes/Threads are not blocked, however the program/system as a whole fails to make progress.
-            \\
-            \\ For example a busy wait on a acquiring a mutex, when the mutex cannot be acquired.
-            \threadlist{C}{mutex livelock}{c}
-            Or a system receiving messages, may never run a lower priority thread under high load (\keyword{receive livelock}).
+\section*{Deadlock}
+When two processes mutually block access to a resource the other requires to progress. An example is below:
+\threadlist{C}{deadlock simple}{c}
+\subsubsection*{Dining Philosophers}
+\codelist{C}{dining philosophers init.c}
+\codelist{C}{dining philosopher eat.c}
+Notice that if every philosopher takes chopstick $i$ at the same time (chopstick to the left), then we have a deadlock. As no one can get the chopstick to the right, so cannot progress.
+
+A set of processes is \keyword{deadlocked} if each process is waiting for an event that only another process can cause, and that process is waiting on an event that is directly or indirectly caused by the other.
+\\
+\\Resource deadlock is the most common type, and for it $4$ conditions must hold:
+\begin{itemize}
+	\bullpara{Mutual Exlcusion}{
+		Each resoruce is either available or assigned to exactly one process
+	}
+	\bullpara{Hold \& Wait}{
+		Process can request resources while it holds other resources.
+	}
+	\bullpara{No preemption}{
+		Resources given to a process cannot be forcibly revoked or borrowed.
+	}
+	\bullpara{Circular Wait}{
+		Two or more processes in a circular chain, each waiting for a resoruce held by the next process.
+	}
+\end{itemize}
+\subsubsection*{Resource Allocation Graphs}
+A \keyword{Directed Graph} containing:
+\centerimage{width=0.8\textwidth}{RAG edges.png}
+A cycle in the graph represents a deadlock.
+
+\section*{Deadlock Strategies}
+\begin{itemize}
+	\bullpara{Ignore}{
+		\\ The "ostrich algorithm", if contention for resources is low \& deadlocks very infrequent, then can iugnore, simply restart when a deadlock occurs.
+	}
+	\bullpara{Detection \& Recovery}{
+		\\ After the system becomes deadlocked, detect a deadlock has occured \& recover from it (e.g reverting to a saved state).
+	}
+	\bullpara{Dynamic Avoidance}{
+		\\ Dynamically consider every request and decide if it is safe to grant.
+		\\
+		\\ Needs information to determine safety of a request (e.g resoruce use, current owners etc).
+	}
+	\bullpara{Prevention}{
+		\\ Prevent deadlocks by ensuring at least one of the four conditios can never hold.
+	}
+\end{itemize}
+\subsection*{Detection \& Recovery}
+Dynamically builds resource ownership graph and searches for cycles (\keyword{Depth-First Search}, when edge inspected it is marked and not visited again).
+\\
+\\ When cycle detected, recover.
+\codelist{Python}{detection.py}
+\centerimage{width=0.8\textwidth}{RAG deadlock.png}
+Here we have a cycle as $D,E \& G$ are in a cycle and cannot gain the resources they need to progress. Further $B$ may be blocked as $E$ holds $T$.
+\subsubsection*{Recovery}
+\begin{itemize}
+	\bullpara{Pre-emption}{
+		\\ Temporarily take a resource from an owner \& give it to another.
+	}
+	\bullpara{Rollback}{
+		\\ Processes are periodically checkpointed (memory image, state), rollback to the last state (note we must still prevent deadlock from occuring when this state progresses).
+	}
+	\bullpara{Killing Processes}{
+		\\ Select a random process in the cycle and kill it! (Would work for jobs such as compiling, but not for a DB system - depends if it is easy to restart the process)
+	}
+\end{itemize}
+\subsection*{Deadlock Prevention}
+Attack one of the $4$ deadlock conditions.
+\begin{itemize}
+	\bullpara{Mutual Exclusion}{
+		\\ Share the resource
+		\\
+		\\ Issue: This risks race conditions.
+	}
+	\bullpara{Hold \& Wait}{
+		Require all processes to request resources before start, if not available then wait.
+		\\
+		\\ Issue: Need to know what resoruces are needed in advance.
+	}
+	\bullpara{No-preemption}{
+		\\ Issue: Potential issues with race conditions, data corruption etc (e.g forcing a printer to give up half way through a print).
+	}
+	\bullpara{Circular Wait}{
+		\\ Force single resource per process - Issue: Not optimal, requires far more resources.
+		\\
+		\\ Index resources, processes wait for resources in order - Issue: For a large number or resources \& processes it is difficult to organise.
+	}
+\end{itemize}
+\section*{Communication Deadlock}
+\centerimage{width=0.5\textwidth}{communication deadlock.png}
+Ordering resources \& careful scheduling will not help here, instead we must alter the communication protocol to use timeouts.
+
+\section*{Livelock}
+Processes/Threads are not blocked, however the program/system as a whole fails to make progress.
+\\
+\\ For example a busy wait on a acquiring a mutex, when the mutex cannot be acquired.
+\threadlist{C}{mutex livelock}{c}
+Or a system receiving messages, may never run a lower priority thread under high load (\keyword{receive livelock}).
 \end{document}

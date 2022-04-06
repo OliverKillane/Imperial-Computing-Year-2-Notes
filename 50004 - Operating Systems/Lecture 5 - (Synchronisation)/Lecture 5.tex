@@ -6,114 +6,114 @@
 \input{../50004 common.tex}
 
 \begin{document}
-    \maketitle
-    \sidenote{Lecture Recording}{
-        Lecture recording is available \href{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=d4c3f07f-16e0-4975-90cf-add400e5d365}{here}
-    }
+\maketitle
+\sidenote{Lecture Recording}{
+	Lecture recording is available \href{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=d4c3f07f-16e0-4975-90cf-add400e5d365}{here}
+}
 
-    \section*{Process Synchronisation}
-        The key concepts to consider in process synchronisation are:
-        \begin{itemize}
-            \bullpara{Critical Sections}{
-                \\ Section of code where processes access a shared resource
-            }
-            \bullpara{Mutual Exclusion}{
-                \\ Multiple threads/processes cannot execute in a critical section simultaneously.
-            }
-            \bullpara{Atomic Operations}{
-                \\ Operations that can occur without interruption or interleve by other threads, e.g reading and writing in 1 instruction.
-            }
-            \bullpara{Race Conditions}{
-                \\ Where the behaviour of the program is dependent on the timing and interleving of threads.
-            }
-            \bullpara{Deadlock}{
-                \\ Where the completion of tasks are mutually dependent, there is some loop in the dependency graph meaning a task's completion cannot occur before its completion.
-            }
-            \bullpara{Starvation}{}
-            \bullpara{Synchronisation Mechanisms}{
-                \\ Locks, Semaphores and Monitors for example.
-                \\
-                \\ Primitive that allow programmers to enfoce ordering of tasks, and exclusion. They are required at entry to and exit from a critical section.
-            }
-        \end{itemize}
-    \section*{Requirements of Mutual Exclusion}
-        \begin{itemize}
-            \item No two processes can simultaneously be in a critical section.
-            \item No process running outside the critical section can prevent another from entering the critical section.
-            \item When no process is in the critical region, any process requesting permission to enter must be immediately admitted.
-            \item No process requiring access to a critical section can be delayed indefinitely.
-            \item No assumptions are made about the relative speed of processes.
-        \end{itemize}
-    \section*{Disabling Interrupts}
-        \codelist{C}{intr disable.c}
-        \begin{itemize}
-            \item Works only on single-core Systems (other core may access shared in memory).
-            \item May never release the CPU if code buggy.
-            \item Interrupts could be missed while interrupts disabled.
-            \item Only possible in kernel code which has the ability to disable interrupts.
-        \end{itemize}
-    \section*{Software Solution - Strict Alternative}
-        \begin{minipage}[t]{0.5\textwidth}
-            \codelist{C}{turn0.c}
-        \end{minipage}
-        \begin{minipage}[t]{0.5\textwidth}
-            \codelist{C}{turn1.c}
-        \end{minipage}
-        Issues:
-        \begin{itemize}
-            \item Cannot run $0$ or $1$ twice in a row without the other working.
-            \item Busy waiting of thread on turn variable.
-            \item If the noncritical section takes a long time, the other thread is blocked as it must wait for turn to be set. (Thread outside critical region prevent critical region access).
-            \item Turn must be volatile to prevent compiler optimisations causing issues.
-        \end{itemize}
-        \sidenote{Busy Waiting}{
-            Continuously checking a value to determine if a thread can progress. It is a waste of CPU time and should only be used if the wait is short.
-            \\
-            \\ However as a result of actively polling the a value, it can stop waiting very quickly. Spinlocks used in OS kernels take advantage of this.
-        }
-    \section*{Peterson's Solution}
-        \begin{minipage}[t]{0.7\textwidth}
-            \codelist{C}{petersons.c}
-        \end{minipage}
-        \begin{minipage}[t]{0.3\textwidth}
-            \codelist{C}{petersons1.c}
-            \codelist{C}{petersons0.c}
-        \end{minipage}
-        This lock busy waits while the the other is interested and it is the other's turn.
-    
-    \section*{Atomic Operations}
-        \begin{minipage}[t]{0.4 \textwidth}
-            \codelist{C}{extract.c}
-            Not atomic, other extract could be interleaved.
-        \end{minipage}
-        \begin{minipage}[t]{0.2 \textwidth}
-            \begin{huge}
-                \[\Rightarrow\]
-            \end{huge}
-        \end{minipage}
-        \begin{minipage}[t]{0.4 \textwidth}
-            \codelist{C}{extract fake atomic.c}
-            Not atomic, still requires multiple instructions, between which another process could be interleaved.
-        \end{minipage}
-    \section*{Locks}
-        \halfsplit{
-            \codelist{C}{extract locks.c}
-        }{
-            \codelist{C}{bad busy lock.c}
-            \codelist{C}{unlock.c}
-        }
-        Here the implementation of the lock is flawed as we cannot atomically check the value of the lock, and set its value.
-        \\
-        \\ A working implementation is:
-        \codelist{C}{lock atomic.c}
-        TSL (test-and-set-lock) atomically sets the given memory location to $1$ and returns the old value. Locks of this type are called \keyword{spin locks}.
-    \section*{Spin Locks}
-        Spin locks should only be used when the expected wait time is short (otherwise wasteful). However it may run into the priority inversion problem.
-        \sidenote{Priority Inversion}{
-            When a lower priority thread is scheduled instead of a higher priority thread.
-            \\
-            \\ Threads $H > M > L$.
-            \\ $L$ acquires a lock, however is descheduled. $H$ attempts tpo acquire the lock, but is blocked. The lock is not released as $L$ needs to run in order to release it. $M$ is higher priority than $L$, and runs instead.
+\section*{Process Synchronisation}
+The key concepts to consider in process synchronisation are:
+\begin{itemize}
+	\bullpara{Critical Sections}{
+		\\ Section of code where processes access a shared resource
+	}
+	\bullpara{Mutual Exclusion}{
+		\\ Multiple threads/processes cannot execute in a critical section simultaneously.
+	}
+	\bullpara{Atomic Operations}{
+		\\ Operations that can occur without interruption or interleve by other threads, e.g reading and writing in 1 instruction.
+	}
+	\bullpara{Race Conditions}{
+		\\ Where the behaviour of the program is dependent on the timing and interleving of threads.
+	}
+	\bullpara{Deadlock}{
+		\\ Where the completion of tasks are mutually dependent, there is some loop in the dependency graph meaning a task's completion cannot occur before its completion.
+	}
+	\bullpara{Starvation}{}
+	\bullpara{Synchronisation Mechanisms}{
+		\\ Locks, Semaphores and Monitors for example.
+		\\
+		\\ Primitive that allow programmers to enfoce ordering of tasks, and exclusion. They are required at entry to and exit from a critical section.
+	}
+\end{itemize}
+\section*{Requirements of Mutual Exclusion}
+\begin{itemize}
+	\item No two processes can simultaneously be in a critical section.
+	\item No process running outside the critical section can prevent another from entering the critical section.
+	\item When no process is in the critical region, any process requesting permission to enter must be immediately admitted.
+	\item No process requiring access to a critical section can be delayed indefinitely.
+	\item No assumptions are made about the relative speed of processes.
+\end{itemize}
+\section*{Disabling Interrupts}
+\codelist{C}{intr disable.c}
+\begin{itemize}
+	\item Works only on single-core Systems (other core may access shared in memory).
+	\item May never release the CPU if code buggy.
+	\item Interrupts could be missed while interrupts disabled.
+	\item Only possible in kernel code which has the ability to disable interrupts.
+\end{itemize}
+\section*{Software Solution - Strict Alternative}
+\begin{minipage}[t]{0.5\textwidth}
+	\codelist{C}{turn0.c}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+	\codelist{C}{turn1.c}
+\end{minipage}
+Issues:
+\begin{itemize}
+	\item Cannot run $0$ or $1$ twice in a row without the other working.
+	\item Busy waiting of thread on turn variable.
+	\item If the noncritical section takes a long time, the other thread is blocked as it must wait for turn to be set. (Thread outside critical region prevent critical region access).
+	\item Turn must be volatile to prevent compiler optimisations causing issues.
+\end{itemize}
+\sidenote{Busy Waiting}{
+	Continuously checking a value to determine if a thread can progress. It is a waste of CPU time and should only be used if the wait is short.
+	\\
+	\\ However as a result of actively polling the a value, it can stop waiting very quickly. Spinlocks used in OS kernels take advantage of this.
+}
+\section*{Peterson's Solution}
+\begin{minipage}[t]{0.7\textwidth}
+	\codelist{C}{petersons.c}
+\end{minipage}
+\begin{minipage}[t]{0.3\textwidth}
+	\codelist{C}{petersons1.c}
+	\codelist{C}{petersons0.c}
+\end{minipage}
+This lock busy waits while the the other is interested and it is the other's turn.
 
-        }
+\section*{Atomic Operations}
+\begin{minipage}[t]{0.4 \textwidth}
+	\codelist{C}{extract.c}
+	Not atomic, other extract could be interleaved.
+\end{minipage}
+\begin{minipage}[t]{0.2 \textwidth}
+	\begin{huge}
+		\[\Rightarrow\]
+	\end{huge}
+\end{minipage}
+\begin{minipage}[t]{0.4 \textwidth}
+	\codelist{C}{extract fake atomic.c}
+	Not atomic, still requires multiple instructions, between which another process could be interleaved.
+\end{minipage}
+\section*{Locks}
+\halfsplit{
+	\codelist{C}{extract locks.c}
+}{
+	\codelist{C}{bad busy lock.c}
+	\codelist{C}{unlock.c}
+}
+Here the implementation of the lock is flawed as we cannot atomically check the value of the lock, and set its value.
+\\
+\\ A working implementation is:
+\codelist{C}{lock atomic.c}
+TSL (test-and-set-lock) atomically sets the given memory location to $1$ and returns the old value. Locks of this type are called \keyword{spin locks}.
+\section*{Spin Locks}
+Spin locks should only be used when the expected wait time is short (otherwise wasteful). However it may run into the priority inversion problem.
+\sidenote{Priority Inversion}{
+	When a lower priority thread is scheduled instead of a higher priority thread.
+	\\
+	\\ Threads $H > M > L$.
+	\\ $L$ acquires a lock, however is descheduled. $H$ attempts tpo acquire the lock, but is blocked. The lock is not released as $L$ needs to run in order to release it. $M$ is higher priority than $L$, and runs instead.
+
+}
 \end{document}

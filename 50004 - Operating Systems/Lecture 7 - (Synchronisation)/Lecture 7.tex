@@ -6,106 +6,106 @@
 \input{../50004 common.tex}
 
 \begin{document}
-    \maketitle
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=108a0538-c84b-4fad-ab78-addb00f338d1}
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=108a0538-c84b-4fad-ab78-addb00f338d1}
 
-    \section*{Semaphores}
-        A blocking synchronisation mechanism invented by \keyword{Dijkstra}. Processes cooperate by means of signals:
-        \begin{itemize}
-            \item Process stops, waiting for a signal.
-            \item Process continues if it has received a specific signal.
-        \end{itemize}
-        Semaphores allow \var{i} processes to be between \fun{down} and \fun{up}. They are special variables containing 
-        a value and a queue of waiting processes, they are accessible through the following atomic operations:
-        \begin{itemize}
-            \bullpara{\fun{down}(\var{s})}{wait to receive signal via \keyword{semaphore} \var{s}.
-            \codelist{C}{semaphore down.c}}
-            \bullpara{\fun{up}(\var{s})}{transmit a signal via \keyword{semaphore} \var{s}.
-            \codelist{C}{semaphore up.c}}
-            \bullpara{\fun{init}(\var{s},\var{i})}{initialise semaphore \var{s} with value \var{i}
-            \codelist{C}{semaphore init.c}}
-        \end{itemize}
-            \subsubsection*{Mutual Exclusion}
-                \codelist{C}{semaphore mutual exclusion.c}
-                A semaphore with an initial value of $1$ acts similarly to a \keyword{lock} (\keyword{lock} also enforces that only 
-                the thread that acquired the access to the critical region can release it).
-            \subsubsection*{Ordering Events}
-                \threadlist{C}{semaphore ordering events}{c}
-                No matter the order of processes being started, process B cannot continue to the critical region until process A has called \fun{sema\_up}.
-        \section*{Producer/Consumer}
-            \begin{itemize}
-                \bullpara{Producer Constraints}{
-                    \compitem{
-                        \item Items can only be deposited if there is space.
-                        \item Items can only be deposited in the buffer if mutual exclusion is ensured.
-                    }
-                }
-                \bullpara{Consumer Constraints}{
-                    \compitem{
-                        \item Items can only be fetched if the buffer is not empty.
-                        \item Items can only be fetched from the buffer if mutual exclusion is ensured.
-                    }
-                }
-                \bullpara{Buffer Constraints}{
-                    \\ Buffer can hold between $0$ and $N$ items.
-                }
-            \end{itemize}
-            \codelist{C}{producer consumer init.c}
-                \begin{minipage}[t]{0.45\textwidth}
-                    \codelist{C}{producer.c}
-                \end{minipage}
-                \hfill
-                \begin{minipage}[t]{0.45\textwidth}
-                    \codelist{C}{consumer.c}
-                \end{minipage}
-    \section*{Monitors}
-        Monitors allow processes to wait on high level conditions. Entry procedures are called from outside the monitor, internal procedures only from inside (cannot access monitor data, only monitor procedures).
-        \\
-        \\ There is an (implicit) monitor lock, with one process being in the monitor at a time.
-        \\
-        \\ The high-level conditions could be:
-        \begin{itemize}
-            \item \textit{Some space is available in the buffer}
-            \item \textit{Some data has arrived in the buffer}
-            \item \textit{There is an available resource}
-        \end{itemize}
-        Signals do not accumulate, if a condition is signalled and no processes/threads are waiting for it, the signal is lost.
-        \\
-        \\ Typically a language construct, and are not supported by \keyword{C}, however we can explicitly implement them (as in \keyword{PINTOS}).
-        \\ Java uses synchronize, \fun{wait} and \fun{notify} with no condition variables.
-        \subsubsection*{Monitor Procedures}
-            \begin{itemize}
-                \bullpara{\fun{wait}(\var{condition})}{
-                    Releases monitor lock, waits for \var{condition} to be signaled.
-                }
-                \bullpara{\fun{signal}(\var{condition})}{
-                    Wakes up one process waiting for \var{condition}.
-                }
-                \bullpara{\fun{broadcast}(\var{condition})}{
-                    Wakes up all processes waiting for \var{condition}.
-                }
-            \end{itemize}
-        \subsubsection*{Monitor Code}
-            \codelist{VBScript}{producer consumer monitor.pesudocode}
-    \section*{Synchronisation Summary}
-        \begin{itemize}
-            \bullpara{Lock}{
-                \compitem{
-                    \item Reader/Writer Locks.
-                    \item Often exposed in monitor language construct.
-                    \item Within a process.
-                    \item 1 process/thread in the critical section.
-                }
-            }
-            \bullpara{Mutex}{
-                \compitem{
-                    \item Like lock, but works across processes.
-                }
-            }
-            \bullpara{Semaphore}{
-                \compitem{
-                    \item Like mutex, but can let $N$ processes / threads pass \& does not need the same process/thread to release as acquired.
-                }
-            }
-        \end{itemize}
+\section*{Semaphores}
+A blocking synchronisation mechanism invented by \keyword{Dijkstra}. Processes cooperate by means of signals:
+\begin{itemize}
+	\item Process stops, waiting for a signal.
+	\item Process continues if it has received a specific signal.
+\end{itemize}
+Semaphores allow \var{i} processes to be between \fun{down} and \fun{up}. They are special variables containing
+a value and a queue of waiting processes, they are accessible through the following atomic operations:
+\begin{itemize}
+	\bullpara{\fun{down}(\var{s})}{wait to receive signal via \keyword{semaphore} \var{s}.
+		\codelist{C}{semaphore down.c}}
+	\bullpara{\fun{up}(\var{s})}{transmit a signal via \keyword{semaphore} \var{s}.
+		\codelist{C}{semaphore up.c}}
+	\bullpara{\fun{init}(\var{s},\var{i})}{initialise semaphore \var{s} with value \var{i}
+		\codelist{C}{semaphore init.c}}
+\end{itemize}
+\subsubsection*{Mutual Exclusion}
+\codelist{C}{semaphore mutual exclusion.c}
+A semaphore with an initial value of $1$ acts similarly to a \keyword{lock} (\keyword{lock} also enforces that only
+the thread that acquired the access to the critical region can release it).
+\subsubsection*{Ordering Events}
+\threadlist{C}{semaphore ordering events}{c}
+No matter the order of processes being started, process B cannot continue to the critical region until process A has called \fun{sema\_up}.
+\section*{Producer/Consumer}
+\begin{itemize}
+	\bullpara{Producer Constraints}{
+	\compitem{
+	\item Items can only be deposited if there is space.
+	\item Items can only be deposited in the buffer if mutual exclusion is ensured.
+	      }
+	      }
+	      \bullpara{Consumer Constraints}{
+	      \compitem{
+	\item Items can only be fetched if the buffer is not empty.
+	\item Items can only be fetched from the buffer if mutual exclusion is ensured.
+	      }
+	      }
+	      \bullpara{Buffer Constraints}{
+		      \\ Buffer can hold between $0$ and $N$ items.
+	      }
+\end{itemize}
+\codelist{C}{producer consumer init.c}
+\begin{minipage}[t]{0.45\textwidth}
+	\codelist{C}{producer.c}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
+	\codelist{C}{consumer.c}
+\end{minipage}
+\section*{Monitors}
+Monitors allow processes to wait on high level conditions. Entry procedures are called from outside the monitor, internal procedures only from inside (cannot access monitor data, only monitor procedures).
+\\
+\\ There is an (implicit) monitor lock, with one process being in the monitor at a time.
+\\
+\\ The high-level conditions could be:
+\begin{itemize}
+	\item \textit{Some space is available in the buffer}
+	\item \textit{Some data has arrived in the buffer}
+	\item \textit{There is an available resource}
+\end{itemize}
+Signals do not accumulate, if a condition is signalled and no processes/threads are waiting for it, the signal is lost.
+\\
+\\ Typically a language construct, and are not supported by \keyword{C}, however we can explicitly implement them (as in \keyword{PINTOS}).
+\\ Java uses synchronize, \fun{wait} and \fun{notify} with no condition variables.
+\subsubsection*{Monitor Procedures}
+\begin{itemize}
+	\bullpara{\fun{wait}(\var{condition})}{
+		Releases monitor lock, waits for \var{condition} to be signaled.
+	}
+	\bullpara{\fun{signal}(\var{condition})}{
+		Wakes up one process waiting for \var{condition}.
+	}
+	\bullpara{\fun{broadcast}(\var{condition})}{
+		Wakes up all processes waiting for \var{condition}.
+	}
+\end{itemize}
+\subsubsection*{Monitor Code}
+\codelist{VBScript}{producer consumer monitor.pesudocode}
+\section*{Synchronisation Summary}
+\begin{itemize}
+	\bullpara{Lock}{
+	\compitem{
+	\item Reader/Writer Locks.
+	\item Often exposed in monitor language construct.
+	\item Within a process.
+	\item 1 process/thread in the critical section.
+	      }
+	      }
+	      \bullpara{Mutex}{
+	      \compitem{
+	\item Like lock, but works across processes.
+	      }
+	      }
+	      \bullpara{Semaphore}{
+	      \compitem{
+	\item Like mutex, but can let $N$ processes / threads pass \& does not need the same process/thread to release as acquired.
+	      }
+	      }
+\end{itemize}
 \end{document}

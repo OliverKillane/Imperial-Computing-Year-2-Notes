@@ -4,373 +4,373 @@
     \date{15/02/22}
 \input{../50005 common.tex}
 \begin{document}
-    \maketitle
-    
-    \section*{History and Terminology}
-        \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=b5fdb75c-f334-41e0-8c6f-ae3100f69b1a}
+\maketitle
 
-        \subsection*{H/P/V/A/C}
-        \begin{itemize}
-            \bullpara{Hacker}{
-                \\ Highly competent computer ethusiast/engineer
-                \begin{center}
-                    \begin{tabular}{l l}
-                        White Hat & Informs organisations of vulnerabilities before going public. \\
-                        Grey Hat & Only informs if paid. \\
-                        Black Hat & Malicious, uses findings to do illegal activity. \\
-                    \end{tabular}
-                \end{center}
-            }
-            \bullpara{Phreaker}{
-                \\ Phone hacker, as phone network has become more digital they have been more often in the hacker category.
-            }
-            \bullpara{Virii}{
-                \\ Computer virus creators.
-                \begin{center}
-                    \begin{tabular}{l l}
-                        Ransomware & Encrypt files, decrypt for ransom. \\
-                        Spyware & Keyloggers, browser addons to track, often include adware. \\
-                        Trojans & Software for botnet zombies, often appear as legitimate software. \\
-                    \end{tabular}
-                \end{center}
-            }
-            \bullpara{Anarchist}{
-                \\ Politically active hackers, when peaceful called hacktavists, when not so much they are anarchists. Some parts of the anonymous movement could be considered anarchists.
-            }
-            \bullpara{Crackers}{
-                \\ Make use of tools built by others (e.g purchasing virus software, infiltration tools). Most modern digital organised crime would be in this category.
-            }
-            \bullpara{DDoSers}{
-                \\ Someone who participates in \keyword{Distributed Denials of Service} attacks. \href{https://en.wikipedia.org/wiki/Low_Orbit_Ion_Cannon}{\keyword{Low Orbit Ion Cannon}} is an example, it is used to stress tests networks.
-            }
-            \bullpara{Spammers/Botters}{
-                \\ Send unsolicited messages (often advertisements) en-masse, usually using botnets.
-            }
-            \bullpara{Warez}{
-                \\ Information piracy, distribution software, images \& videos without the legal right to do so. Examples include the \href{https://en.wikipedia.org/wiki/The_Pirate_Bayhttps://en.wikipedia.org/wiki/The_Pirate_Bay}{priate bay} piracy site.
-            }
-            \bullpara{Whistleblowers}{
-                \\ Former employees of an organisation that leak/"blow the whistle" on often malicious, illegal, or immoral activity even when it is illegal to do so (e.g have signed a \keyword{Non-Disclosure Agreement}).
-            }
-            \bullpara{Social Engineers}{
-                \\ Use of social manipulation to compromise the human security of an organisation.
-                \begin{center}
-                    \begin{tabular}{l l}
-                        Phising & Usually over email, pretending to be some organisation they are not. \\
-                        Vishing & Via voice messages. \\
-                        Smishing & Via \keyword{SMS}. \\
-                        Catfishing & Via impersonation (e.g fake social media profiles). \\
-                    \end{tabular}
-                \end{center}
-            }
-        \end{itemize}
-        
-        \subsection*{Black Hat Methods} 
-            \begin{itemize}
-                \bullpara{Credential Reuse/Stuffing}{
-                    \\ Previously leaked login credentials are used against many sites (often people use the same email and password comnbination on many sites).
-                    \\
-                    \\ The site \href{https://haveibeenpwned.com/}{have I been pwned} can be used to check if your own details are included in any leaks.
-                }
-                \bullpara{Packet Sniffing}{
-                    \\ Monitoring network traffic not intended for your \keyword{NIC}, e.g over a wireless network, on a router or switch you control.
-                }
-                \bullpara{Code/SQL Injection}{
-                    \\ Using data infput to get a system to runb your code. If the system does not sanitise its input, some keywords or code contained may be executed. This is often SQL Injection, as most opportunities to input data are related to databases. An example is the log4j bug/exploit expained well by \href{https://www.youtube.com/watch?v=uyq8yxWO1ls}{this video}.
-                }
-                \bullpara{Session/Cookie Hijacking}{
-                    \\ Stealing a session cookie to be authenticated as them in an ongoing browser session.
-                }
-                \bullpara{Wardriving}{
-                    \\ Searchinbg for and abusing open/unsecure \keyword{WiFi}s.
-                }
-                \bullpara{Trashing/Dumpster Diving}{
-                    \\ Checking physical waste for useful informatrion (e.g bank statements, official records).
-                }
-                \bullpara{Clickjacking}{
-                    \\ Using hidden html divs, popups to force a user's click to redirect to a malicious destination. 
-                }
-                \bullpara{Bait \& Switch}{
-                    \\ Luring a user to click with a seemingly legitimate advertisement, only to redirect them to something else.
-                }
-                \bullpara{Spoofing}{
-                    \\ Falsifying identification to receive packets intended for another recipient.
-                    \begin{center}
-                        \begin{tabular}{l l}
-                            IP & Fake your IP as another (Layer 3). \\
-                            MAC & Media Access Control address distinguishes between different \keyword{NICs}. \\
-                            DNS & DNS cache poisoning (falsifying the cache to pretend to be at a given domain). \\
-                        \end{tabular}
-                    \end{center}
-                }
-                \bullpara{Rootkits}{
-                    \\ Allows attackers to secretly enter external systems, often installed as part of a virus.
-                }
-                \bullpara{Keyloggers}{
-                    \\ Records all keyboard input, sending key-logs back to the hacker, or allowing them to be remotely accessed. 
-                    \\
-                    \\ A potential advantage of password managers is that keyloggers cannot be used effectively to detect passwords if they are not typed.
-                }
-                \bullpara{Trojans}{
-                    \\ Allow a hacker to remotely control an entire system, often as a zombie on a botnet.
-                }
-                \bullpara{Evil Twin}{
-                    \\ Where a hacker attempts to lure victims into using their network, gaining information from the victim (e.g network histroy) \& potentially sending malicious data to the user when they use it.
-                }
-            \end{itemize}
-        \subsection*{White Hat Tools}
-            \begin{itemize}
-                \bullpara{Tails}{
-                    \\ \href{https://tails.boum.org/}{Tails} is a portable operating system designed to be usable from a usb drive, and to never store data, thus removing data integrity related security issues.
-                }
-                \bullpara{Kali Linux}{
-                    \\ \href{https://www.kali.org/}{Kali is} an operating system designed for penetration testing and other security related work. It comes bundled with many useful tools such as \keyword{Metasploit} and \keyword{Nmap}. It is supported on ARM, as well as by the windows subsystem for linux.
-                }
-                \bullpara{Metasploit}{
-                    \\ \href{https://www.metasploit.com/}{Metasploit} is a tool use to automatically scan systems for vulnerabilities based on a large database of known vulnerabilities and exploits.
-                }
-            \end{itemize}
+\section*{History and Terminology}
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=b5fdb75c-f334-41e0-8c6f-ae3100f69b1a}
 
-        \subsection*{Cybercrime Laws}
-            In the \keyword{UK} many laws (listed below) apply. Physical locations of hosts is used to determine which nation's laws are used, meaning \keyword{US} law is also very important (common country to host from).
-            \begin{center}
-                \begin{tabular}{l l}
-                    1964 & \href{https://www.legislation.gov.uk/ukpga/1964/74/contents}{Obscene Publications Act} (In reference to spam) \\
-                    1978 & \href{https://www.legislation.gov.uk/ukpga/1978/37/contents}{Protection of Children Act} (In reference to online abuse \& spam against children online) \\
-                    1988 & \href{https://www.legislation.gov.uk/ukpga/1988/48/contents}{Copyright, Designs and Patents Act} \\
-                    1990 & \href{https://www.legislation.gov.uk/ukpga/1990/18/contents}{Computer Misuse Act} \\
-                    1999 & \href{https://www.legislation.gov.uk/ukpga/1999/14/contents}{Amendment to the Protection of Children Act} (Still being changed) \\
-                    2000 & \href{https://www.legislation.gov.uk/ukpga/2000/36/contents}{Freedom of Information Act} \\
-                    2000 & \href{https://www.legislation.gov.uk/ukpga/2000/23/contents}{Regulation of Investigatory Powers Act} (In reference to computer/phone surveillance) \\
-                    2002 & \href{https://www.legislation.gov.uk/uksi/2002/2013/made}{e-Commerce Regulations Directive} \\
-                    2003 & \href{https://www.legislation.gov.uk/ukpga/2003/44/contents}{Criminal Justice Act} \\
-                    2005 & \href{https://www.legislation.gov.uk/ukpga/2005/13/contents}{Disability Discrimination Act} (In reference to online abuse \& spam) \\
-                    2010 & \href{https://www.legislation.gov.uk/uksi/2010/2694/contents/made}{Amendment to the Copyright, Designs and Patents Act} \\
-                    2013 & \href{https://www.legislation.gov.uk/ukpga/2013/26/contents}{Defamation Act} (In reference to online abuse \& spam) \\
-                    2017 & \href{https://www.legislation.gov.uk/ukpga/2017/30/contents}{Digital Economy Act} \\
-                    2018 & \href{https://www.legislation.gov.uk/ukpga/2018/12/contents}{Data Protection Act} \\
-                \end{tabular}
-            \end{center}
-            In the \keyword{US} there is the \href{https://www.copyright.gov/dmca/}{DMCA} (Digital Millennium Copyright Act).
-        \subsection*{Standards Organisations}
-            \begin{center}
-                \begin{tabular}{l p{0.8\textwidth}}
-                    \href{https://www.iana.org/}{IANA} & Internet Assigned Numbers Authority, deals with \keyword{DNS}, \keyword{IP} Addressing and more standards. \\
-                    \href{https://www.icann.org/}{ICANN} & A nonprofit organisations responsible for coordinating standards for the maintenance and running of namespace and numerical space databases for the internet. \\
-                    \href{https://www.ietf.org/}{IEFT} & Internet Engineering Task Force, a collection of working groups (e.g routing, transport, security) concerned with developing the internet. \\
-                    \href{https://www.internetsociety.org/}{ISOC} & Internet Society, dedicated to furthering beneficial use of the internet. \\
-                    \href{https://www.eff.org/}{EFF} & Electronic Frontier Foundation, a politically active nonprofit dedicated to defending privacy, free speech and freedom to innovate online. \\
-                    \href{https://www.w3.org/standards/}{W3C} & The World Wide Web Consortium develops standards to help developers build tools on the web smoothly. \\
-                    \href{https://www.iso.org/}{ISO} & International Organisation for Standardization, you can find their standards for information technology \href{https://www.iso.org/committee/45020/x/catalogue/}{here}. \\
-                \end{tabular}
-            \end{center}
-        \subsection*{Attack Examples}
-            \termdef{Heartbleed}{
-                A bug in OpenSSL 1.0.1 first identified onm 14/03/2012 and patched on 07/04/2014.
-                \\
-                \\ OpenSSL is an implementation of the TLS (transport Layer Security)/SSL (Secure Sockets Layer) protocol that allows for secure website access (\lstinline{https://})
-                \\
-                \\ The bug allowed users to gradually reveal server memory in chunks of $64KB$. It is not known if it was used in any exploits.
-            }
-            \termdef{KRACK}{
-                The \keyword{WPA2} (wireless protected access protocol) used in Wifi. Android devices could be forced to use a zero-based key, rendering the encryption useless.
-                \\
-                \\ The full explanation can be found \href{https://www.krackattacks.com/}{here}.
-                \\
-                \\ It has been patched, but the next version (\keyword{WPA3}) was released in 2020 which was meant to be more secure also has issues.
-            }
-            \termdef{WEP}{
-                \keyword{Wired Equivalent Privacy} is a security algorithm for wireless networks, it has been shown to be vulnerable many times.
-            }
+\subsection*{H/P/V/A/C}
+\begin{itemize}
+	\bullpara{Hacker}{
+		\\ Highly competent computer ethusiast/engineer
+		\begin{center}
+			\begin{tabular}{l l}
+				White Hat & Informs organisations of vulnerabilities before going public. \\
+				Grey Hat  & Only informs if paid.                                         \\
+				Black Hat & Malicious, uses findings to do illegal activity.              \\
+			\end{tabular}
+		\end{center}
+	}
+	\bullpara{Phreaker}{
+		\\ Phone hacker, as phone network has become more digital they have been more often in the hacker category.
+	}
+	\bullpara{Virii}{
+		\\ Computer virus creators.
+		\begin{center}
+			\begin{tabular}{l l}
+				Ransomware & Encrypt files, decrypt for ransom.                                \\
+				Spyware    & Keyloggers, browser addons to track, often include adware.        \\
+				Trojans    & Software for botnet zombies, often appear as legitimate software. \\
+			\end{tabular}
+		\end{center}
+	}
+	\bullpara{Anarchist}{
+		\\ Politically active hackers, when peaceful called hacktavists, when not so much they are anarchists. Some parts of the anonymous movement could be considered anarchists.
+	}
+	\bullpara{Crackers}{
+		\\ Make use of tools built by others (e.g purchasing virus software, infiltration tools). Most modern digital organised crime would be in this category.
+	}
+	\bullpara{DDoSers}{
+		\\ Someone who participates in \keyword{Distributed Denials of Service} attacks. \href{https://en.wikipedia.org/wiki/Low_Orbit_Ion_Cannon}{\keyword{Low Orbit Ion Cannon}} is an example, it is used to stress tests networks.
+	}
+	\bullpara{Spammers/Botters}{
+		\\ Send unsolicited messages (often advertisements) en-masse, usually using botnets.
+	}
+	\bullpara{Warez}{
+		\\ Information piracy, distribution software, images \& videos without the legal right to do so. Examples include the \href{https://en.wikipedia.org/wiki/The_Pirate_Bayhttps://en.wikipedia.org/wiki/The_Pirate_Bay}{priate bay} piracy site.
+	}
+	\bullpara{Whistleblowers}{
+		\\ Former employees of an organisation that leak/"blow the whistle" on often malicious, illegal, or immoral activity even when it is illegal to do so (e.g have signed a \keyword{Non-Disclosure Agreement}).
+	}
+	\bullpara{Social Engineers}{
+		\\ Use of social manipulation to compromise the human security of an organisation.
+		\begin{center}
+			\begin{tabular}{l l}
+				Phising    & Usually over email, pretending to be some organisation they are not. \\
+				Vishing    & Via voice messages.                                                  \\
+				Smishing   & Via \keyword{SMS}.                                                   \\
+				Catfishing & Via impersonation (e.g fake social media profiles).                  \\
+			\end{tabular}
+		\end{center}
+	}
+\end{itemize}
 
-    \section*{Network Security Issues}
-        \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=5aaaa362-95f2-45a9-b9fd-ae3100f6a443}
-        \subsection*{Basic Security Concepts}
-            \begin{center}
-                \begin{tabular}{l p{0.8\textwidth}}
-                    Access Control & Only certain users can access certain resources. \\
-                    Authentication & User knows resource is as identified, and resource that user is as identified. \\
-                    Confidentiality & Users can limit access to their resources and information, and limit access to see their traffic over a channel. \\
-                    Data Integrity & Users cannot damage the integrity of a resource (e.g crash a webserver by visiting). \\
-                    Non-Repudiation & User cannot deny communication occurred, secure logs held and can be audited. \\
-                \end{tabular}
-            \end{center}
-        
-        \subsection*{Access Control}    
-            \centerimage{width=0.6\textwidth}{access control.png}
-            Assuming the channel used for communication is secure, the guard needs to determine:
-            \compitem{
-                \item Which principals (users) can access the resource. 
-                \item Where principals can be located (e.g user's \keyword{IP} address is outside the organisation's network).
-                \item What requests principals can make for this resource (e.g can view database, but not send mutating \keyword{SQL} commands).
-            }
-            Security can be difficult as:
-            \compitem{
-                \item Many systems used by an organisation can be different (Heterogeneous systems) (e.g bank has different OSes several models of ATM).
-                \item Users can be careless (e.g reusing passwords), this include system administrators and managers.
-            }
-        \subsection*{Firewalls}
-            \termdef{Firewall}{
-                A security barrier between internal and external networks.
-                \compitem{
-                    \bullpara{Application Level Gateway}{
-                        \\ An application that runs, checks requests in the application layer. Can also be a proxy, using an extra set of rules to decide if to share requests or responses, or to send on requests.
-                        \\
-                        \\ Examples include \keyword{SOCKS} and \href{https://www.netfilter.org/projects/iptables/index.html}{netfilter's iptables}.
-                    }
-                    \bullpara{Proxy Server}{
-                        \\ Runs on the network protecting it by making requests and receiving responses on its behalf (to the external network). Can also include caching of results.
-                    }
-                    \bullpara{Circuit Level Gateway}{
-                        \\ Creates a circuit of proxies, sending data between each node in the circuit (for example \keyword{Tor}).
-                    }
-                    \bullpara{Packet Filtering}{
-                        \\ Filtering packets with a set of rules based on contents, source and destination IP address/port, only alowing non-suspect packets through. Can also be stateful, considering not just a single packet traffic to a host over some time period.
-                    }
-                    \bullpara{Hybrid}{
-                        \\ Use a combination of all the above.
-                    }
-                } 
-                They can be software or hardware based, with hardware solutions being faster, but more difficult to change (e.g if a vulnerability is found).
-            }
+\subsection*{Black Hat Methods}
+\begin{itemize}
+	\bullpara{Credential Reuse/Stuffing}{
+		\\ Previously leaked login credentials are used against many sites (often people use the same email and password comnbination on many sites).
+		\\
+		\\ The site \href{https://haveibeenpwned.com/}{have I been pwned} can be used to check if your own details are included in any leaks.
+	}
+	\bullpara{Packet Sniffing}{
+		\\ Monitoring network traffic not intended for your \keyword{NIC}, e.g over a wireless network, on a router or switch you control.
+	}
+	\bullpara{Code/SQL Injection}{
+		\\ Using data infput to get a system to runb your code. If the system does not sanitise its input, some keywords or code contained may be executed. This is often SQL Injection, as most opportunities to input data are related to databases. An example is the log4j bug/exploit expained well by \href{https://www.youtube.com/watch?v=uyq8yxWO1ls}{this video}.
+	}
+	\bullpara{Session/Cookie Hijacking}{
+		\\ Stealing a session cookie to be authenticated as them in an ongoing browser session.
+	}
+	\bullpara{Wardriving}{
+		\\ Searchinbg for and abusing open/unsecure \keyword{WiFi}s.
+	}
+	\bullpara{Trashing/Dumpster Diving}{
+		\\ Checking physical waste for useful informatrion (e.g bank statements, official records).
+	}
+	\bullpara{Clickjacking}{
+		\\ Using hidden html divs, popups to force a user's click to redirect to a malicious destination.
+	}
+	\bullpara{Bait \& Switch}{
+		\\ Luring a user to click with a seemingly legitimate advertisement, only to redirect them to something else.
+	}
+	\bullpara{Spoofing}{
+		\\ Falsifying identification to receive packets intended for another recipient.
+		\begin{center}
+			\begin{tabular}{l l}
+				IP  & Fake your IP as another (Layer 3).                                             \\
+				MAC & Media Access Control address distinguishes between different \keyword{NICs}.   \\
+				DNS & DNS cache poisoning (falsifying the cache to pretend to be at a given domain). \\
+			\end{tabular}
+		\end{center}
+	}
+	\bullpara{Rootkits}{
+		\\ Allows attackers to secretly enter external systems, often installed as part of a virus.
+	}
+	\bullpara{Keyloggers}{
+		\\ Records all keyboard input, sending key-logs back to the hacker, or allowing them to be remotely accessed.
+		\\
+		\\ A potential advantage of password managers is that keyloggers cannot be used effectively to detect passwords if they are not typed.
+	}
+	\bullpara{Trojans}{
+		\\ Allow a hacker to remotely control an entire system, often as a zombie on a botnet.
+	}
+	\bullpara{Evil Twin}{
+		\\ Where a hacker attempts to lure victims into using their network, gaining information from the victim (e.g network histroy) \& potentially sending malicious data to the user when they use it.
+	}
+\end{itemize}
+\subsection*{White Hat Tools}
+\begin{itemize}
+	\bullpara{Tails}{
+		\\ \href{https://tails.boum.org/}{Tails} is a portable operating system designed to be usable from a usb drive, and to never store data, thus removing data integrity related security issues.
+	}
+	\bullpara{Kali Linux}{
+		\\ \href{https://www.kali.org/}{Kali is} an operating system designed for penetration testing and other security related work. It comes bundled with many useful tools such as \keyword{Metasploit} and \keyword{Nmap}. It is supported on ARM, as well as by the windows subsystem for linux.
+	}
+	\bullpara{Metasploit}{
+		\\ \href{https://www.metasploit.com/}{Metasploit} is a tool use to automatically scan systems for vulnerabilities based on a large database of known vulnerabilities and exploits.
+	}
+\end{itemize}
 
-            \termdef{Proxy}{
-                Makes requests and recieved responses on behalf of a client, can filter in and outgoing traffic.
-                \compitem{
-                    \bullpara{Normal}{ \\ Client is aware of proxy, and connects to it to use it.}
-                    \bullpara{Transparent}{ \\ Client is unaware, for example a local router could act as a proxy. Requires not intervention from client.}
-                    \bullpara{Reverse}{ \\ Runs on the receiving side, impersonating a server and protecting a server from the external network. (Much like \keyword{CDN} load balancing) }
-                }
-            }
-            \termdef{Bastion Host}{
-                A server that expects to be attacked.
-                \compitem{
-                    \item Runs a minimal trusted/secure OS.
-                    \item Only essential applications (e.g no window manager needed).
-                    \item All possible limits enabled (readonly file system, no mounts, file permissions all set, no normal user accounts)
-                    \item Typically managed over a dedicated terminal
-                }
-                It passes requests on from the external network, and acts as a proxy firewall. 
-                \\
-                \\ It drops any connections it determines are suspect using packet filtering (usually stateful) and other techniques.
-            }
-            \example{iptables}{
-                \fun{iptables} can be used on linux to set packet filters. It consists of several tables, each containing chains of rules on managing network packets.
-                \\
-                \\ Note that it requires root as it interfaces directly with the linux kernel's firewall.
-            }
-            \example{tcpd}{
-                The linux \keyword{TCP} Daemon controls access to unix services \& can monitor requests to services (e.g \fun{ftp}, \fun{exec}, \fun{rsh}, \fun{telnet}).
-                \\
-                \\ It uses two files, \lstinline{/etc/hosts.allow} and \lstinline{/etc/hosts.deny} to determine access.
-            }
-        
-        \subsection*{Firewall Avoidance}
-            \subsubsection*{SSH}
-                We can attempt to avoid a firewall by tunneling through with an allowed protocol, to then use the internal. 
-                \\
-                \\ An example of this is with \keyword{ssh}. We can get through the firewall on ssh, and then send our requests through ssh to the internal network, to get responses, and use services the firewall may normally block.
-            
-            \subsubsection*{Spoof MAC Address}
-                Can re-write the \keyword{MAC} address if the firewall is blocking requests based on it (MAC address blacklisting or whitelisting).
+\subsection*{Cybercrime Laws}
+In the \keyword{UK} many laws (listed below) apply. Physical locations of hosts is used to determine which nation's laws are used, meaning \keyword{US} law is also very important (common country to host from).
+\begin{center}
+	\begin{tabular}{l l}
+		1964 & \href{https://www.legislation.gov.uk/ukpga/1964/74/contents}{Obscene Publications Act} (In reference to spam)                                           \\
+		1978 & \href{https://www.legislation.gov.uk/ukpga/1978/37/contents}{Protection of Children Act} (In reference to online abuse \& spam against children online) \\
+		1988 & \href{https://www.legislation.gov.uk/ukpga/1988/48/contents}{Copyright, Designs and Patents Act}                                                        \\
+		1990 & \href{https://www.legislation.gov.uk/ukpga/1990/18/contents}{Computer Misuse Act}                                                                       \\
+		1999 & \href{https://www.legislation.gov.uk/ukpga/1999/14/contents}{Amendment to the Protection of Children Act} (Still being changed)                         \\
+		2000 & \href{https://www.legislation.gov.uk/ukpga/2000/36/contents}{Freedom of Information Act}                                                                \\
+		2000 & \href{https://www.legislation.gov.uk/ukpga/2000/23/contents}{Regulation of Investigatory Powers Act} (In reference to computer/phone surveillance)      \\
+		2002 & \href{https://www.legislation.gov.uk/uksi/2002/2013/made}{e-Commerce Regulations Directive}                                                             \\
+		2003 & \href{https://www.legislation.gov.uk/ukpga/2003/44/contents}{Criminal Justice Act}                                                                      \\
+		2005 & \href{https://www.legislation.gov.uk/ukpga/2005/13/contents}{Disability Discrimination Act} (In reference to online abuse \& spam)                      \\
+		2010 & \href{https://www.legislation.gov.uk/uksi/2010/2694/contents/made}{Amendment to the Copyright, Designs and Patents Act}                                 \\
+		2013 & \href{https://www.legislation.gov.uk/ukpga/2013/26/contents}{Defamation Act} (In reference to online abuse \& spam)                                     \\
+		2017 & \href{https://www.legislation.gov.uk/ukpga/2017/30/contents}{Digital Economy Act}                                                                       \\
+		2018 & \href{https://www.legislation.gov.uk/ukpga/2018/12/contents}{Data Protection Act}                                                                       \\
+	\end{tabular}
+\end{center}
+In the \keyword{US} there is the \href{https://www.copyright.gov/dmca/}{DMCA} (Digital Millennium Copyright Act).
+\subsection*{Standards Organisations}
+\begin{center}
+	\begin{tabular}{l p{0.8\textwidth}}
+		\href{https://www.iana.org/}{IANA}            & Internet Assigned Numbers Authority, deals with \keyword{DNS}, \keyword{IP} Addressing and more standards.                                                             \\
+		\href{https://www.icann.org/}{ICANN}          & A nonprofit organisations responsible for coordinating standards for the maintenance and running of namespace and numerical space databases for the internet.          \\
+		\href{https://www.ietf.org/}{IEFT}            & Internet Engineering Task Force, a collection of working groups (e.g routing, transport, security) concerned with developing the internet.                             \\
+		\href{https://www.internetsociety.org/}{ISOC} & Internet Society, dedicated to furthering beneficial use of the internet.                                                                                              \\
+		\href{https://www.eff.org/}{EFF}              & Electronic Frontier Foundation, a politically active nonprofit dedicated to defending privacy, free speech and freedom to innovate online.                             \\
+		\href{https://www.w3.org/standards/}{W3C}     & The World Wide Web Consortium develops standards to help developers build tools on the web smoothly.                                                                   \\
+		\href{https://www.iso.org/}{ISO}              & International Organisation for Standardization, you can find their standards for information technology \href{https://www.iso.org/committee/45020/x/catalogue/}{here}. \\
+	\end{tabular}
+\end{center}
+\subsection*{Attack Examples}
+\termdef{Heartbleed}{
+	A bug in OpenSSL 1.0.1 first identified onm 14/03/2012 and patched on 07/04/2014.
+	\\
+	\\ OpenSSL is an implementation of the TLS (transport Layer Security)/SSL (Secure Sockets Layer) protocol that allows for secure website access (\lstinline{https://})
+	\\
+	\\ The bug allowed users to gradually reveal server memory in chunks of $64KB$. It is not known if it was used in any exploits.
+}
+\termdef{KRACK}{
+	The \keyword{WPA2} (wireless protected access protocol) used in Wifi. Android devices could be forced to use a zero-based key, rendering the encryption useless.
+	\\
+	\\ The full explanation can be found \href{https://www.krackattacks.com/}{here}.
+	\\
+	\\ It has been patched, but the next version (\keyword{WPA3}) was released in 2020 which was meant to be more secure also has issues.
+}
+\termdef{WEP}{
+	\keyword{Wired Equivalent Privacy} is a security algorithm for wireless networks, it has been shown to be vulnerable many times.
+}
 
-            \subsubsection*{Spoof IP Address}
-                Much like with \keyword{MAC} address, however stateful firewalls will most likely detect this.
-            
-            \subsubsection*{(VPN) Virtual Private Network}
-                Much like with \keyword{SSH}, we can tunnel through the firewall. Provided the tunnel is secure (e.g using \keyword{SSL}) the firewall will not be able to decipher your traffic.
+\section*{Network Security Issues}
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=5aaaa362-95f2-45a9-b9fd-ae3100f6a443}
+\subsection*{Basic Security Concepts}
+\begin{center}
+	\begin{tabular}{l p{0.8\textwidth}}
+		Access Control  & Only certain users can access certain resources.                                                                 \\
+		Authentication  & User knows resource is as identified, and resource that user is as identified.                                   \\
+		Confidentiality & Users can limit access to their resources and information, and limit access to see their traffic over a channel. \\
+		Data Integrity  & Users cannot damage the integrity of a resource (e.g crash a webserver by visiting).                             \\
+		Non-Repudiation & User cannot deny communication occurred, secure logs held and can be audited.                                    \\
+	\end{tabular}
+\end{center}
 
-        \subsection*{Other Security}
-            \termdef{(IDS) Intrustion Detection System}{
-                Detects intrustions to inform the system (e.g a DDoS attack), however does not perform actions to stop the detected intrusion.
-            }
-            \termdef{(IPS) Intrusion Prevention System}{
-                Actively prevents intrusions (e.g blocking \const{SYN} flooders attempting to perform a DDoS attack), can work with an \keyword{IDS}.
-            }
-            \termdef{(NGFW) Next Generation Firewall}{
-                A stateful firewall that comes with an \keyword{IPS} / \keyword{IDS} system.
-            }
-            \termdef{(UTM) Unified Threat Management}{
-                Similar to a \keyword{NGFW} but with added features such as spam filters, antivirus etc.
-            }
-        \subsection*{(DMZ) Demilitarized Zone}
-            \centerimage{width=0.7\textwidth}{DMZ.png}
-            \termdef{(NAT) Network Address Translation}{
-                Rather than expose the \keyword{LAN} \keyword{IP} address of an internal host, routers translate the IP addresses to their own public IP to send, and when receiving from their public IP back to the IPs of internal hosts.
-            }
-            \termdef{Port Forwarding}{
-                To expose an internal host to the external network without placing it in the \keyword{DMZ} we can set the router to forward all packets arriving at a given port straight to the internal host.
-                \\
-                \\ For example we could specify any packet recieved on the router's IP at port $3472$ should be immediately forwarded to the \keyword{NAT} based \keyword{LAN} \keyword{IP} of "host A" on port 80.
-                \\
-                \\ Useful for hosting servers, even for games (e.g minecraft servers require port forwarding).
-            }
-        \subsection*{Logging and Auditing}
-            Most systems keep logs, they are useful for:
-            \compitem{
-                \item Checking for missed breaches. An attack may only be discovered in logs after the fact.
-                \item Forensics, providing evidence to law enforcement to discover who the purputrators of an attack are.
-                \item Determining how a system was exploited in an attack, in order to patch it.
-                \item Ensuring good practices are being followed (e.g if an unsafe features starts to be used).
-                \item Detecting other network issues (e.g congestion).
-            }
-            Logs can be found on linux at \lstinline{/var/log/} and the event viewer in Windows.
-    
-    \section*{Cryptography}
-        \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=e8e5754c-bb81-43f7-9bae-ae3100f6a67b}
-        \centerimage{width=0.9\textwidth}{cryptography.png}
-        A good encryption algorithm should ensure:
-        \compitem{
-            \item Given $M_C$ it is only possible to find $M$ by going though all possible values of $K^{-1}$ (brute force attack).
-            \item Given $M$ and $M_C$ it should be difficult to get the values of $K$ and $K^{-1}$. (e.g caesar cipher is poor as we can just calculate the shift)
-        }
-        \termdef{Symmetric and Secret Key Encryption}{
-            \centerimage{width=0.9\textwidth}{cryptography symmetric.png}
-            The same key is used for encryption and decryption (symmetric), and this key is secretly shared between sender and receiver (not on an unsecure channel) (secret).
-            \compitem{
-                \item Must secretly disclose key to communicate.
-                \item Faster encryption/decryption than \keyword{Asymmetric}.
-            }
-            An example is \keyword{DES} (\keyword{Data Encryption Standard}), though this has a short key length and is now too insecure for general use (wikipedia article \href{https://en.wikipedia.org/wiki/Data_Encryption_Standard}{here}).
-        }
-        \termdef{Asymmetric and Public Key Encryption} {
-            Each user has a \keyword{public} and \keyword{private} key.
-            \\
-            \\ For confidentiality: Sender encrypts with receiver's public, receiver decrypts with their private.
-            \centerimage{width=0.9\textwidth}{cryptography asymmetric confidential.png}
-            For signing: Sender encrypts with their private key, receiver decrypts with sender's public key, if value was successfully decrypted then we know the message was from the sender with the public key we used.
-            \centerimage{width=0.9\textwidth}{cryptography asymmetric sign.png}
-            We can then combine these, encrypting a message, but including a signed segment inside to verify the sender. We can also combine with symmetric encryption to sign symmetrically encrypted files (e.g check if a password protected file is from the correct sender/is not tampered with). Foe example \href{https://gnupg.org/}{GPG}.
-            \\
-            \\ The main points are:
-            \compitem{
-                \item No need to disclose private information to communicate securely so, can start communication on unsecure channel.
-                \item Hence more secure than \keyword{Secret Key} encryption.
-                \item However is slower to encrypt and decrypt.
-            }
-            An example of this is \keyword{RSA} which uses current difficulty in prime factor decomposition to ensure brute force attacks are computationally intractable (wikipedia article is \href{https://en.wikipedia.org/wiki/RSA_(cryptosystem)}{here}).
-        }
-        \termdef{Diffie-Hellman Key Exchange}{
-            \centerimage{width=0.9\textwidth}{diffie hellman key exchange.png}
+\subsection*{Access Control}
+\centerimage{width=0.6\textwidth}{access control.png}
+Assuming the channel used for communication is secure, the guard needs to determine:
+\compitem{
+	\item Which principals (users) can access the resource.
+	\item Where principals can be located (e.g user's \keyword{IP} address is outside the organisation's network).
+	\item What requests principals can make for this resource (e.g can view database, but not send mutating \keyword{SQL} commands).
+}
+Security can be difficult as:
+\compitem{
+	\item Many systems used by an organisation can be different (Heterogeneous systems) (e.g bank has different OSes several models of ATM).
+	\item Users can be careless (e.g reusing passwords), this include system administrators and managers.
+}
+\subsection*{Firewalls}
+\termdef{Firewall}{
+	A security barrier between internal and external networks.
+	\compitem{
+		\bullpara{Application Level Gateway}{
+			\\ An application that runs, checks requests in the application layer. Can also be a proxy, using an extra set of rules to decide if to share requests or responses, or to send on requests.
+			\\
+			\\ Examples include \keyword{SOCKS} and \href{https://www.netfilter.org/projects/iptables/index.html}{netfilter's iptables}.
+		}
+		\bullpara{Proxy Server}{
+			\\ Runs on the network protecting it by making requests and receiving responses on its behalf (to the external network). Can also include caching of results.
+		}
+		\bullpara{Circuit Level Gateway}{
+			\\ Creates a circuit of proxies, sending data between each node in the circuit (for example \keyword{Tor}).
+		}
+		\bullpara{Packet Filtering}{
+			\\ Filtering packets with a set of rules based on contents, source and destination IP address/port, only alowing non-suspect packets through. Can also be stateful, considering not just a single packet traffic to a host over some time period.
+		}
+		\bullpara{Hybrid}{
+			\\ Use a combination of all the above.
+		}
+	}
+	They can be software or hardware based, with hardware solutions being faster, but more difficult to change (e.g if a vulnerability is found).
+}
 
-        }
-        \termdef{Kerberos (Needham \& Schroeder)}{
-            A key distribution system for secret keys, using a trusted server.
-            \compitem{
-                \item Kernberos authenticates you with a password.
-                \item It can also authenticate the user/resource you intend to communicate with.
-                \item Generates a ticket which allows for communication.
-                \item Ticket can be used up to a time limit, after which you must get another ticket.
-                \item Originally vulnerable to \keyword{Man/Monster in the Middle} attacks, though these have since been addressed.
-            }
-        }
-        \termdef{Hashing}{
-            In cryptography, a hash function converts some data into a fixed size alphanumeric string.
-            \compitem{
-                \item The same input data always produces the same hash value.
-                \item Not possible to derive the original input from the hash value (unlike encryption).
-                \item Can be used as a checksum to verify data (e.g that the contents of a file are unchanged/not tampered with).
-                \item Many old hash functions have been broken (either algorithm issues, or all possible hashes now determines - rainbow tables).
-            }
-        }
+\termdef{Proxy}{
+	Makes requests and recieved responses on behalf of a client, can filter in and outgoing traffic.
+	\compitem{
+		\bullpara{Normal}{ \\ Client is aware of proxy, and connects to it to use it.}
+		\bullpara{Transparent}{ \\ Client is unaware, for example a local router could act as a proxy. Requires not intervention from client.}
+		\bullpara{Reverse}{ \\ Runs on the receiving side, impersonating a server and protecting a server from the external network. (Much like \keyword{CDN} load balancing) }
+	}
+}
+\termdef{Bastion Host}{
+	A server that expects to be attacked.
+	\compitem{
+		\item Runs a minimal trusted/secure OS.
+		\item Only essential applications (e.g no window manager needed).
+		\item All possible limits enabled (readonly file system, no mounts, file permissions all set, no normal user accounts)
+		\item Typically managed over a dedicated terminal
+	}
+	It passes requests on from the external network, and acts as a proxy firewall.
+	\\
+	\\ It drops any connections it determines are suspect using packet filtering (usually stateful) and other techniques.
+}
+\example{iptables}{
+	\fun{iptables} can be used on linux to set packet filters. It consists of several tables, each containing chains of rules on managing network packets.
+	\\
+	\\ Note that it requires root as it interfaces directly with the linux kernel's firewall.
+}
+\example{tcpd}{
+	The linux \keyword{TCP} Daemon controls access to unix services \& can monitor requests to services (e.g \fun{ftp}, \fun{exec}, \fun{rsh}, \fun{telnet}).
+	\\
+	\\ It uses two files, \lstinline{/etc/hosts.allow} and \lstinline{/etc/hosts.deny} to determine access.
+}
+
+\subsection*{Firewall Avoidance}
+\subsubsection*{SSH}
+We can attempt to avoid a firewall by tunneling through with an allowed protocol, to then use the internal.
+\\
+\\ An example of this is with \keyword{ssh}. We can get through the firewall on ssh, and then send our requests through ssh to the internal network, to get responses, and use services the firewall may normally block.
+
+\subsubsection*{Spoof MAC Address}
+Can re-write the \keyword{MAC} address if the firewall is blocking requests based on it (MAC address blacklisting or whitelisting).
+
+\subsubsection*{Spoof IP Address}
+Much like with \keyword{MAC} address, however stateful firewalls will most likely detect this.
+
+\subsubsection*{(VPN) Virtual Private Network}
+Much like with \keyword{SSH}, we can tunnel through the firewall. Provided the tunnel is secure (e.g using \keyword{SSL}) the firewall will not be able to decipher your traffic.
+
+\subsection*{Other Security}
+\termdef{(IDS) Intrustion Detection System}{
+	Detects intrustions to inform the system (e.g a DDoS attack), however does not perform actions to stop the detected intrusion.
+}
+\termdef{(IPS) Intrusion Prevention System}{
+	Actively prevents intrusions (e.g blocking \const{SYN} flooders attempting to perform a DDoS attack), can work with an \keyword{IDS}.
+}
+\termdef{(NGFW) Next Generation Firewall}{
+	A stateful firewall that comes with an \keyword{IPS} / \keyword{IDS} system.
+}
+\termdef{(UTM) Unified Threat Management}{
+	Similar to a \keyword{NGFW} but with added features such as spam filters, antivirus etc.
+}
+\subsection*{(DMZ) Demilitarized Zone}
+\centerimage{width=0.7\textwidth}{DMZ.png}
+\termdef{(NAT) Network Address Translation}{
+	Rather than expose the \keyword{LAN} \keyword{IP} address of an internal host, routers translate the IP addresses to their own public IP to send, and when receiving from their public IP back to the IPs of internal hosts.
+}
+\termdef{Port Forwarding}{
+	To expose an internal host to the external network without placing it in the \keyword{DMZ} we can set the router to forward all packets arriving at a given port straight to the internal host.
+	\\
+	\\ For example we could specify any packet recieved on the router's IP at port $3472$ should be immediately forwarded to the \keyword{NAT} based \keyword{LAN} \keyword{IP} of "host A" on port 80.
+	\\
+	\\ Useful for hosting servers, even for games (e.g minecraft servers require port forwarding).
+}
+\subsection*{Logging and Auditing}
+Most systems keep logs, they are useful for:
+\compitem{
+	\item Checking for missed breaches. An attack may only be discovered in logs after the fact.
+	\item Forensics, providing evidence to law enforcement to discover who the purputrators of an attack are.
+	\item Determining how a system was exploited in an attack, in order to patch it.
+	\item Ensuring good practices are being followed (e.g if an unsafe features starts to be used).
+	\item Detecting other network issues (e.g congestion).
+}
+Logs can be found on linux at \lstinline{/var/log/} and the event viewer in Windows.
+
+\section*{Cryptography}
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=e8e5754c-bb81-43f7-9bae-ae3100f6a67b}
+\centerimage{width=0.9\textwidth}{cryptography.png}
+A good encryption algorithm should ensure:
+\compitem{
+	\item Given $M_C$ it is only possible to find $M$ by going though all possible values of $K^{-1}$ (brute force attack).
+	\item Given $M$ and $M_C$ it should be difficult to get the values of $K$ and $K^{-1}$. (e.g caesar cipher is poor as we can just calculate the shift)
+}
+\termdef{Symmetric and Secret Key Encryption}{
+	\centerimage{width=0.9\textwidth}{cryptography symmetric.png}
+	The same key is used for encryption and decryption (symmetric), and this key is secretly shared between sender and receiver (not on an unsecure channel) (secret).
+	\compitem{
+		\item Must secretly disclose key to communicate.
+		\item Faster encryption/decryption than \keyword{Asymmetric}.
+	}
+	An example is \keyword{DES} (\keyword{Data Encryption Standard}), though this has a short key length and is now too insecure for general use (wikipedia article \href{https://en.wikipedia.org/wiki/Data_Encryption_Standard}{here}).
+}
+\termdef{Asymmetric and Public Key Encryption} {
+	Each user has a \keyword{public} and \keyword{private} key.
+	\\
+	\\ For confidentiality: Sender encrypts with receiver's public, receiver decrypts with their private.
+	\centerimage{width=0.9\textwidth}{cryptography asymmetric confidential.png}
+	For signing: Sender encrypts with their private key, receiver decrypts with sender's public key, if value was successfully decrypted then we know the message was from the sender with the public key we used.
+	\centerimage{width=0.9\textwidth}{cryptography asymmetric sign.png}
+	We can then combine these, encrypting a message, but including a signed segment inside to verify the sender. We can also combine with symmetric encryption to sign symmetrically encrypted files (e.g check if a password protected file is from the correct sender/is not tampered with). Foe example \href{https://gnupg.org/}{GPG}.
+	\\
+	\\ The main points are:
+	\compitem{
+		\item No need to disclose private information to communicate securely so, can start communication on unsecure channel.
+		\item Hence more secure than \keyword{Secret Key} encryption.
+		\item However is slower to encrypt and decrypt.
+	}
+	An example of this is \keyword{RSA} which uses current difficulty in prime factor decomposition to ensure brute force attacks are computationally intractable (wikipedia article is \href{https://en.wikipedia.org/wiki/RSA_(cryptosystem)}{here}).
+}
+\termdef{Diffie-Hellman Key Exchange}{
+	\centerimage{width=0.9\textwidth}{diffie hellman key exchange.png}
+
+}
+\termdef{Kerberos (Needham \& Schroeder)}{
+	A key distribution system for secret keys, using a trusted server.
+	\compitem{
+		\item Kernberos authenticates you with a password.
+		\item It can also authenticate the user/resource you intend to communicate with.
+		\item Generates a ticket which allows for communication.
+		\item Ticket can be used up to a time limit, after which you must get another ticket.
+		\item Originally vulnerable to \keyword{Man/Monster in the Middle} attacks, though these have since been addressed.
+	}
+}
+\termdef{Hashing}{
+	In cryptography, a hash function converts some data into a fixed size alphanumeric string.
+	\compitem{
+		\item The same input data always produces the same hash value.
+		\item Not possible to derive the original input from the hash value (unlike encryption).
+		\item Can be used as a checksum to verify data (e.g that the contents of a file are unchanged/not tampered with).
+		\item Many old hash functions have been broken (either algorithm issues, or all possible hashes now determines - rainbow tables).
+	}
+}
 \end{document}

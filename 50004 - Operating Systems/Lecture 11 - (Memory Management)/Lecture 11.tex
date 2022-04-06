@@ -4,186 +4,186 @@
     \date{23/11/21}
 \input{../50004 common.tex}
 \begin{document}
-    \maketitle
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=f7672205-af40-419e-aee8-ade900e5f489}
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=f7672205-af40-419e-aee8-ade900e5f489}
 
-    \section*{Page Replacement Algorithms Continued...}
-        \subsection*{Least Recently Reused Page}
-            Each page has a counter, when referenced, copy clock to counter. When replacing, choose page with lowest counter.
-            \\ \textbf{3 frames, 9 page faults}
-            \begin{center}
-                \begin{tabular}{l c c c c c c c c c c c c}
-                    Access:     & 1 & 2 & 3 & 4 & 1 & 2 & 5 & 1 & 2 & 3 & 4 & 5 \\
-                    Page Fault: & Y & Y & Y & Y & Y & Y & Y & N & N & Y & Y & N \\
-                    Frame 0:    & 1 & 1 & 1 & 4 & 4 & 4 & 5 & $\to$ & $\to$ & 5 & 5 & $\to$ \\
-                    Frame 1:    & N & 2 & 2 & 2 & 1 & 1 & 1 & $\to$ & $\to$ & 3 & 3 & $\to$ \\
-                    Frame 2:    & N & N & 3 & 3 & 3 & 2 & 2 & $\to$ & $\to$ & 2 & 4 & $\to$ \\
-                \end{tabular}
-            \end{center}
-            As proper \keyword{LRU} is expensive (requires a search for lowest counter \& to store counters), so we use approximations.
-            \begin{itemize}
-                \bullpara{Reference Bit}{
-                    \compitem{
-                        \item Each page has reference bit $r$, inbitially $r=0$.
-                        \item When a page is referenced $r = 1$ (done by \keyword{MMU}).
-                        \item Periodically reset bits.
-                        \item When evicting, choose a page with $r = 0$.
-                    }
-                }
-                \bullpara{Second Chance}{
-                    Evict pages in order, but if $r = 1$ give a second chance to stay in memory.
-                    \centerimage{width=0.8\textwidth}{second chance algorithm.png}
-                    \compitem{
-                        \item Uses a reference bit $r$ and usesd clock replacement
-                        \item If page to be replaced (in clock order) has $r = 1$, set $r = 0$, leave in memory, search for another page.
-                    }
-                }
+\section*{Page Replacement Algorithms Continued...}
+\subsection*{Least Recently Reused Page}
+Each page has a counter, when referenced, copy clock to counter. When replacing, choose page with lowest counter.
+\\ \textbf{3 frames, 9 page faults}
+\begin{center}
+	\begin{tabular}{l c c c c c c c c c c c c}
+		Access:     & 1 & 2 & 3 & 4 & 1 & 2 & 5 & 1     & 2     & 3 & 4 & 5     \\
+		Page Fault: & Y & Y & Y & Y & Y & Y & Y & N     & N     & Y & Y & N     \\
+		Frame 0:    & 1 & 1 & 1 & 4 & 4 & 4 & 5 & $\to$ & $\to$ & 5 & 5 & $\to$ \\
+		Frame 1:    & N & 2 & 2 & 2 & 1 & 1 & 1 & $\to$ & $\to$ & 3 & 3 & $\to$ \\
+		Frame 2:    & N & N & 3 & 3 & 3 & 2 & 2 & $\to$ & $\to$ & 2 & 4 & $\to$ \\
+	\end{tabular}
+\end{center}
+As proper \keyword{LRU} is expensive (requires a search for lowest counter \& to store counters), so we use approximations.
+\begin{itemize}
+	\bullpara{Reference Bit}{
+	\compitem{
+	\item Each page has reference bit $r$, inbitially $r=0$.
+	\item When a page is referenced $r = 1$ (done by \keyword{MMU}).
+	\item Periodically reset bits.
+	\item When evicting, choose a page with $r = 0$.
+	      }
+	      }
+	      \bullpara{Second Chance}{
+	      Evict pages in order, but if $r = 1$ give a second chance to stay in memory.
+	      \centerimage{width=0.8\textwidth}{second chance algorithm.png}
+	      \compitem{
+	\item Uses a reference bit $r$ and usesd clock replacement
+	\item If page to be replaced (in clock order) has $r = 1$, set $r = 0$, leave in memory, search for another page.
+	      }
+	      }
 
-            \end{itemize}
-        \subsection*{Counting algorithms}
-            Work by keeping a counter of the number of references.
-            \begin{itemize}
-                \bullpara{LFU - Least Frequently Used}{
-                    \compitem{
-                        \item Replace page with the smallest count.
-                        \item May replace very new page just brought into memory.
-                        \item Never forgets heavy page usage (reset counters or use ageing)
-                    }
-                }
-                \bullpara{MFU - Most Frequently Used}{
-                    \compitem{
-                        \item Replace page with largest count.
-                        \item Newly accessed pages have low count, are prioritised.
-                        \item Pages barely used hog memory \& heavily used pages evicted quickly.
-                    }
-                }
-            \end{itemize}
-    \section*{Locality of Reference}
-        Programs tend to request the same pages across space \& time. We need to design for this to ensure good performance.
-        \\
-        \\ If we do optimise for this, it could result in \keyword{thrashing}
-        \sidenote{Thrashing}{
-            where memory virtual memory is so overused, that there are constant page faults, and paging routines (OS replacing). This destroys performnance.
-        }
+\end{itemize}
+\subsection*{Counting algorithms}
+Work by keeping a counter of the number of references.
+\begin{itemize}
+	\bullpara{LFU - Least Frequently Used}{
+	\compitem{
+	\item Replace page with the smallest count.
+	\item May replace very new page just brought into memory.
+	\item Never forgets heavy page usage (reset counters or use ageing)
+	      }
+	      }
+	      \bullpara{MFU - Most Frequently Used}{
+	      \compitem{
+	\item Replace page with largest count.
+	\item Newly accessed pages have low count, are prioritised.
+	\item Pages barely used hog memory \& heavily used pages evicted quickly.
+	      }
+	      }
+\end{itemize}
+\section*{Locality of Reference}
+Programs tend to request the same pages across space \& time. We need to design for this to ensure good performance.
+\\
+\\ If we do optimise for this, it could result in \keyword{thrashing}
+\sidenote{Thrashing}{
+	where memory virtual memory is so overused, that there are constant page faults, and paging routines (OS replacing). This destroys performnance.
+}
 
-        \compitem{
-            \item Excessive page faults \& page replacement causing low CPU utilisation, low performance.
-            \item Program gets slowed by constant access to slow secondary storage.
-        }
-        \subsection*{Working Set Model}
-            A \keyword{working set} of pages $W(t,w)$ is a set of pages referenced by a process while running at time interval $t - w$ to $t$.
-            \centerimage{width=0.5\textwidth}{working set.png}
-            We can then use this in our clock replacement algorithm, keeping track of pages in a working set.
-            \\
-            \\ At each page fault:
-            \begin{enumerate}
-                \bullpara{$r = 1$}{Set $r = 0$ and move to next page.}
-                \bullpara{$r = 0$}{
-                    \compenum{
-                        \item Calculate age.
-                        \item If $age < w$ (working set age) continue (page is in working set).
-                        \item If $age > w$, if page clean, replace, else write back and replace.
-                    }
-                }
-            \end{enumerate}
-            Effectively we only replace pages if they haven't be referenced in $w$ time, so that we can take advantage of temporal locality.
-    
-        \subsection*{Working Set Size (w)}
-            Processes transition between working sets (different parts of the program use different sets of pages). Hence allocations tend to look like:
-            \centerimage{width=0.8\textwidth}{working set size.png}
-            Here we do not deallocate pages referenced within $w$ time, at different points in the program the number of allocated page frames differ. 
-            \\
-            \\ In transitions the number of allocated pages tend to be higher as pages from two sets are referenced within $w$ time.
-            \compitem{
-                \item Working set too large - too many allocations, process uses too much memory.
-                \item Working set too small - tooo few allocations, lots of page faults, slow.
-                \item Programs transition between working sets (e.g program moves to a new phase, uses different structures).
-                \item Dont want to misallocate - OS allocates for pages the program dosen't actually want anymore.
-            }
-            A program can transition between working sets, e.g:
-            \codelist{C}{working set transition.c}
-            As we allocate more pages, the number of page faults will decrease (so interfault time will increase). When we allocate all pages in the process there will be no page faults, so interfault time is execution time.
-            \\
-            \\ This generally follows:
-            \centerimage{width=0.6\textwidth}{page fault frequency.png}
-        
-        \subsection*{Local and Global Page Replacement}
-            \begin{itemize}
-                \bullpara{Local Strategy}{
-                    \\ When replacing a page, a process can choose some page that belongs to the same process.
-                    \\
-                    \\ Requires some partitioning to determine how many pages each process owns/can be allocated. The most popular techniques are:
-                    \compitem{
-                        \item fixed partitioning - each process gets a fixed size
-                        \item balanced set algorithms
-                    }
-                    As processes manage page faults independently, it is more scalable than global (at most considering one process' pages when replacing).
-                }
-                \bullpara{Global Strategy}{
-                    \\ Can choose any page from any process.
-                    \compitem{
-                        \item memory is dynamically shared between processes.
-                        \item Initially allocate memory proportional to process size.
-                        \item Use page fault frequency to tune allocation (more page faults $\to$ more allocation).
-                    }
-                    Uses all pages to determine replacement (slower).
-                    \\
-                    \\ More efficient overall than local. e.g demanding process's page replaces page of process idling/not using the page.
-                }
-            \end{itemize}
-            There is no agreed best solution \& it is partially dependent on the scheduling strategy. 
-            \compitem{
-                \item Windows is local
-                \item Linux is global
-            }
-    
-    \section*{Linux Page Replacement}
-        Uses a variation of the \keyword{clock algorithm} to approximate \keyword{LRU} page replacement.
-        \centerimage{width=0.8\textwidth}{linux page replacement.png}
-        \begin{itemize}
-            \bullpara{kswapd}{ Swap Daemon
-                \compitem{
-                    \item Pages in inactive list reclaimed when memory low.
-                    \item Uses dedicated swap partition or file
-                    \item Handles locked \& shared pages.
-                }
-            }
-            \bullpara{pdflush}{ Kernel Thread
-                \compitem{
-                    \item Periodically flushes dirty pages to disk from the inactive list.
-                    \item Clean pages can just be freed, no need to write back.
-                }
-            \bullpara{Reference bit}{Used to determine when pages are moved between active \& inactive lists. }
-            }
-        \end{itemize}
-        \subsubsection{Example:}
-            Given 3 empty frames and a reference string of virtual memory accesses:
-            \begin{center}
-                \begin{tabular}{c c c c c c c c c c c c c c c c c}
-                    1 & 2 & 1 & 3 & 2 & 1 & 4 & 3 & 1 & 1 & 2 & 4 & 1 & 5 & 6 & 2 & 1 \\
-                \end{tabular}
-            \end{center}
-            Assume demand paging.
-            \textbf{LRU replacement policy - 11 page faults}
-            \begin{center}
-                \begin{tabular}{l c c c c c c c c c c c c c c c c c}
-                    Access:     & 1 & 2 & 1 & 3 & 2 & 1 & 4 & 3 & 1 & 1 & 2 & 4 & 1 & 5 & 6 & 2 & 1 \\
-                    Page Fault: & Y & Y & N & Y & N & N & Y & Y & N & N & Y & Y & N & Y & Y & Y & Y\\
-                    Frame 0:    & 1 & 1 & $\to$ & 1 & $\to$ & $\to$ & 1 & 1 & $\to$ & $\to$ & 1 & 1 & $\to$ & 1 & 1 & 2 & 2 \\
-                    Frame 1:    & N & 2 & $\to$ & 2 & $\to$ & $\to$ & 2 & 3 & $\to$ & $\to$ & 3 & 4 & $\to$ & 4 & 6 & 6 & 6 \\
-                    Frame 2:    & N & N & $\to$ & 3 & $\to$ & $\to$ & 4 & 4 & $\to$ & $\to$ & 2 & 2 & $\to$ & 5 & 5 & 5 & 1 \\
-                \end{tabular}
-            \end{center}
-            \textbf{Second chance with clock algorithm - 9 page faults}
-            \begin{tiny}
-                \begin{center}
-                    \begin{tabular}{l c c c c c c c c c c c c c c c c c}
-                        Access:     &             1 &             2 & 1 &             3 & 2 & 1 &             4 & 3 &             1 & 1 &             2 & 4 & 1 &             5 &             6 &             2 & 1 \\
-                        Page Fault: &             Y &             Y & N &             Y & N & N &             Y & N &             Y & N &             Y & N & N &             N &             N &             N & N\\
-                        Frame 0:    & $p \ 1_{r=1}$ & $q \ 1_{r=1}$ & $\to$ & $p \ 1_{r=1}$ & $\to$ & $\to$ &     $4_{r=1}$ & $\to$ & $4_{r=0}$     & $\to$ & $p \ 4_{r=0}$ & $\to$ & $\to$ &     $5_{r=1}$ &     $5_{r=1}$ & $p \ 5_{r=0}$ & $\to$\\
-                        Frame 1:    & N             & $2_{r=1}$     & $\to$ & $2_{r=1}$     & $\to$ & $\to$ & $p \ 2_{r=0}$ & $\to$ & $1_{r=1}$     & $\to$ & $1_{r=0}$     & $\to$ & $\to$ & $p \ 1_{r=0}$ &     $6_{r=1}$ &     $6_{r=0}$ & $\to$\\
-                        Frame 2:    & N             & N             & $\to$ & $3_{r=1}$     & $\to$ & $\to$ &     $3_{r=0}$ & $\to$ & $p \ 3_{r=0}$ & $\to$ & $2_{r=1}$     & $\to$ & $\to$ &     $2_{r=1}$ & $p \ 2_{r=1}$ &     $1_{r=1}$ & $\to$\\
-                    \end{tabular}
-                \end{center}
-            \end{tiny}
+\compitem{
+	\item Excessive page faults \& page replacement causing low CPU utilisation, low performance.
+	\item Program gets slowed by constant access to slow secondary storage.
+}
+\subsection*{Working Set Model}
+A \keyword{working set} of pages $W(t,w)$ is a set of pages referenced by a process while running at time interval $t - w$ to $t$.
+\centerimage{width=0.5\textwidth}{working set.png}
+We can then use this in our clock replacement algorithm, keeping track of pages in a working set.
+\\
+\\ At each page fault:
+\begin{enumerate}
+	\bullpara{$r = 1$}{Set $r = 0$ and move to next page.}
+	\bullpara{$r = 0$}{
+	\compenum{
+	\item Calculate age.
+	\item If $age < w$ (working set age) continue (page is in working set).
+	\item If $age > w$, if page clean, replace, else write back and replace.
+	      }
+	      }
+\end{enumerate}
+Effectively we only replace pages if they haven't be referenced in $w$ time, so that we can take advantage of temporal locality.
+
+\subsection*{Working Set Size (w)}
+Processes transition between working sets (different parts of the program use different sets of pages). Hence allocations tend to look like:
+\centerimage{width=0.8\textwidth}{working set size.png}
+Here we do not deallocate pages referenced within $w$ time, at different points in the program the number of allocated page frames differ.
+\\
+\\ In transitions the number of allocated pages tend to be higher as pages from two sets are referenced within $w$ time.
+\compitem{
+	\item Working set too large - too many allocations, process uses too much memory.
+	\item Working set too small - tooo few allocations, lots of page faults, slow.
+	\item Programs transition between working sets (e.g program moves to a new phase, uses different structures).
+	\item Dont want to misallocate - OS allocates for pages the program dosen't actually want anymore.
+}
+A program can transition between working sets, e.g:
+\codelist{C}{working set transition.c}
+As we allocate more pages, the number of page faults will decrease (so interfault time will increase). When we allocate all pages in the process there will be no page faults, so interfault time is execution time.
+\\
+\\ This generally follows:
+\centerimage{width=0.6\textwidth}{page fault frequency.png}
+
+\subsection*{Local and Global Page Replacement}
+\begin{itemize}
+	\bullpara{Local Strategy}{
+	\\ When replacing a page, a process can choose some page that belongs to the same process.
+	\\
+	\\ Requires some partitioning to determine how many pages each process owns/can be allocated. The most popular techniques are:
+	\compitem{
+	\item fixed partitioning - each process gets a fixed size
+	\item balanced set algorithms
+	      }
+	      As processes manage page faults independently, it is more scalable than global (at most considering one process' pages when replacing).
+	      }
+	      \bullpara{Global Strategy}{
+	      \\ Can choose any page from any process.
+	      \compitem{
+	\item memory is dynamically shared between processes.
+	\item Initially allocate memory proportional to process size.
+	\item Use page fault frequency to tune allocation (more page faults $\to$ more allocation).
+	      }
+	      Uses all pages to determine replacement (slower).
+	      \\
+	      \\ More efficient overall than local. e.g demanding process's page replaces page of process idling/not using the page.
+	      }
+\end{itemize}
+There is no agreed best solution \& it is partially dependent on the scheduling strategy.
+\compitem{
+	\item Windows is local
+	\item Linux is global
+}
+
+\section*{Linux Page Replacement}
+Uses a variation of the \keyword{clock algorithm} to approximate \keyword{LRU} page replacement.
+\centerimage{width=0.8\textwidth}{linux page replacement.png}
+\begin{itemize}
+	\bullpara{kswapd}{ Swap Daemon
+	\compitem{
+	\item Pages in inactive list reclaimed when memory low.
+	\item Uses dedicated swap partition or file
+	\item Handles locked \& shared pages.
+	      }
+	      }
+	      \bullpara{pdflush}{ Kernel Thread
+	      \compitem{
+	\item Periodically flushes dirty pages to disk from the inactive list.
+	\item Clean pages can just be freed, no need to write back.
+	      }
+	      \bullpara{Reference bit}{Used to determine when pages are moved between active \& inactive lists. }
+	      }
+\end{itemize}
+\subsubsection{Example:}
+Given 3 empty frames and a reference string of virtual memory accesses:
+\begin{center}
+	\begin{tabular}{c c c c c c c c c c c c c c c c c}
+		1 & 2 & 1 & 3 & 2 & 1 & 4 & 3 & 1 & 1 & 2 & 4 & 1 & 5 & 6 & 2 & 1 \\
+	\end{tabular}
+\end{center}
+Assume demand paging.
+\textbf{LRU replacement policy - 11 page faults}
+\begin{center}
+	\begin{tabular}{l c c c c c c c c c c c c c c c c c}
+		Access:     & 1 & 2 & 1     & 3 & 2     & 1     & 4 & 3 & 1     & 1     & 2 & 4 & 1     & 5 & 6 & 2 & 1 \\
+		Page Fault: & Y & Y & N     & Y & N     & N     & Y & Y & N     & N     & Y & Y & N     & Y & Y & Y & Y \\
+		Frame 0:    & 1 & 1 & $\to$ & 1 & $\to$ & $\to$ & 1 & 1 & $\to$ & $\to$ & 1 & 1 & $\to$ & 1 & 1 & 2 & 2 \\
+		Frame 1:    & N & 2 & $\to$ & 2 & $\to$ & $\to$ & 2 & 3 & $\to$ & $\to$ & 3 & 4 & $\to$ & 4 & 6 & 6 & 6 \\
+		Frame 2:    & N & N & $\to$ & 3 & $\to$ & $\to$ & 4 & 4 & $\to$ & $\to$ & 2 & 2 & $\to$ & 5 & 5 & 5 & 1 \\
+	\end{tabular}
+\end{center}
+\textbf{Second chance with clock algorithm - 9 page faults}
+\begin{tiny}
+	\begin{center}
+		\begin{tabular}{l c c c c c c c c c c c c c c c c c}
+			Access:     & 1             & 2             & 1     & 3             & 2     & 1     & 4             & 3     & 1             & 1     & 2             & 4     & 1     & 5             & 6             & 2             & 1     \\
+			Page Fault: & Y             & Y             & N     & Y             & N     & N     & Y             & N     & Y             & N     & Y             & N     & N     & N             & N             & N             & N     \\
+			Frame 0:    & $p \ 1_{r=1}$ & $q \ 1_{r=1}$ & $\to$ & $p \ 1_{r=1}$ & $\to$ & $\to$ & $4_{r=1}$     & $\to$ & $4_{r=0}$     & $\to$ & $p \ 4_{r=0}$ & $\to$ & $\to$ & $5_{r=1}$     & $5_{r=1}$     & $p \ 5_{r=0}$ & $\to$ \\
+			Frame 1:    & N             & $2_{r=1}$     & $\to$ & $2_{r=1}$     & $\to$ & $\to$ & $p \ 2_{r=0}$ & $\to$ & $1_{r=1}$     & $\to$ & $1_{r=0}$     & $\to$ & $\to$ & $p \ 1_{r=0}$ & $6_{r=1}$     & $6_{r=0}$     & $\to$ \\
+			Frame 2:    & N             & N             & $\to$ & $3_{r=1}$     & $\to$ & $\to$ & $3_{r=0}$     & $\to$ & $p \ 3_{r=0}$ & $\to$ & $2_{r=1}$     & $\to$ & $\to$ & $2_{r=1}$     & $p \ 2_{r=1}$ & $1_{r=1}$     & $\to$ \\
+		\end{tabular}
+	\end{center}
+\end{tiny}
 \end{document}

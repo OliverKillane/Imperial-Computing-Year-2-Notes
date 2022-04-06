@@ -6,44 +6,44 @@
 \input{../50002 common.tex}
 
 \begin{document}
-    \maketitle
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=f8370610-159a-41b1-b7d1-ade500f91cef}
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=f8370610-159a-41b1-b7d1-ade500f91cef}
 
-    \section*{Testing}
-        By using the \keyword{Model-View-Controller} pattern we can make it easy to test the logic of our application, as we can test the model in isolation.
-        \\
-        \\ However we may want to test the entire application to ensure not only that the view and controller components function, but that there are no bugs from integrating them together.
-        \\
-        \\ To do this we do a \keyword{System Test} which interacts with an instance of our application.
-        \centerimage{width=\textwidth}{system test.png}
-        The driver interacts with the framework used for displaying graphics in order to get value of objects, and pass commands.
-    
-    \section*{Window Licker}
-        A driver used for testing Java based UIs, to use it we:
-        \begin{enumerate}
-            \bullpara{Create driver code}{
-                \\ To make it easier to access buttons, text firleds etc we can create functions to make use of WindowLick's library to get components and interact with them.
-                \codelist{Java}{driver setup.java}
-            }
-            \bullpara{Create Test Code}{
-                \\ Using the driver to control, add test code.
-                \codelist{Java}{test code.java}
-            }
-            \bullpara{Run Tests}{
-                \\ Can run the tests in a headless mode, or display the GUI \& let the \keyword{WindowLick} driver control interactions.
-            }
-        \end{enumerate}
-    
-    \section*{Web Application}
-        We applications use the browser to view, and usually have the controller as the dominant object.
-        \centerimage{width=0.8\textwidth}{webapp.png}
-        For webapp we can use a tool such as \keyword{Selenium} which automates browser control. 
-        \\
-        \\ We can use \keyword{Selenium} to:
-        \compitem{
-            \item connect to the webapp.
-            \item Get handles for html components using tags, names, if necessary xpaths etc
-            \item Interact with components.
-        }
-        It offers many drivers for interacting using different browsers, as well as headless modes, and can run many browsers in parallel to speed up large test suites.
+\section*{Testing}
+By using the \keyword{Model-View-Controller} pattern we can make it easy to test the logic of our application, as we can test the model in isolation.
+\\
+\\ However we may want to test the entire application to ensure not only that the view and controller components function, but that there are no bugs from integrating them together.
+\\
+\\ To do this we do a \keyword{System Test} which interacts with an instance of our application.
+\centerimage{width=\textwidth}{system test.png}
+The driver interacts with the framework used for displaying graphics in order to get value of objects, and pass commands.
+
+\section*{Window Licker}
+A driver used for testing Java based UIs, to use it we:
+\begin{enumerate}
+	\bullpara{Create driver code}{
+		\\ To make it easier to access buttons, text firleds etc we can create functions to make use of WindowLick's library to get components and interact with them.
+		\codelist{Java}{driver setup.java}
+	}
+	\bullpara{Create Test Code}{
+		\\ Using the driver to control, add test code.
+		\codelist{Java}{test code.java}
+	}
+	\bullpara{Run Tests}{
+		\\ Can run the tests in a headless mode, or display the GUI \& let the \keyword{WindowLick} driver control interactions.
+	}
+\end{enumerate}
+
+\section*{Web Application}
+We applications use the browser to view, and usually have the controller as the dominant object.
+\centerimage{width=0.8\textwidth}{webapp.png}
+For webapp we can use a tool such as \keyword{Selenium} which automates browser control.
+\\
+\\ We can use \keyword{Selenium} to:
+\compitem{
+	\item connect to the webapp.
+	\item Get handles for html components using tags, names, if necessary xpaths etc
+	\item Interact with components.
+}
+It offers many drivers for interacting using different browsers, as well as headless modes, and can run many browsers in parallel to speed up large test suites.
 \end{document}

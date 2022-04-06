@@ -6,107 +6,107 @@
 \input{../50004 common.tex}
 
 \begin{document}
-    \maketitle
-    \sidenote{Lecture Recording}{
-        Lecture recording is available \href{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=90571bc3-0ec6-4452-9461-adbf00c863f3}{here}
-    }
-    \section*{Introduction}
-        Covering the theoretical side of OS, with many concepts to be implemented in the Pintos lab.
-        \subsection*{Course Delivery}
-            \begin{center}
-                \begin{tabular}{r l}
-                    Week & Form \\
-                    \hline
-                    2-3 & Remote live lectures on teams (Tues and Thurs) \\
-                    4 & No lectures \\
-                    5-11 & Hybrid lectures (Teams \& Huxley) \\
-                \end{tabular}
-            \end{center}
-            \subsubsection*{Part 1 - Dr Pietzuch}
-                \begin{itemize}
-                    \item Overview and Introduction
-                    \item Processes and Threads
-                    \item Overview and Introduction
-                \end{itemize}
-                \subsubsection*{Part 2 - Luis}
-                \begin{itemize}
-                    \item Memory Management
-                    \item Device Management
-                    \item Disk Management
-                    \item File Systems
-                    \item Security
-                    \item Virtualisation
-                \end{itemize}
-            \subsubsection*{Recommended Reading}
-                \begin{enumerate}
-                    \item Modern Operating Systems
-                    \item Operating Systems: 3 easy pieces (free online)
-                    \item Understanding the Linux Kernel
-                    \item Inside Windows NT \& 2000
-                \end{enumerate}
-    
-    \section*{Computer Architecture Overview}
-        OS provides a clean interface for different types of applications to run on different hardware.
-        \\ \centerline{\textit{OS provides resource management and useful abstractions.}}
-        \begin{center}
-            \includegraphics[scale = 0.6]{OS VM.png} \\
-        \end{center}
-        \begin{center}
-            \includegraphics[scale = 0.6]{OS diagram.png}
-        \end{center}
-    \section*{OS Characteristics}
-        The OS must be able to:
-        \begin{itemize}
-            \item Must share Data, programs and hardware (time and space multiplexing)
-            \item Must offer resource allocation (efficient and fair use of memory, CPU etc)
-            \item Must offer simultaneous access to resources, or if this is not possible, enforce mutual exclusion.
-            \item Must protect against accidental or malicious corruption of Data.
-        \end{itemize}
-        Can also support concurrency (logical or actual)
-        \begin{itemize}
-            \item Support simultaneous activities occurring, e.g multiple users \& programs 
-            \item Can switch activities at any arbitrary time, and must ensure this does not result in program failures
-            \item Ensure safe concurrency through primitives (e.g semaphores, locks)
-        \end{itemize}
-        The OS must also take into account non-determinism, as it cannot predict what interrupts/events will occur and when. (events occur in an unpredictable order)
-        \\
-        \\ Also needs to consider persistent storage (e.g HDD, SSD etc).
-        \begin{itemize}
-            \item easy access to files through user-defined names.
-            \item Enforces access controls (permissions to read, write, copy, etc).
-            \item Can Protect against failure (e.g backups).
-            \item Manage storage devices, partitions etc.
-        \end{itemize}
-    \section*{OS Structure}
-        \subsubsection*{Monolithic}
-            Whole OS is a single executable that runs in a single address space. File system, drivers etc are built into the kernel and run with privilege.
-        \subsubsection*{Microkernel}
-            \begin{itemize}
-                \item Kernel provides some abstraction, manages resources, but many services run as servers (e.g file system, drivers, etc).
-                \item IPC slow, so lower performance than monolithic.
-                \item More reliable.
-            \end{itemize}
-        \subsubsection*{Hybrid Kernel}
-            Mix of the two above, used by OS's such as windows.
-    \section*{Linux}
-        Linux is a variant of Unix, developed as a monolithic version of the Minix kernel.
-        \begin{itemize}    
-            \item System calls implemented by putting args in registers \& on the stack and issuing a trap.
-            \item Supports many programs through GNU (GNU's not unix) project.
-            \item Interrupt handlers are the primary method of interacting with devices.
-            \item Supports dynamically loadable modules.
-            \item exposes many devices and services as files.
-        \end{itemize}
-    \section*{Windows}
-        A hybrid kernel, NT replaced MS-DOS and was inspired by VMS.
-        \begin{center}
-            \includegraphics[width=\textwidth]{windows kernel.png}
-        \end{center}
-        \keyword{NTOS} is loaded from ntoskrnl.exe (windows NT operating system kernel executable) at boot.
-        \\ It consists of two layers:
-        \begin{enumerate}
-            \item Executive - Most of the services.
-            \item Kernel Thread scheduling \& synchronisation, traps, interrupt handlers, and CPU management.
-        \end{enumerate}
-        There is also a \keyword{HAL} (Hardware Abstraction Layer) that abstracts away DMA (direct memory access) operations, BIOS config \& CPU types. This in theory makes windows easy to poert to new devices and architectures. However in practice for mainly commercial reasons this has not occurred.
+\maketitle
+\sidenote{Lecture Recording}{
+	Lecture recording is available \href{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=90571bc3-0ec6-4452-9461-adbf00c863f3}{here}
+}
+\section*{Introduction}
+Covering the theoretical side of OS, with many concepts to be implemented in the Pintos lab.
+\subsection*{Course Delivery}
+\begin{center}
+	\begin{tabular}{r l}
+		Week & Form                                           \\
+		\hline
+		2-3  & Remote live lectures on teams (Tues and Thurs) \\
+		4    & No lectures                                    \\
+		5-11 & Hybrid lectures (Teams \& Huxley)              \\
+	\end{tabular}
+\end{center}
+\subsubsection*{Part 1 - Dr Pietzuch}
+\begin{itemize}
+	\item Overview and Introduction
+	\item Processes and Threads
+	\item Overview and Introduction
+\end{itemize}
+\subsubsection*{Part 2 - Luis}
+\begin{itemize}
+	\item Memory Management
+	\item Device Management
+	\item Disk Management
+	\item File Systems
+	\item Security
+	\item Virtualisation
+\end{itemize}
+\subsubsection*{Recommended Reading}
+\begin{enumerate}
+	\item Modern Operating Systems
+	\item Operating Systems: 3 easy pieces (free online)
+	\item Understanding the Linux Kernel
+	\item Inside Windows NT \& 2000
+\end{enumerate}
+
+\section*{Computer Architecture Overview}
+OS provides a clean interface for different types of applications to run on different hardware.
+\\ \centerline{\textit{OS provides resource management and useful abstractions.}}
+\begin{center}
+	\includegraphics[scale = 0.6]{OS VM.png} \\
+\end{center}
+\begin{center}
+	\includegraphics[scale = 0.6]{OS diagram.png}
+\end{center}
+\section*{OS Characteristics}
+The OS must be able to:
+\begin{itemize}
+	\item Must share Data, programs and hardware (time and space multiplexing)
+	\item Must offer resource allocation (efficient and fair use of memory, CPU etc)
+	\item Must offer simultaneous access to resources, or if this is not possible, enforce mutual exclusion.
+	\item Must protect against accidental or malicious corruption of Data.
+\end{itemize}
+Can also support concurrency (logical or actual)
+\begin{itemize}
+	\item Support simultaneous activities occurring, e.g multiple users \& programs
+	\item Can switch activities at any arbitrary time, and must ensure this does not result in program failures
+	\item Ensure safe concurrency through primitives (e.g semaphores, locks)
+\end{itemize}
+The OS must also take into account non-determinism, as it cannot predict what interrupts/events will occur and when. (events occur in an unpredictable order)
+\\
+\\ Also needs to consider persistent storage (e.g HDD, SSD etc).
+\begin{itemize}
+	\item easy access to files through user-defined names.
+	\item Enforces access controls (permissions to read, write, copy, etc).
+	\item Can Protect against failure (e.g backups).
+	\item Manage storage devices, partitions etc.
+\end{itemize}
+\section*{OS Structure}
+\subsubsection*{Monolithic}
+Whole OS is a single executable that runs in a single address space. File system, drivers etc are built into the kernel and run with privilege.
+\subsubsection*{Microkernel}
+\begin{itemize}
+	\item Kernel provides some abstraction, manages resources, but many services run as servers (e.g file system, drivers, etc).
+	\item IPC slow, so lower performance than monolithic.
+	\item More reliable.
+\end{itemize}
+\subsubsection*{Hybrid Kernel}
+Mix of the two above, used by OS's such as windows.
+\section*{Linux}
+Linux is a variant of Unix, developed as a monolithic version of the Minix kernel.
+\begin{itemize}
+	\item System calls implemented by putting args in registers \& on the stack and issuing a trap.
+	\item Supports many programs through GNU (GNU's not unix) project.
+	\item Interrupt handlers are the primary method of interacting with devices.
+	\item Supports dynamically loadable modules.
+	\item exposes many devices and services as files.
+\end{itemize}
+\section*{Windows}
+A hybrid kernel, NT replaced MS-DOS and was inspired by VMS.
+\begin{center}
+	\includegraphics[width=\textwidth]{windows kernel.png}
+\end{center}
+\keyword{NTOS} is loaded from ntoskrnl.exe (windows NT operating system kernel executable) at boot.
+\\ It consists of two layers:
+\begin{enumerate}
+	\item Executive - Most of the services.
+	\item Kernel Thread scheduling \& synchronisation, traps, interrupt handlers, and CPU management.
+\end{enumerate}
+There is also a \keyword{HAL} (Hardware Abstraction Layer) that abstracts away DMA (direct memory access) operations, BIOS config \& CPU types. This in theory makes windows easy to poert to new devices and architectures. However in practice for mainly commercial reasons this has not occurred.
 \end{document}

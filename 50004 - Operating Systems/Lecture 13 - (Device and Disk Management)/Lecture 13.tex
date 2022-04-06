@@ -4,204 +4,204 @@
     \date{25/11/21}
 \input{../50004 common.tex}
 \begin{document}
-    \maketitle
-    \lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=f4a7d21a-feab-428d-a9db-adeb00c7250f}
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=f4a7d21a-feab-428d-a9db-adeb00c7250f}
 
-    \section*{Linux API}
-        \subsubsection*{I/O Classes}
-            \begin{tabular}{l l l}
-                Character & unstructured & Files and devices \\
-                Block & structured & Devices \\
-                Pipes & message & Interprocess communication \\
-                Socket & message & Network Interface \\
-            \end{tabular}
-            \sidenote{Sockets}{
-                \compitem{
-                    \item Allow for bidirectional communication between processes.
-                    \item Can be local (e.g processes communicating on the same system), or across the network (e.g connecting to a server) (pipes use machine specific file descriptors, so cannot go over network).
-                    \item There are two types (\keyword{TCP}, \keyword{UDP})
-                }
-            }
-        \subsection*{User Space API}
-            \codelist{C}{linux api.c}
-        
-        \subsection*{File Descriptors}
-            \compitem{
-                \item File descriptors are integers, refering to a file opened by the process.
-                \item Process context sensitive (same descriptor, different process $\to$ different file)
-            }
-            Each process has 3 descriptors when starting:
-            \\ \begin{tabular}{l l}
-                0 & Standard Input (\const{stdin}) \\
-                1 & Standard Output (\const{stdout}) \\
-                2 & Standard Error (\const{stderr}) \\
-            \end{tabular}
-            \\ By default these point to the terminal which spawned the process.
-    \section*{Blocking \& Asynchronous I/O}
-        \begin{itemize}
-            \bullpara{Blocking}{ process suspended until operation complete
-                \\ The I/O call only returns once completed. As a result from the program's perspective this is instantaneous.
-                \\
-                \\ Process making call could be blocked for a long time, we can use threads to get around this (while one blocked, others can run) however this is complex.
-            }
-            \bullpara{Non-Blocking}{ I/O call returns as much as is available.
-                \\ Return immediately (sometimes with data, sometimes with none). By making many calls we can get some data (e.g constantly read until all data is read).
-                \\
-                \\ The provides an application-level polling for I/O (Can constantly request reads from stdin, operating only if there is data at that moment).
-                \\ e.g to respond to keystrokes immediately for a terminal game poll stdin by non-blocking reads.
-                \\ 
-                \\ Turn on using the \fun{fcntl} system call (for sending commands to manage file descriptors, e.g make a file descriptor non-blocking for read/write).
-                \codelist{C}{fcntl.c}
-            }
-            \bullpara{Asynchronous}{
-                \centerimage{width=0.4\textwidth}{asynchronous.png}
-                \compitem{
-                    \item Process runs in parallel with the I/O operations (Non-blocking)
-                    \item When operations is complete the process is notified (callback function called, or process signal sent).
-                    \item Process can check/wait for I/O completion
-                    \item Flexible \& Efficient (non-blocking but does not require lots of polling)
-                    \item More complex code (e.g futures/promises)
-                    \item Potentially less secure if buffers for recieving data are mismanaged.
-                }
-                Security example: Asynchronous read, process sends pointer to buffer to write to. Process then does other stuff, frees buffer, buffer used for something else later. On callback data is written to freed buffer (used after free).
-                \codelist{C}{aio.c}
-            }
-        \end{itemize}
-    \section*{Responsibilities}
-        \begin{itemize}
-            \bullpara{Computing track, sector \& head for disk read}{Device Driver (or hardware)
-                \\ Requires information about disk layout, in modern HDDs the disk controller is used at only the hardware knows locations of bad blocks.
-                \\
-                \\ (Bad Block - Area that is no longer functioning properly/reliable - physicall damage or corruption)
-                }
-            \bullpara{Maintain cache of recently used blocks}{Device Independent OS layer
-                \\ Useful across many types of block I/O and can be reused/shared between different devices
-                }
-            \bullpara{Write Commands to Drive Registers}{Interrupt Handler
-                \\ If time-critical can be performed in an interrupt routine, if it requires more time (or is device specific) can be done by device driver.
-                }
-            \bullpara{Checking user is allowed to use a device}{Device Independent OS layer
-                \\ Applicable to many different types of devices, OS can enforce policy uniformly over all devices.
-                }
-            \bullpara{Converting integers to ASCII for printing}{ User-Level I/O Layer
-                \\ Data representations managed by a library users link against (e.g for pretty printing), this gives user programs lots of flexibility about how to convert.
-                \\
-                \\ Aslo more performant as requires no kernel involvement (which would require context switches).
-            }
-        \end{itemize}
-    
-    \section*{Disk Management}
-        \subsection*{History}
-            \begin{minipage}[t]{0.4\textwidth}
-                \textbf{1956} - IBM 305 RAMAC (First Commercial Hard Disk)
-                \compitem{
-                    \item 4.4MB
-                    \item $1.5m^2$
-                    \item \$160,000
-                }
-            \end{minipage}
-            \begin{minipage}[t]{0.2\textwidth}
-                \begin{huge}
-                    \[\to\]
-                \end{huge}
-            \end{minipage}
-            \begin{minipage}[t]{0.4\textwidth}
-                \textbf{2005} - Toshiba 0.85'' disk (Smallest ever)
-                \compitem{
-                    \item 4GB
-                    \item $<\$300$
-                }
-            \end{minipage}
-            \\ Disk capacity has grown exponentially, through access speeds have not kept pace.
-            \\
-            \\ Recently this has been driven by demand from cloud providers \& services (e.g Youtube, microsoft 365, facebook etc).
-            \\
-            \sidenote{HAMR}{
-                Heat Assisted Magnetic Recording. To ensure high rpecision, even when working at very high speeds, the platter is such that 
-                it can only be written to when heated. 
-                \\
-                \\ A laser shines just ahead of the read/write head, heating areas that will be written too. Cold areas ignore any reading/writing.
-            }
-        
-        \subsection*{Disk Layout}
-            \begin{minipage}[t]{0.6\textwidth}
-                \centerimage{width=\textwidth}{disk cylinder.jpg}
-                (Note that \keyword{cylinder} refers to all the tracks on top opf eachother / same number on each disk. Innermost cylinder is all the innermost tracks on all the platters)
-            \end{minipage}
-            \begin{minipage}[t]{0.4\textwidth}
-                \centerimage{width=\textwidth}{disk layout.png}
-            \end{minipage}
-        
-        \subsection*{Sector Layout}
-            \centerimage{width=0.6\textwidth}{disk geometry.png}
-            \compitem{
-                \item Surface split into tracks (concentric circles)
-                \item Track split into equal size sectors (outer tracks have more sectors)
-                \item Physical address is (cylinder, surface, sector), but this is hidden from the OS.
-            }
-            Modern systems use \keyword{logical sector addressing/logical block addresses (LBA)}:
-            \compitem{
-                \item Sector Numbered consecutively $0..n$
-                \item Makes disk management much easier (just get sector number \& offset in sector)
-                \item Helps to work around BIOS limitations (e.g IBM PC BIOS could only address 8GB (6 bits sector, 4 head, 14 cylinder), this is too small).
-            }
+\section*{Linux API}
+\subsubsection*{I/O Classes}
+\begin{tabular}{l l l}
+	Character & unstructured & Files and devices          \\
+	Block     & structured   & Devices                    \\
+	Pipes     & message      & Interprocess communication \\
+	Socket    & message      & Network Interface          \\
+\end{tabular}
+\sidenote{Sockets}{
+	\compitem{
+		\item Allow for bidirectional communication between processes.
+		\item Can be local (e.g processes communicating on the same system), or across the network (e.g connecting to a server) (pipes use machine specific file descriptors, so cannot go over network).
+		\item There are two types (\keyword{TCP}, \keyword{UDP})
+	}
+}
+\subsection*{User Space API}
+\codelist{C}{linux api.c}
 
-            \sidenote{Capacity}{
-                Some sources will use $1000$, others $1024$ as base for KB, MB, GB, TB. Ensure you are consistent with which base you use during exams.
-            }
+\subsection*{File Descriptors}
+\compitem{
+	\item File descriptors are integers, refering to a file opened by the process.
+	\item Process context sensitive (same descriptor, different process $\to$ different file)
+}
+Each process has 3 descriptors when starting:
+\\ \begin{tabular}{l l}
+	0 & Standard Input (\const{stdin})   \\
+	1 & Standard Output (\const{stdout}) \\
+	2 & Standard Error (\const{stderr})  \\
+\end{tabular}
+\\ By default these point to the terminal which spawned the process.
+\section*{Blocking \& Asynchronous I/O}
+\begin{itemize}
+	\bullpara{Blocking}{ process suspended until operation complete
+		\\ The I/O call only returns once completed. As a result from the program's perspective this is instantaneous.
+		\\
+		\\ Process making call could be blocked for a long time, we can use threads to get around this (while one blocked, others can run) however this is complex.
+	}
+	\bullpara{Non-Blocking}{ I/O call returns as much as is available.
+		\\ Return immediately (sometimes with data, sometimes with none). By making many calls we can get some data (e.g constantly read until all data is read).
+		\\
+		\\ The provides an application-level polling for I/O (Can constantly request reads from stdin, operating only if there is data at that moment).
+		\\ e.g to respond to keystrokes immediately for a terminal game poll stdin by non-blocking reads.
+		\\
+		\\ Turn on using the \fun{fcntl} system call (for sending commands to manage file descriptors, e.g make a file descriptor non-blocking for read/write).
+		\codelist{C}{fcntl.c}
+	}
+	\bullpara{Asynchronous}{
+	\centerimage{width=0.4\textwidth}{asynchronous.png}
+	\compitem{
+	\item Process runs in parallel with the I/O operations (Non-blocking)
+	\item When operations is complete the process is notified (callback function called, or process signal sent).
+	\item Process can check/wait for I/O completion
+	\item Flexible \& Efficient (non-blocking but does not require lots of polling)
+	\item More complex code (e.g futures/promises)
+	\item Potentially less secure if buffers for recieving data are mismanaged.
+	      }
+	      Security example: Asynchronous read, process sends pointer to buffer to write to. Process then does other stuff, frees buffer, buffer used for something else later. On callback data is written to freed buffer (used after free).
+	      \codelist{C}{aio.c}
+	      }
+\end{itemize}
+\section*{Responsibilities}
+\begin{itemize}
+	\bullpara{Computing track, sector \& head for disk read}{Device Driver (or hardware)
+		\\ Requires information about disk layout, in modern HDDs the disk controller is used at only the hardware knows locations of bad blocks.
+		\\
+		\\ (Bad Block - Area that is no longer functioning properly/reliable - physicall damage or corruption)
+	}
+	\bullpara{Maintain cache of recently used blocks}{Device Independent OS layer
+		\\ Useful across many types of block I/O and can be reused/shared between different devices
+	}
+	\bullpara{Write Commands to Drive Registers}{Interrupt Handler
+		\\ If time-critical can be performed in an interrupt routine, if it requires more time (or is device specific) can be done by device driver.
+	}
+	\bullpara{Checking user is allowed to use a device}{Device Independent OS layer
+		\\ Applicable to many different types of devices, OS can enforce policy uniformly over all devices.
+	}
+	\bullpara{Converting integers to ASCII for printing}{ User-Level I/O Layer
+		\\ Data representations managed by a library users link against (e.g for pretty printing), this gives user programs lots of flexibility about how to convert.
+		\\
+		\\ Aslo more performant as requires no kernel involvement (which would require context switches).
+	}
+\end{itemize}
 
-        \subsection*{Disk Formatting}
-            \subsubsection*{Low Level Format}
-                \centerimage{width=0.8\textwidth}{disk sector layout.png}
-                \compitem{
-                    \bullpara{Preamble}{Identify the type of block}
-                    \bullpara{Data}{For storage}
-                    \bullpara{ECC}{Error Correction Codes (to correct small errors in read/write)}
-                }
-                Some techniques are also used such as \keyword{interleaving} (for older systems, sequential data spread apart such that CPU has time to process a sector, before the next one is read) and cylinder skew (cylinder skew of $n$ means when the head is at sector $x$ on one surface, on the next its at sector $x + n$).
-            \subsubsection*{High Level Format}
-                \compitem{
-                    \bullpara{Boot Block}{A block (usually at start of disk) that is dedicated to starting the system. }
-                    \bullpara{Free Block List}{Stores which blocks are currently in use, and which are free to allocate. }
-                    \bullpara{Root Directory}{Start of the file system, all subdirectries emenate from here.}
-                    \bullpara{Empty File System}{}
-                }
-            
-            \subsubsection*{Example Question}
-                A disk controller with enough memory can perform \keyword{read-ahead}, reading blocks before the CPU has requested them.
-                \\ 
-                \\ Should it also do \keyword{write-behind} (writing to controller memory, informing CPU it is done, only to write back later)
-                \\
-                \\ Answer: Not in general - as disk controller memory is still volatile, so in a power loss the data would be lost. (Method around is a small battery large enough to write back in case of a power failure).
-        
-        \subsection*{Disk Delay}
-            \begin{center}
-                \begin{tabular}{l l l}
-                    Sector Size & 521 bytes & \\
-                    Seek time & adjacent cylinder ($<$1ms), avg (8ms)& (Move to correct track) \\
-                    Latency/Rotation time & $4ms$ & (Spin platter to get to beginning of block) \\
-                    Transfer time & $> 100MB/s$ & (Spin platter over block being read) \\
-                \end{tabular}
-            \end{center}
-            \textbf{Seek time is $2-3$x larger than latency time}
-            \subsubsection*{Disk Scheduling}
-                \compitem{
-                    \item Minimise seek/latency times
-                    \item Order pending requests to take advantage of head position
-                }
-            \subsubsection*{Disk Performance}
-                Where:
-                \compitem{
-                    \item $b$ - bytes to transfer
-                    \item $N$ - bytes per track
-                    \item $r$ - rotation speed in r/s (rotations per second)
-                }
-                \compitem{
-                    \bullpara{Seek Time}{$t_{seek}$}
-                    \bullpara{Transfer Time}{$t_{transfer} = \cfrac{b}{r \times N}$
-                        \\ $\cfrac{1}{r}$ is seconds per revolution.
-                    }
-                    \bullpara{Total Access Time}{$t_{access} = t_{seek} + \cfrac{1}{2 \times r} + \cfrac{b}{r \times N}$
-                        \\ Seek + latency time (to get to start average case rotate half $\to$ disk typically only rotates in one direction) + How much to rotate while reading (e.g reading $x$ bytes from track size $2x$ requires a half rotation)}
-                }
+\section*{Disk Management}
+\subsection*{History}
+\begin{minipage}[t]{0.4\textwidth}
+	\textbf{1956} - IBM 305 RAMAC (First Commercial Hard Disk)
+	\compitem{
+		\item 4.4MB
+		\item $1.5m^2$
+		\item \$160,000
+	}
+\end{minipage}
+\begin{minipage}[t]{0.2\textwidth}
+	\begin{huge}
+		\[\to\]
+	\end{huge}
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+	\textbf{2005} - Toshiba 0.85'' disk (Smallest ever)
+	\compitem{
+		\item 4GB
+		\item $<\$300$
+	}
+\end{minipage}
+\\ Disk capacity has grown exponentially, through access speeds have not kept pace.
+\\
+\\ Recently this has been driven by demand from cloud providers \& services (e.g Youtube, microsoft 365, facebook etc).
+\\
+\sidenote{HAMR}{
+	Heat Assisted Magnetic Recording. To ensure high rpecision, even when working at very high speeds, the platter is such that
+	it can only be written to when heated.
+	\\
+	\\ A laser shines just ahead of the read/write head, heating areas that will be written too. Cold areas ignore any reading/writing.
+}
+
+\subsection*{Disk Layout}
+\begin{minipage}[t]{0.6\textwidth}
+	\centerimage{width=\textwidth}{disk cylinder.jpg}
+	(Note that \keyword{cylinder} refers to all the tracks on top opf eachother / same number on each disk. Innermost cylinder is all the innermost tracks on all the platters)
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+	\centerimage{width=\textwidth}{disk layout.png}
+\end{minipage}
+
+\subsection*{Sector Layout}
+\centerimage{width=0.6\textwidth}{disk geometry.png}
+\compitem{
+	\item Surface split into tracks (concentric circles)
+	\item Track split into equal size sectors (outer tracks have more sectors)
+	\item Physical address is (cylinder, surface, sector), but this is hidden from the OS.
+}
+Modern systems use \keyword{logical sector addressing/logical block addresses (LBA)}:
+\compitem{
+	\item Sector Numbered consecutively $0..n$
+	\item Makes disk management much easier (just get sector number \& offset in sector)
+	\item Helps to work around BIOS limitations (e.g IBM PC BIOS could only address 8GB (6 bits sector, 4 head, 14 cylinder), this is too small).
+}
+
+\sidenote{Capacity}{
+	Some sources will use $1000$, others $1024$ as base for KB, MB, GB, TB. Ensure you are consistent with which base you use during exams.
+}
+
+\subsection*{Disk Formatting}
+\subsubsection*{Low Level Format}
+\centerimage{width=0.8\textwidth}{disk sector layout.png}
+\compitem{
+	\bullpara{Preamble}{Identify the type of block}
+	\bullpara{Data}{For storage}
+	\bullpara{ECC}{Error Correction Codes (to correct small errors in read/write)}
+}
+Some techniques are also used such as \keyword{interleaving} (for older systems, sequential data spread apart such that CPU has time to process a sector, before the next one is read) and cylinder skew (cylinder skew of $n$ means when the head is at sector $x$ on one surface, on the next its at sector $x + n$).
+\subsubsection*{High Level Format}
+\compitem{
+	\bullpara{Boot Block}{A block (usually at start of disk) that is dedicated to starting the system. }
+	\bullpara{Free Block List}{Stores which blocks are currently in use, and which are free to allocate. }
+	\bullpara{Root Directory}{Start of the file system, all subdirectries emenate from here.}
+	\bullpara{Empty File System}{}
+}
+
+\subsubsection*{Example Question}
+A disk controller with enough memory can perform \keyword{read-ahead}, reading blocks before the CPU has requested them.
+\\
+\\ Should it also do \keyword{write-behind} (writing to controller memory, informing CPU it is done, only to write back later)
+\\
+\\ Answer: Not in general - as disk controller memory is still volatile, so in a power loss the data would be lost. (Method around is a small battery large enough to write back in case of a power failure).
+
+\subsection*{Disk Delay}
+\begin{center}
+	\begin{tabular}{l l l}
+		Sector Size           & 521 bytes                             &                                             \\
+		Seek time             & adjacent cylinder ($<$1ms), avg (8ms) & (Move to correct track)                     \\
+		Latency/Rotation time & $4ms$                                 & (Spin platter to get to beginning of block) \\
+		Transfer time         & $> 100MB/s$                           & (Spin platter over block being read)        \\
+	\end{tabular}
+\end{center}
+\textbf{Seek time is $2-3$x larger than latency time}
+\subsubsection*{Disk Scheduling}
+\compitem{
+	\item Minimise seek/latency times
+	\item Order pending requests to take advantage of head position
+}
+\subsubsection*{Disk Performance}
+Where:
+\compitem{
+	\item $b$ - bytes to transfer
+	\item $N$ - bytes per track
+	\item $r$ - rotation speed in r/s (rotations per second)
+}
+\compitem{
+	\bullpara{Seek Time}{$t_{seek}$}
+	\bullpara{Transfer Time}{$t_{transfer} = \cfrac{b}{r \times N}$
+		\\ $\cfrac{1}{r}$ is seconds per revolution.
+	}
+	\bullpara{Total Access Time}{$t_{access} = t_{seek} + \cfrac{1}{2 \times r} + \cfrac{b}{r \times N}$
+		\\ Seek + latency time (to get to start average case rotate half $\to$ disk typically only rotates in one direction) + How much to rotate while reading (e.g reading $x$ bytes from track size $2x$ requires a half rotation)}
+}
 \end{document}
