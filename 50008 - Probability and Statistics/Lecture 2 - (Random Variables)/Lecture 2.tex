@@ -133,7 +133,7 @@ We can determine the probability over finite intervals using the cumulative dist
 For a \keyword{discrete random variable} we define the probability mass function as:
 \[p_X(x_i) = P(X = x_i) = P(E_i) \text{ where } x_i \in supp(X) \text{ and } x_i \text{ is the outcome of event } E_i\]
 We can also define using \keyword{cfds}:
-\[F_X(x_i) = \sum^{i}_{j = 1}p_X(x_i) \Leftrightarrow p_X(x_i) = F_X(x_i) - F_X(x_{i-1}) \ \text{ where } i = 2, 3 \dots\]
+\[F_X(x_i) = \sum^{i}_{j = 1}p_X(x_j) \Leftrightarrow p_X(x_i) = F_X(x_i) - F_X(x_{i-1}) \ \text{ where } i = 2, 3 \dots\]
 Or more simply:
 \[p_X(x_i) = P_X(X = x_i) = P(X \leq x_i) - P(X \leq x_{i-1}) = F_X(x_i) - F_X(x_{i-1})\]
 When graphed, $F_X$ is a monotonically increasing, stepped function with jumps at points in $S(X)$.
