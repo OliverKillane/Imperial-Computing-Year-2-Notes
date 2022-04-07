@@ -40,6 +40,8 @@ Then simply edit your `Lecture 42.tex` file to your heart's content, placing `.d
 ## VSCode Glory
 I recommend using [Latex Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop), [Draw.io VS Code Integration](https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio) & [VSCode-PDF](https://marketplace.visualstudio.com/items?itemName=tomoki1207.pdf) to edit tex, draw diagram & have lecture slides open all in vscode.
 
+`latexindent` is used as a basic formatter for consistency & ensuing PR diffs are not overwhelming.
+
 ## Contributions
 ### Notes Improvements
 Users who have contributed material to improve and extend the notes.
