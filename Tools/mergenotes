@@ -1,0 +1,30 @@
+#!/bin/bash
+# A tool for merging all notes pdfs in a module into a single pdf for easy 
+# Ctrl-F-ing.
+
+folder=$(basename "$PWD")
+
+SWE='50002 - Software Engineering Design'
+MOD='50003 - Models Of Computation'
+OS='50004 - Operating Systems'
+ALG='50001 - Algorithm Analysis and Design'
+NET='50005 - Networks and Communications'
+COMP='50006 - Compilers'
+STAT='50008 - Probability and Statistics'
+TECH='50011 - Computational Techniques'
+
+
+case $folder in
+    $SWE | $MOD | $OS | $ALG | $NET | $COMP | $STAT | $TECH);;
+    *) echo "Must be in a notes folder, cannot be $folder"; exit;;
+esac
+
+# Find all lecture notes pdfs in notes folders and concatenate them in order 
+# (-v for 1,2,3 rather than 1,11,12,)
+#
+# Then replace the newlines with nulls
+#
+# Then use -0 on xargs (with -r so there must be at least one notes pdf) to 
+# create the new file
+rm -f "$folder full notes.pdf"
+ls -v */*.pdf | tr '\n' '\0' | xargs -r0 gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE="$folder full notes.pdf"
