@@ -1,6 +1,6 @@
 # 50006 - Compilers
 ## Contents
-My work-in-progress lecture notes for the Year 2 compilers module taught in Spring 2022.
+My complete lecture notes for the Year 2 compilers module taught in Spring 2022.
 
 ## Lecture Recordings
 Lecture recordings can be found on [panopto](https://imperial.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx#folderID=%226759b935-30a1-468e-a875-adb9014a6e2a%22), though these are only available for imperial computing students (2nd year, 2021-22).
