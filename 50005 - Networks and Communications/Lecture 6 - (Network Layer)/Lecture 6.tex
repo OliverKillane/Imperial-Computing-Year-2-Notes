@@ -238,11 +238,11 @@ Each arc is labelled with a cost (e.g delay, hops, some function of parameters p
 }
 Routers cooperate to find the best routes between all pairs of nodes in the network.
 \termdef{Shortest Path Routing (SPR)}{
-	Use \keyword{Djikstra's Algorithm} to determine the shorest routes from each router, to every destination. The forward packets accordingly.
+	Use \keyword{Djikstra's Algorithm} to determine the shortest routes from each router, to every destination. The forward packets accordingly.
 }
 \termdef{Flood Routing}{
 	\centerimage{width=0.3\textwidth}{flood routing}
-	Forward incoming packets to every outgoing link. Except for the link the packet was recieved on.
+	Forward incoming packets to every outgoing link. Except for the link the packet was received on.
 	\\
 	\\ We can use several strategies to avoid drowning the network in packets:
 	\compitem{
@@ -259,7 +259,7 @@ Routers cooperate to find the best routes between all pairs of nodes in the netw
 	}
 	Flooding always chooses the shortest path (all paths explored in parallel), however it creates significant overhead (must send many packets at every router in every path).
 	\\
-	\\ Use case is when the packet must be recieved, but when the route to the destination is unknown.
+	\\ Use case is when the packet must be received, but when the route to the destination is unknown.
 }
 \termdef{Distance Vector Routing (DVR/Bellman-Ford)}{
 Both \keyword{Flood Routing} and \keyword{Shortest Path Routing} are static and do not take into account current network conditions (e.g network load). \keyword{DVR} is dynamic and does consider this.
@@ -269,9 +269,9 @@ Both \keyword{Flood Routing} and \keyword{Shortest Path Routing} are static and 
 }
 This is expressed by the \keyword{Bellman-Foprd Equation} for the cost from node $u$ to node $v$:
 \[D_u'[v] = \min_{x \in neighbours(u)}(cost(u,x) + D_x[v])\]
-(Cost from $u$ to $v$ is the minimum of the cost from $u$ to a neighbour, plus the cost of that neightbour to $v$)
+(Cost from $u$ to $v$ is the minimum of the cost from $u$ to a neighbour, plus the cost of that neighbour to $v$)
 \centerimage{width=0.6\textwidth}{distance vector routing}
-However there is a \keyword{count-to-infinity} problem. When a node goes down, and routers continually update their costs based off seachothers, resulting in the cost incrementing constantly.
+However there is a \keyword{count-to-infinity} problem. When a node goes down, and routers continually update their costs based off eachothers, resulting in the cost incrementing constantly.
 \[\begin{split}
 		A \to C &= B \to C + 1 \\
 		B \to C &= A \to C + 1 \\
@@ -295,7 +295,7 @@ Examples of distance vector algorithms include \keyword{RIP}.
 		\item Calculate the cost of sending packet to each neighbour ("echo").
 		\item Build a \keyword{Link State Advertisement/LSA} describing the router, its connections to its neighbours.
 		\item Send the \keyword{LSA} packet to every router on the network (\keyword{flooding}).
-		\item Recieve \keyword{LSA} packets from every other reouter on the network.
+		\item Recieve \keyword{LSA} packets from every other router on the network.
 		\item Now the router has the status of all links between all routers, it runs dijkstra's algorithm locally, to create a \keyword{sink tree} for use in routing.
 	}
 	This algorithm allows better routes to be chosen using current network conditions.
@@ -397,7 +397,7 @@ We can compare \keyword{DVR} and \keyword{Link State Routing}:
 		\item Can adapt dynamically to changing network topology (nodes added or removed).
 		\item Supports routing based on \keyword{ToS} (Type of service).
 		\item Supports load balancing (not overwhelming routers e.g by flooding)
-		\item Offsers some scurity features (though some have been compromised).
+		\item Offsers some security features (though some have been compromised).
 	}
 	It also supports hierarchical routing. It is possible to split an AS into several "areas", then each area has one or more "area border routers" which are in a "backbone area" (contains all border routers) to route traffic between the "areas".
 }
@@ -426,7 +426,7 @@ We can compare \keyword{DVR} and \keyword{Link State Routing}:
 		\\
 		\\ This is also referred to as \textit{supernetting}.
 	}
-	In \keyword{BGP} each AS has a unique identifier (\keyword{Autonomous System Number} (\keyword{ASN}))and several attributes:
+	In \keyword{BGP} each AS has a unique identifier (\keyword{Autonomous System Number} (\keyword{ASN})) and several attributes:
 	\compitem{
 		\bullpara{AS-PATH}{Sequence of AS identifiers through which the advertisement was sent}
 		\bullpara{NEXT-HOP}{Next IP address to forward packets towards advertised destination (resolves ambiguity when there are multiple AS reachable through multiple inferfaces)}
@@ -439,7 +439,7 @@ We can compare \keyword{DVR} and \keyword{Link State Routing}:
 		\item Shortest \keyword{AS-PATH}
 		\item closest \keyword{NEXT-HOP} router.
 	}
-	The \textit{count-to-infinity} problem is sovled by \textit{path exploration/hunting} (actiuvely seeks paths), furthermore routers can send withdrawl messages (e.g before taking a node down, can tell others to remove the path).
+	The \textit{count-to-infinity} problem is solved by \textit{path exploration/hunting} (actively seeks paths), furthermore routers can send withdrawal messages (e.g before taking a node down, can tell others to remove the path).
 	\\
 	\\ This allows routers to identify invalid paths, at the expense of some delays.
 }
