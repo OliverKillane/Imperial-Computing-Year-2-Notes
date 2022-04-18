@@ -1,0 +1,85 @@
+\documentclass{report}
+    \title{50005 - Networks and Communications - Lecture 7}
+    \author{Oliver Killane}
+    \date{18/04/22}
+\input{../50005 common.tex}
+\begin{document}
+\maketitle
+
+\section*{WireShark}
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=bd933f5f-688c-460a-af86-ae3d0100e28c}
+\termdef{Credential Resuse/Stuffing}{
+    Using previously leaked/found eail-passoword combinations on other services. Useful when users reuse passwords for mutliple services.
+}
+\termdef{Network Monitoring / Packet Sniffing}{
+    Listening on a network and reading packets where you (your \keyword{NIC}) are not the intended recipient.
+}
+\termdef{Code/SQL Injection}{
+    Executing code on a system by passing it through normal data collection.
+    \\
+    \\ e.g if text entered in a website is directly substituted into a database query, by writing SQL ocde in the text entry, we can alter (or add another query) to the query generated.
+}
+\termdef{Session/Cookie Hijacking}{
+    Using the cookie/authentication token form another user's session to get authenticated.
+}
+\termdef{Wardriving}{
+    Identifying and compomising unsecured wireless networks.
+    \\
+    \\ e.g installing spyware on usecured home routers.
+}
+\termdef{Wireshark}{
+    Wireshark is a network protocol analyser. It allows users to capture, analyse \& deconstruct packets to analyse traffic on a network. 
+}
+\subsection*{WireShark Modes}
+\halfsplit{
+    \centerline{\keyword{Promiscuous Mode}}
+    \compitem{
+        \item Works for Wired and wireless.
+        \item \keyword{NIC} does not drop packets, retains all received packets.
+        \item When wireless, only listens on the connected network.
+        \item Some \keyword{NIC}s ignore this (considered \textit{impolite} and easily abused).
+    }
+}{
+    \centerline{\keyword{Monitor Mode}}
+    \compitem{
+        \item Only works on wireless networks.
+        \item \keyword{NIC} listens on all networks in range/that it can receive from.
+        \item Wifi networks secured with authentication (e.g password) will appear scrambled (encryption).
+        \item Most \keyword{NICs} do not support this, may require new drivers or a special \keyword{NIC}.
+        \item \keyword{WinPcap} (windows) does not support though \keyword{AirPcap} and \keyword{Npcap} on linux do.
+    }
+}
+
+\sidenote{Sniffing Ethics}{
+    When monitoring a network, it needs to be a netywork you have permission to monitor (either wired or wireless)
+}
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=5481751f-1e54-487a-8f58-ae3d0101379a}
+\subsection*{WireShark Packet Capture}
+\begin{center}
+    \begin{tabular}{l p{0.7\textwidth}}
+        \textbf{Location} & \textbf{Can Capture} \\
+        \hline
+        \textbf{Hub} & Local traffic, Broadcast/Multicast, (Promiscuous Mode) Entire Network. \\
+        \textbf{Switch} & Local Traffic, Broadcast/Multicast, (Promiscuous Mode) Network connected to the same switch port. \\
+        \textbf{WLAN} & Local Traffic, Broadcast/Multicast, (Promiscuous Mode) Entire WLAN, (Monitor Mode) All wireless packets physically receivable/in range. \\
+    \end{tabular}
+\end{center}
+We can provide wireshark with authentication to allow it to decrypt packets on for protected networks (e.g provide the RSA key for SSL, or password for WPA/WEP).
+
+\subsection*{WireShark Display Filters}
+Can hide or select packets based on contents, destination \& source address and more. And can build up complex filters.
+\example{WireShark Capture Filter}{
+    \codelist{Python}{wireshark filter.py}
+    \href{https://wiki.wireshark.org/DisplayFilters\#examples}{More Examples} and \href{https://www.wireshark.org/docs/wsug_html_chunked/ChWorkBuildDisplayFilterSection.html}{filter building tutorial}.
+}
+
+\subsection*{NMAP}
+\termdef{NMAP}{
+    A network scanning tool which uses sends raw \keyword{IP} packets and monitors responses \& determine the services provided by the network and its hosts.
+    \\
+    \\ It can be used to detect vulnerable hosts on a network.
+}
+We can scan networks using the gui, or by using the command line utility:
+\codelist{Bash}{namp examples.sh}
+
+\end{document}
