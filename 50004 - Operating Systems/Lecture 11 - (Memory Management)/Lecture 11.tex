@@ -88,7 +88,7 @@ We can then use this in our clock replacement algorithm, keeping track of pages 
 	\compenum{
 	\item Calculate age.
 	\item If $age < w$ (working set age) continue (page is in working set).
-	\item If $age > w$, if page clean, replace, else write back and replace.
+	\item If $age > w$, if page clean, replace, else start write back and continue to find another page (once the write-back of the frame is complete the page is marked as free \& clean - we dont want to halt while waiting for the page to be written back to disk)
 	      }
 	      }
 \end{enumerate}

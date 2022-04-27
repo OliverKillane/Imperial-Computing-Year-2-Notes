@@ -117,7 +117,7 @@ Given a node $d: \ t = a \bullet b$ the conditions for hoisting are:
 	}
 	\bullpara{There can only be one definition of $t$}{\\ Count the definitions.}
 	\bullpara{$t$ cannot be liveout from the loop's pre-header}{
-		\\ If $t$ is live out from the pre-header, it means that $t$ is used somewhere in the loop, and $t$ is also defined in the loop. Hence we cannot hoist it.
+		\\ If $t$ is live out from the pre-header, it means that $t$ is used somewhere in the loop ($t$ is also defined in the loop), or the value of $t$ from the pre-header is used after the loop (e.g a while loop when no iterations are run). Hence we cannot hoist it.
 		Use \keyword{live range} analysis for this.
 	}
 }
