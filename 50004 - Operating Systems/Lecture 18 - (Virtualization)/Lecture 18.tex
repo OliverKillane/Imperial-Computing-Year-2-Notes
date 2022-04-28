@@ -15,9 +15,9 @@
 		\\ Hence can save money by running multiple dedicated servers on the same physical server, dynamically allocating resources on demand.
 	}
 	\bullpara{Legacy Software}{ Some software is OS \& version specific.
-		\\ Despite large efforts by companies to ensure backward compatability, software rpoduced for older OSes may be incompatible/buggy on newer ones.
+		\\ Despite large efforts by companies to ensure backward compatability, software produced for older OSes may be incompatible/buggy on newer ones.
 		\\
-		\\ Applications may use drivers that are no longer supported for legcacy hardware that is no longer commercially available.
+		\\ Applications may use drivers that are no longer supported for legacy hardware that is no longer commercially available.
 		\\
 		\\ e.g Windows 8, 7, Vista are not truly backwards compatible with XP }
 	\bullpara{Software Development \& Testing}{ Test more \& more easily
@@ -68,7 +68,7 @@ When the instruction is run, it traps, allowing the \keyword{VMM} to take over a
 		\\
 		\\ Hence as the guest OS runs in user space, this instruction could silently fail (not informing VM of attempt to access \var{IF})
 	}
-	\bullpara{Visibility of privelege level}{
+	\bullpara{Visibility of privilege level}{
 		\\ The \var{CS} (code segment) register informs a process of its privilege level. If we do not attempt to hide this from the guest OS, it will be able to determine if it is in a virtual machine as when running in a vm it will not have kernel privilege on the hardware.
 	}
 \end{itemize}
@@ -105,7 +105,7 @@ Frequent traps incur significant performance overhead (must clear \keyword{TLB},
 \\
 \\ In order to eliminate traps, we can instead dynamically translate trap-inducing instructions into the code to resolve them. This is faster than trapping, then emulating, and then switching back to the guest OS.
 \centerimage{width=\textwidth}{translate vs trap.png}
-This technique was originally developed for the \keyword{Type 2} hypervisor VMWare Workstation (though has been used outside of virtualization for decades, fist paper I could find \href{https://dl.acm.org/doi/10.1145/151220.151227}{here}.) It can also be used to speed up \keyword{Type 1} hypervisors.
+This technique was originally developed for the \keyword{Type 2} hypervisor VMWare Workstation (though has been used outside of virtualization for decades, first paper I could find \href{https://dl.acm.org/doi/10.1145/151220.151227}{here}.) It can also be used to speed up \keyword{Type 1} hypervisors.
 \compenum {
 	\item Scan each \keyword{Basic Block} just before execution.
 	\item If the block contains sensitive/privileged instructions, replace them with calls to hypervisor functions, or instructions in place.
