@@ -56,8 +56,8 @@ The main objectives of security are:
 }
 Types of security in which we attempt to achieve said goals include:
 \compitem {
-	\bullpara{People Security}{Inider, social engineering (e.g blagging).}
-	\bullpara{Hardware Security}{e.g phhysical secureness of a syustem's hardware (e.g physically steal a disk to access data).}
+	\bullpara{People Security}{Insider, social engineering (e.g blagging).}
+	\bullpara{Hardware Security}{e.g physical secureness of a system's hardware (e.g physically steal a disk to access data).}
 	\bullpara{Software Security}{Using flaws in software to access a system (e.g exploit a bug to run programs with higher permissions, such as superuser, without properly acquiring said permissions).}
 }
 \subsection*{People Security}
@@ -164,7 +164,7 @@ To authenticate the identity of a user we can use:
 		}
 	}
 	\bullpara{Knowledge}{Key is a secret known to the user. (i.e passwords)
-		Password tuirnover is important (longer a password is used, the greater time a cracker has to guess the password).
+		Password turnover is important (longer a password is used, the greater time a cracker has to guess the password).
 		\\
 		\\ A strong password (few english words, effectively random) can only be cracked by exhaustive search/brute force.
 		\\
@@ -285,7 +285,7 @@ When a file is executed, it executes with the privileges of the user executing. 
 \\
 \\ As a result each user effectively has $3$ user IDs:
 \compenum{
-	\bullpara{Real UID}{ID of the user that started thaae process}
+	\bullpara{Real UID}{ID of the user that started the process}
 	\bullpara{Effective UID}{Effective ID of the process (used for access control checks), when executing a file with the \keyword{SUID} flag this will be different to the real \keyword{UID}}
 	\bullpara{Saved UID}{UID the effective UID can be switched to.}
 }
