@@ -59,3 +59,4 @@ If *you* have found a mistake, please add an issue, create a pull request, or me
 - [Naman](https://github.com/NamanSharma5) - [Typos in OS, Networks, redex definition in Models](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/1766b72b6c2302411f34545c5e422e2db039cc46)
 - [Deepro](https://github.com/DeeproChoudhury) - [Fixes to minor errors in OS (clock algorithm) and Compilers (rationale for hoisting rules)](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/467fb457b5623ccd6b3a115d80bfcee75e54471d)
 - [Dayana](https://github.com/yana-alia) - [Fixes to OS Lecture 16 typos](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/4be0155094fbef71d0ed29c5354402b45052a69d)
+- [Dayana](https://github.com/yana-alia) - [General Typo Fixed to OS Lectures](https://github.com/OliverKillane/Imperial-Computing-Year-2-Notes/commit/71b30ad6e7b9f84e3f0afde4b8d74ec03c83bbec)
