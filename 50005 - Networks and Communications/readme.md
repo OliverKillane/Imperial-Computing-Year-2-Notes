@@ -1,6 +1,6 @@
 # 50005 - Networks and Communications
 ## Contents
-Lecture notes for the Networks and Communications module as taught in term 2 2021.
+Complete lecture notes for the Networks and Communications module as taught in term 2 2021.
 
 ## Lecture Recordings
 Lecture recordings can be found on [panopto](https://imperial.cloud.panopto.eu/Panopto/Pages/Sessions/List.aspx#folderID=%22a1773b84-de2c-4c0e-a818-adb90149f62c%22), though these are only available for imperial computing students (2nd year, 2021-22).
@@ -13,8 +13,6 @@ Available on [scientia](https://scientia.doc.ic.ac.uk/2122/modules/50005/resourc
 
 ## Plans
 I would like to expand on these notes:
-
-🔴 Complete Lecture Notes for the module.
 
 🔴 Create a Unified notes document from all lecture materials.
 
