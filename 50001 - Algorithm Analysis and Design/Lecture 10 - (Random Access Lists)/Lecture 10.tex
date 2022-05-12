@@ -17,7 +17,7 @@ As you ca  see \fun{!!} costs $O(n)$ as it may traverse the entire list.
 \codelist{Haskell}{list tree.hs}
 This costs $O(\log n)$ as each recursive call acts on half of the remaining list.
 \\
-\\ However we hav difficulty with insertion:
+\\ However we have difficulty with insertion:
 \begin{center}
 	\begin{tabular}{l l l}
 		Insert Quickly & $n : t = node (Leaf n) t$               & Effectively becomes a linked list, $\log n$ search time ruined. \\

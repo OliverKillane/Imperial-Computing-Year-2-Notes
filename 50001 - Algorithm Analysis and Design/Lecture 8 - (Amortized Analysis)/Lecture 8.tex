@@ -67,13 +67,13 @@ When considering the cost of \fun{tail} and \fun{init} we must consider that the
 \begin{center}
 	\begin{tabular}{l l p{7cm}}
 		High Cost & $\begin{matrix}
-				init (Dequeue us [s]) \\
-				tail (Dequeue [u] sv) \\
+				init (Dequeue \ us \ [s]) \\
+				tail (Dequeue \ [u] \ sv) \\
 			\end{matrix}$
 		          & This operation is $O(n)$ complexity due to the \fun{spitAt} and \fun{reverse} operation done on half of a list.                                                                                       \\
 		Low Cost  & $\begin{matrix}
-				init (Dequeue us (s:sv)) \\
-				tail (Dequeue (u:us) sv) \\
+				init (Dequeue \ us \ (s:sv)) \\
+				tail (Dequeue \ (u:us) \ sv) \\
 			\end{matrix}$                                                                                     & Low cost $O(1)$ operation as it requires only a pattern match on the first element. \\
 	\end{tabular}
 \end{center}

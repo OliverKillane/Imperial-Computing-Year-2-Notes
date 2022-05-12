@@ -37,9 +37,9 @@ Defines inequalities for the rate of increase of functions.
 \begin{proof}
 	\proofstep{$<$}{$f \prec g \Leftrightarrow lim = 0$}{$g$ grows much faster than $f$}
 	\proofstep{$\leq$}{$f \preccurlyeq g \Leftrightarrow lim <  \infty$}{$g$ grows much faster than $f$ or some multiple of $f$}
-	\proofstep{$=$}{$f \asymp g \Leftrightarrow lim < \infty$}{$g$ grows some multiple faster than $f$}
-	\proofstep{$\geq$}{$f \succcurlyeq  g \Leftrightarrow lim > \infty$}{$f$ grows much faster than $g$ or some multiple of $g$}
-	\proofstep{$>$}{$f \succ g \Leftrightarrow lim > \infty$}{$f$ grows much faster than $g$}
+	\proofstep{$=$}{$f \asymp g \Leftrightarrow 0 < lim < \infty$}{$g(n)$ grows towards some constant times $f(n)$}
+	\proofstep{$\geq$}{$f \succcurlyeq  g \Leftrightarrow lim > 0$}{$f$ grows much faster than $g$ or some multiple of $g$}
+	\proofstep{$>$}{$f \succ g \Leftrightarrow lim = \infty$}{$f$ grows much faster than $g$}
 \end{proof}
 These operators form a trichotomy such that one of the below will always hold:
 \[\begin{matrix}

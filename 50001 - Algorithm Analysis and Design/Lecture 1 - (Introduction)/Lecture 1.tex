@@ -41,11 +41,11 @@ Hence this requires $3$ call steps.
 	\end{matrix}\]
 We can solve the recurrence:
 \[\begin{matrix}
-		T_{insert n} & = 1 + T_{insert}(n-1)                 \\
-		T_{insert n} & = 1 + 1 + T_{insert}(n-2)             \\
-		T_{insert n} & = 1 + 1 + \dots + 1 + T_{insert}(n-n) \\
-		T_{insert n} & = n + T_{insert}(0)                   \\
-		T_{insert n} & = n + 1                               \\
+		T_{insert} (n) & = 1 + T_{insert}(n-1)                 \\
+		T_{insert} (n) & = 1 + 1 + T_{insert}(n-2)             \\
+		T_{insert} (n) & = 1 + 1 + \dots + 1 + T_{insert}(n-n) \\
+		T_{insert} (n) & = n + T_{insert}(0)                   \\
+		T_{insert} (n) & = n + 1                               \\
 	\end{matrix}\]
 
 \subsubsection*{More complex algorithms}
@@ -60,12 +60,12 @@ Hence by using our previous formula for $insert$
 	\end{matrix}\]
 And by recurrence:
 \[\begin{matrix}
-		T_{isort} n & = 1 + n + (1 + n - 1) + T_{isort}(n-2)                       \\
-		T_{isort} n & = 1 + n + (1 + n - 1) + (1 + n - 2) + \dots + T_{isort}(n-n) \\
-		T_{isort} n & = 1 + n + (1 + n - 1) + (1 + n - 2) + \dots + T_{isort}(0)   \\
-		T_{isort} n & = n + n + (n - 1) + (n - 2) + \dots + (n-n) + 1              \\
-		T_{isort} n & = 1 + n + \sum_{i = 0}^n{i}                                  \\
-		T_{isort} n & =  \sum_{i = 0}^{n+1}{i}                                     \\
-		T_{isort} n & =  \cfrac{(n+1)\times(n+1)}{2}                               \\
+		T_{isort} (n) & = 1 + n + (1 + n - 1) + T_{isort}(n-2)                       \\
+		T_{isort} (n) & = 1 + n + (1 + n - 1) + (1 + n - 2) + \dots + T_{isort}(n-n) \\
+		T_{isort} (n) & = 1 + n + (1 + n - 1) + (1 + n - 2) + \dots + T_{isort}(0)   \\
+		T_{isort} (n) & = n + n + (n - 1) + (n - 2) + \dots + (n-n) + 1              \\
+		T_{isort} (n) & = 1 + n + \sum_{i = 0}^n{i}                                  \\
+		T_{isort} (n) & =  \sum_{i = 0}^{n+1}{i}                                     \\
+		T_{isort} (n) & =  \cfrac{(n+1)\times(n+1)}{2}                               \\
 	\end{matrix}\]
 \end{document}

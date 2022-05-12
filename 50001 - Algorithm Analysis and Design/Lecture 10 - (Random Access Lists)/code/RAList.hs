@@ -17,8 +17,8 @@ instance List RAList where
   n : (RAList ls) = RAList (insertTree (Leaf n) ls)
     where
       insertTree :: Tree a -> [Tree a] -> [Tree a]
-      insertTree t [])      = [t]
-      insertTree t (tip:ls) = t:ls
+      insertTree t ([])      = [t]
+      insertTree t (Tip:ls) = t:ls
       insertTree t (t':ts)  = Tip: insertTree (node t t') ts
 
   length :: RAList a -> Int
@@ -27,6 +27,7 @@ instance List RAList where
   (!!) :: RAList a -> Int -> a
   (RAList []) !! _ = error "(!!): empty list"
   (RAList (x:xs)) !! n
-    | n < m     = x || n
+    | isEmpty x = (RAList ts) !! k
+    | n < m     = x !! n
     | otherwise = (RAList xs) !! (n-m)
     where m = length x
