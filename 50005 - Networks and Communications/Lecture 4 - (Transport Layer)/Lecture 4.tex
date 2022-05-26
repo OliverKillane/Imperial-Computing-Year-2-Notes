@@ -261,7 +261,7 @@ We can describe transitions between states for a protocol by the event and actio
 \subsection*{TCP FSM}
 \centerimage{width=\textwidth}{tcp fsm.png}
 \sidenote{View TCP states on your device}{
-	On windows can use the \fun{netstat -a} commend, \href{https://docs.microsoft.com/en-us/sysinternals/downloads/tcpview}{tcpview} or \href{https://www.nirsoft.net/utils/cports.html}{currPorts}.
+	On windows can use \fun{netstat -a} \href{https://docs.microsoft.com/en-us/sysinternals/downloads/tcpview}{tcpview} or \href{https://www.nirsoft.net/utils/cports.html}{currPorts}.
 	\\
 	\\ On linux there is \href{https://htop.dev/}{htop} and \href{http://iptraf.seul.org/}{iptraf}.
 }
@@ -490,9 +490,9 @@ There are many different congestion control algorithms:
 		\item \keyword{timeout interval} $T$ must be larger than the $RTT$ otherwise we will retransmit data unnecessarily.
 		\item $T$ cannot be too large, otherwise it will be slow to retransmit.
 		\item \keyword{TCP} continuously estimates the $RTT$.
-		\item \keyword{TCP} sets $T$ using the \keyword{smoothed RTT} ($SRTT$) and the RTT Variation $RTTVAR$ (exact computation can be found in section 2.2 \& 2.3 \href{https://datatracker.ietf.org/doc/html/rfc6298}{here}.)
+		\item \keyword{TCP} sets $T$ using the \keyword{smoothed RTT} (SRTT) and the RTT Variation RTTVAR (exact computation can be found in section 2.2 \& 2.3 \href{https://datatracker.ietf.org/doc/html/rfc6298}{here}.)
 	}
-	\[T = SRTT + 4 \times RTTVAR\]
+	\[T = \text{SRTT} + 4 \times \text{RTTVAR}\]
 }
 \termdef{Fast Retransmission}{
 	Three duplicate \const{ACK}s are interpreted as a \const{NACK}. The number $3$ is agreed upon in section 3 \href{https://datatracker.ietf.org/doc/html/rfc2001}{here} as a tradeoff between fast retransmission and unnecessary premature retransmission.
