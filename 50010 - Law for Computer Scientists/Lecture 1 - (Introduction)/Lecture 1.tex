@@ -1,0 +1,153 @@
+\documentclass{report}
+\title{50010 - Law for Computer Scientists - Lecture 1}
+\author{Oliver Killane}
+\date{28/05/22}
+\input{../50010 common.tex}
+\begin{document}
+\maketitle
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=1d5c2cfa-f25e-4741-b9bd-aea200ef24b7}
+
+\sidenote{Why are we doing law?}{
+    \compitem{
+        \item Degree accreditation requires us to learn "relevant law".
+        \item Computer Scientists need to know about law relating to both society at large (e.g contract law) and computing specific work (e.g data protection, copyright in software)
+    }
+}
+
+\section*{Copyright Law}
+
+\termdef{Copyright Law}{
+    A set of legal property rights which the author of a work (or possibly employer) is granted by statute.
+    \\
+    \\ These laws allow the copyright owner to control acts relating to the work.
+    \compitem{
+        \item One of the most internationally standardised types of law (due to international standards, european law).
+    }
+}
+
+\subsection*{History of copyright law}
+\termdef{Berne Convention}{
+    Signed in 1886, and established basic ideas of copyright.
+    \compitem{
+        \item Minimum period of copyright protection (till 50 years after author's death).
+        \item Copright of works produced in one country to be recognised in other countries.
+    }
+}
+\termdef{Information Society Directive}{
+    EU directive from 2001, concerning copyright more generally.
+    \compitem{
+        \item Copy protection, circumvention and legal protections.
+        \item Technical copies (e.g to allow a computer system to run).
+        \item And more beyond the scope of this course.
+    }
+}
+\termdef{Directive on the legal protection of computer programs (Software Directive)}{
+    EU directive from 2009, on controlling legal protections for computer programs under EU copyright law.
+    \\
+    \\ Owner of the copyright has the exclusive right to authorise:
+    \compitem{
+        \item Temporary or permenant copying of the program (including that required to load, view or run the program).
+        \item Alternations (e.g translation) of programs.
+        \item Distribution of the program to the public (e.g sale, rental).
+    }
+}
+\sidenote{EU law? what about Brexit!}{
+    EU law is highly relevant and will likely continue to be for the foreseable future even for law in the UK as post brexit much european law has been copied over to UK law.
+}
+\termdef{{Copyright, Designs and Patents Act}}{
+    UK law from 1998. The direct source of copyright law in the UK (informed by international convention - almost directly transplanting international treaties into domestic law).   
+}
+
+\subsection*{Intellectual Property}
+Copyright is intellectual property.
+\\
+\\ Property rights are rights enforceable against a 3rd party without their agreement. By contrast a contract between two parties requires both's agreement in order be become binding.
+
+\example{Get off my property!}{
+    Given I own a house, I have several rights to (my property) the house.
+    \compitem{
+        \item I have the right to exclude others from my house (without requiring any agreement/contract).
+        \item I have the right to exclusive posession of the house.
+        \item The right is \keyword{alienable}, meaning I can sell or transfer this right to another party.
+        \item I can waive my right to exclude, e.g for a fee (rent) to allow another party to enter my house.
+    }
+}
+
+Property rights are private rights (not criminal), and are time limited (till 70 years after author's death in the EU and UK)
+
+\sidenote{Mickey Mouse Protection Act}{
+    The long time copyright protection exists is effectively forever for software (software written by alan turing will the out of protection in 2024). And there is a large incentive to keep extensions.
+    \\
+    \\ For example Disney lobbied heavily to increase the protection period to 70 years after the author's death (like europe) to maintain copyright from the first mickey mouse cartoon "steamboat willie".
+}
+
+Rights under copyright are typically enforceable against everyone, and \keyword{alienable} (can sell, license or rent rights under copyright)
+\sidenote{Intellectual property "theft"}{
+    Theft is specific to illegal aquisition physically of the property. Hence intellectual property (information, not physical) cannot be stolen, but rather the copyright on the intellectual property is violated, and an offence under some provision of the \keyword{Copyright, Designs and Patents Act}.
+    \\
+    \\ This is typically illegal, and potentially even criminal if done at scale or with commercial intent.
+}
+There are other forms of intellectual property, such as \keyword{trademarks} and \keyword{patents}, database rights (specialist form in the collection of data), design rights (e.g protection of fonts) and topography rights (rights in the design of semiconductors).
+\termdef{Trademark}{
+    Restricts the use of descriptive names, logos, symbols or expressions to identify certain products or services from a particular source. This can go as far as non-conventional trademarks on colours, smells or sounds (e.g company jingle)
+    \compitem{
+        \item Company logos, names (e.g Unilever)
+        \item Brands \& Products (e.g Bovril)
+    }
+}
+\termdef{Patents}{
+    PPatents protect ideas behind inventions (copyright does not protect ideas).
+    \\
+    \\ In europe software is not patentable (US is much broader), however software causing a physical effect may be patentable in conjunction with the system they control.
+}
+
+\subsection*{Software Copyright}
+Copyright law was developed and standardized before the advent of modern computing, and hence has had to be adapted to this medium.
+\\
+\\ Programs are considered literary work (much like a book, or play-script) under copyright law.
+
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=28e96a36-6d65-4060-809c-aea200ef24d5}
+
+The core/main exclusive rights of software copyright are:
+\begin{enumerate}
+    \item The right to make permanent or temporary copies (in particular to load, display and run the program)
+    \item The right to translate, adapt, arrange or otherwise alter a program (in particular compiling, decompiling and transpiling to another programming language)
+    \item The right to distribute to the public, including renting copies of the program.
+\end{enumerate}
+These are described in section 4.1 of the \keyword{software directive}, and sections $16 \to 21$ of the \keyword{copyright, designs and patents act} in very similar terms.
+\\
+\\ There are exceptions to these
+\begin{enumerate}
+    \item The right to use (if you have a legal copy of the program, you are allowed to use it) subject to license terms.
+    \item The right to make backups where necessary (for the use, e.g to use of a RAID 1 drive system is legal).
+    \item The right to observe, study and test the program (Article 5.3 of the \keyword{software directive}) even if the license says the user cannot (e.g using a debugger).
+    \item The right to decompile in limited circumstances (e.g to achieve interoperability with other systems, e.g preventing software from using proprietary network, protocols, file formats etc to prevent other software working with them).
+\end{enumerate}
+
+\subsection*{Copyright Ownership}
+Copyright ownership law is very clear. The author is the copyright owner, unless it is work made by a employee in which case the employer owns the copyright (subject to any other agreements).
+\\
+\\ As students are not employees, and hence own the copyright for their own work. Some universities (such as \href{Oxford}{https://www.ox.ac.uk/students/academic/guidance/intellectual-property}) have policies to claim copyright on student produced work, though there is questionable legal basis for this.
+
+\subsection*{Copyright Law Breach}
+Copyright creates a \keyword{Statutory} (from statute) \keyword{Tort} (something one can be sued for). The main response to a breach is to take the offender to court to get damages/compensation or an injunction (court order to refrain from some activity).
+\\
+\\ Damages are more complex, for example giving up infringing copies is not as relevant to software (copied are free).
+\\
+\\ Litigating a copyright case can be very expensive, this can make it difficult to hold offenders to account, and can leave companies vulnerable to copyright trolls (who have no case, but threaten for an out of court settlement).
+
+\section*{Common Law Countries}
+\termdef{Common Law}{
+    Also known as \keyword{judicial precedent} or \keyword{judge made law} is law built up over time by court made decisions, that can be used in new cases where there are ambiguities in the law. 
+    \\
+    \\ Hence in determining the legality of actions, potential outcomes of cases it is important to consider historic cases and arguments made.
+}
+
+We must consider \keyword{common law} when determining if some action breaches copyright.
+
+\lectlink{https://imperial.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=736a4f33-0bd3-4c99-a7ee-aea200ef254e}
+
+\unfinished
+
+
+\end{document}

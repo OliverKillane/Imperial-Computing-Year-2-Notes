@@ -42,10 +42,11 @@ NET='50005 - Networks and Communications'
 COMP='50006 - Compilers'
 STAT='50008 - Probability and Statistics'
 TECH='50011 - Computational Techniques'
+LAW='50010 - Law for Computer Scientists'
 
 
 case $folder in
-    $SWE | $MOD | $OS | $ALG | $NET | $COMP | $STAT | $TECH);;
+    $SWE | $MOD | $OS | $ALG | $NET | $COMP | $STAT | $TECH | $LAW);;
     *) echo "Must be in a notes folder, cannot be $folder"; exit;;
 esac
 
