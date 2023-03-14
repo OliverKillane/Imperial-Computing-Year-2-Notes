@@ -1,3 +1,6 @@
+## Deprecation Notice
+These notes will not longer be maintained. Over the next year they will be moved into the [Imperial-Computing-Notes](https://github.com/OliverKillane/Imperial-Computing-Notes) repository and heavily refactored to a higher quality.
+
 # Imperial-Computing-Year-2-Notes
 
 My notes from second year at Imperial College, in a nice structure blessed with overzealous & somewhat unecessary latex.
